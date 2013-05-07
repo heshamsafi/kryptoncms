@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+form.membership_form{
+/* 	width: 400px; */
+}
+.control-group label{
+/* 	width:60px !important; */
+}
+form button[type=submit]{
+	width: 15em;
+}
+/* .hide{ */
+/* 	display:none !important; */
+/* } */
+* {
+    -webkit-transition: width 0.7s ease, margin 0.7s ease;
+    -moz-transition: width 0.7s ease, margin 0.7s ease;
+    -o-transition: width 0.7s ease, margin 0.7s ease;
+    transition: width 0.7s ease, margin 0.7s ease;
+}
+.ui-selectable-helper,.ui-selectable-helper * {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+}
+
+.span0 {
+    width: 15px !important;
+    margin-left: 0 !important;
+    overflow:hidden;
+}
+
+#bod{
+	padding: 60px;
+}
+
+.ui-selectable .ui-selecting { background: #d9edf0!important; }
+.ui-selectable .ui-selected { background: rgb(0, 255, 173)!important; /*color: white!important;*/ }
+
+#resizable { width: 150px; height: 150px; padding: 0.5em; }
+ #resizable h3 { text-align: center; margin: 0; }
+ .ui-resizable-helper { border: 1px dotted gray; }

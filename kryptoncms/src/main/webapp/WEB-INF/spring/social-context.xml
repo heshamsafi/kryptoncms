@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+	xmlns:twitter="http://www.springframework.org/schema/social/twitter"
+	xmlns:social="http://www.springframework.org/schema/social"
+	xmlns:linkedin="http://www.springframework.org/schema/social/linkedin"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/social/linkedin http://www.springframework.org/schema/social/spring-social-linkedin.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/social/twitter http://www.springframework.org/schema/social/spring-social-twitter.xsd
+		http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+
+	<context:property-placeholder location="classpath:/edu/asu/krypton/config/application.properties" />
+	<facebook:config app-id="${facebook.clientId}"    app-secret="${facebook.clientSecret}" app-namespace="socialshowcase" />
+	<bean class="org.springframework.social.connect.web.ProviderSignInController">
+	<!-- relies on by-type autowiring for the constructor-args -->    
+		<constructor-arg ref="signInAdapter" /> 
+	</bean>
+	
+	<!-- connect controller has been added to component scan path -->
+<!-- 	<bean class="org.springframework.social.connect.web.ConnectController"> -->
+<!--    	 	<property name="connectInterceptors"> -->
+<!-- 			<list> -->
+<!-- 				<bean class="edu.asu.krypton.service.membership.social.facebook.interceptors.PopupDialogConnectInterceptor" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<bean id="connectionFactoryLocator" 
+	  class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+	<property name="connectionFactories">
+	    <list>
+	        <bean class="org.springframework.social.twitter.connect.TwitterConnectionFactory">
+	            <constructor-arg value="${twitter.consumerKey}" />
+	            <constructor-arg value="${twitter.consumerSecret}" />               
+	        </bean>
+	        <bean class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+	            <constructor-arg value="${facebook.clientId}" />
+	            <constructor-arg value="${facebook.clientSecret}" />                
+	        </bean>
+	        <bean class="org.springframework.social.linkedin.connect.LinkedInConnectionFactory">
+	            <constructor-arg value="${linkedin.consumerKey}" />
+	            <constructor-arg value="${linkedin.consumerSecret}" />                
+	        </bean>
+	        <bean class="org.springframework.social.google.connect.GoogleConnectionFactory">
+	            <constructor-arg value="${google.clientId}" />
+	            <constructor-arg value="${google.clientSecret}" />   	        
+	        </bean>
+	    </list>
+	</property>
+	</bean>
+	
+	<bean id="connectionRepository" factory-method="createConnectionRepository" 
+	  factory-bean="usersConnectionRepository" scope="request">
+<!-- 		<constructor-arg value="#{request.userPrincipal.name}" /> -->
+		<constructor-arg value="Anonymous" />
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+	
+	<bean id="signInAdapter" class="edu.asu.krypton.service.membership.social.signin.SimpleSignInAdapter"/>
+	
+	<bean id="usersConnectionRepository" 
+	  class="org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="connectionFactoryLocator" />
+		<constructor-arg ref="textEncryptor" />
+	</bean>
+	
+	<bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" 
+	        factory-method="noOpText" />
+	<bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" >
+		<aop:scoped-proxy proxy-target-class="false"/>
+	</bean>
+	
+	
+</beans>

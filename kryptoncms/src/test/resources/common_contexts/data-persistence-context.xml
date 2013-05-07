@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:cloud="http://schema.cloudfoundry.org/spring"
+             xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+             xmlns:c="http://www.springframework.org/schema/c"
+             xmlns:tx="http://www.springframework.org/schema/tx"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:util="http://www.springframework.org/schema/util"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+             http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+			 http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.6.xsd
+             http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+	 
+	<!-- Use this when running in the cloud -->
+<!-- 	<beans profile="cloud"> -->
+<!-- 	    <cloud:service-properties id="serviceProperties"/> -->
+<!-- 	</beans> -->
+	
+	
+	<!-- Hesham: this is the datasource that works for me, declare your own 
+		and inject it in the session factory ... but don't modify this one .. de bta3ty !! :D -->
+	<bean id="dataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" >
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://#{serviceProperties['kryptoncms.db']}" />
+		<property name="username" value="#{serviceProperties['kryptoncms.username']}" />
+		<property name="password" value="#{serviceProperties['kryptoncms.password']}" />
+		<property name="initialSize" value="5" />
+		<property name="maxActive" value="10" />
+		<property name="dialect" value="org.hibernate.dialect.MySQLDialect"></property>
+	</bean>
+	
+	<!-- h2 databases have the advantage of having a server embedded in the app without so we don't have to start a standalone server -->
+	
+<!-- 	<bean id="dataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" > -->
+<!-- 		<property name="driverClassName" value="org.h2.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:h2:mem:krypton" /> -->
+<!-- 		<property name="dialect" value="org.hibernate.dialect.H2Dialect"></property> -->
+<!-- 	</bean> -->
+	
+	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL" >
+		<jdbc:script location="classpath:/org/springframework/social/connect/jdbc/JdbcUsersConnectionRepository.sql" />
+		<jdbc:script location="classpath:/edu/asu/krypton/model/persist/db/scripts/Account.sql" />
+	</jdbc:initialize-database>
+	<!-- postgresql has problems because some of the entity names and property names conflict with some sql reserved words like `User` 
+	this is on our to do list  -->
+<!-- 	<bean id="postresqlDataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" > -->
+<!-- 		<property name="driverClassName" value="org.postgresql.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/krypton" /> -->
+<!-- 		<property name="username" value="postgres" /> -->
+<!-- 		<property name="password" value="root" /> -->
+<!-- 		<property name="initialSize" value="5" /> -->
+<!-- 		<property name="maxActive" value="10" /> -->
+<!-- 		<property name="dialect" value="org.hibernate.dialect.PostgreSQLDialect"></property> -->
+<!-- 	</bean> -->
+	
+	<!-- i upgraded hibernate to version 4.1 ! -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="packagesToScan" value="edu.asu.krypton.model.persist.db" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+<!-- 			Spring expression lang. (SPEL) -->
+				<prop key="dialect">
+<!-- 				    #{dataSource.dialect} -->
+<!-- 					org.hibernate.dialect.H2Dialect -->
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+       <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" c:_-ref="dataSource" />
+		
+    <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name = "classesToBeBound">
+            <array>
+                <value>edu.asu.krypton.model.persist.db.User</value>
+                <value>edu.asu.krypton.model.persist.db.Role</value>
+                <value>edu.asu.krypton.model.persist.db.Article</value>
+                <value>edu.asu.krypton.model.persist.db.ArticleComment</value>
+                <value>edu.asu.krypton.model.persist.db.CommentComment</value>
+                <value>edu.asu.krypton.model.persist.db.Comment</value>
+                <value>edu.asu.krypton.model.message_proxies.QueryMessage</value>
+            </array>
+        </property>
+    </bean>
+	<tx:annotation-driven />
+	
+		<beans profile="default">
+		<util:properties id="serviceProperties">
+			<prop key="kryptoncms.db">localhost:3306/krypton</prop>
+			<prop key="kryptoncms.username">root</prop>
+			<prop key="kryptoncms.password">root</prop>
+		</util:properties>
+	</beans>
+
+	<beans profile="cloud">
+		<cloud:service-properties id="serviceProperties" />
+	</beans>
+</beans>
