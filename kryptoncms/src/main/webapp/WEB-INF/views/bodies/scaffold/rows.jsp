@@ -13,6 +13,7 @@
 	  <li><a tabindex="-1" id="delete" href="javascript:void(0)">Delete</a></li>
   </ul>
 </div>
+
 <form action='<c:url value="/scaffold/${entityClassName}/" />' method="DELETE">
 	<table class="table" class="scaffold" data-enable-selectable>
 	<c:choose>
@@ -31,9 +32,11 @@
 			<td data-attr="${entityField.name}">
 			
 		<%-- 	${entity[entityField.name].getClass()} --%>
+		
 				<c:choose>
 					
-					<c:when test="${fn:contains(entity[entityField.name].getClass(),'PersistentBag')}">
+					<c:when test="${entity[entityField.name].getClass().getSimpleName() eq 'LinkedHashSet'}">
+
 						<c:url var="url" value="/scaffold" />
 						<c:set var="url" value="${url}/${entityField.getGenericType().getActualTypeArguments()[0].simpleName}?ownerType=${entity.getClass().simpleName}&ownerId=${entity['id']}" />
 						<a data-ajax-enable href='${url}'>

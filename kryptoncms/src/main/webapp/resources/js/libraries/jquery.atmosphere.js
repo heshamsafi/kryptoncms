@@ -1724,16 +1724,22 @@ jQuery.atmosphere = function() {
             this.response = _response;
         },
 
-        subscribe: function(url, callback, request) {
+        subscribe : function(url,params, callback, request) {
             if (typeof(callback) == 'function') {
                 jQuery.atmosphere.addCallback(callback);
             }
-
             if (typeof(url) != "string") {
                 request = url;
             } else {
                 request.url = url;
             }
+            request.url += "?";
+            for(var idx =0;idx<params.length ;idx++){
+            	request.url += (params[idx]["key"]+"="+encodeURIComponent(params[idx]["value"]));
+            }
+            
+            console.log(request);
+            
 
             var rq = new jQuery.atmosphere.AtmosphereRequest(request);
             rq.execute();

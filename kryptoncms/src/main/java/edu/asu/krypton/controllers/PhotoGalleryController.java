@@ -52,7 +52,7 @@ public class PhotoGalleryController extends
 	}
 	
 	@RequestMapping(value = "/{parentType}/{parentId}", method = RequestMethod.GET)
-	public @ResponseBody QueryMessage<PhotoMessage> getPhotos(@PathVariable String parentType, @PathVariable long parentId){
+	public @ResponseBody QueryMessage<PhotoMessage> getPhotos(@PathVariable String parentType, @PathVariable String parentId){
 		QueryMessage<PhotoMessage> queryMessage = new QueryMessage<PhotoMessage>();
 		
 		try {

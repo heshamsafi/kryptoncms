@@ -1,14 +1,11 @@
 package edu.asu.krypton.model.persist.db;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Photo implements Commentable{
+public class Photo extends Commentable{
 
 	@Id
 	private String id;
@@ -18,17 +15,6 @@ public class Photo implements Commentable{
 	@DBRef
 	private Album parent;
 	
-	@DBRef
-	private Collection<PhotoComment> comments = new ArrayList<PhotoComment>();
-	
-	public Collection<PhotoComment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Collection<PhotoComment> comments) {
-		this.comments = comments;
-	}
-
 	public Album getParent() {
 		return parent;
 	}

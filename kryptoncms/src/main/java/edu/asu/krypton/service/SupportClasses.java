@@ -6,7 +6,7 @@ import edu.asu.krypton.model.persist.db.Commentable;
 
 public class SupportClasses {
 	private Class<? extends Commentable> commentable;
-	private CommentableService<? extends Commentable> service;
+	private CommentableService service;
 	public Class<? extends Commentable> getCommentable() {
 		return commentable;
 	}
@@ -14,10 +14,10 @@ public class SupportClasses {
 		this.commentable = commentable;
 		return this;
 	}
-	public CommentableService<? extends Commentable> getService() {
+	public CommentableService getService() {
 		return service;
 	}
-	public SupportClasses setService(CommentableService<? extends Commentable> service) {
+	public SupportClasses setService(CommentableService service) {
 		this.service = service;
 		return this;
 	}

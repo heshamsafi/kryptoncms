@@ -26,7 +26,7 @@ public class ChatService {
 	
 	private long anonymousCount;
 
-	public void handShake(User user,final AtmosphereResource atmosphereResource) {
+	public void handShake(edu.asu.krypton.model.persist.db.User user,final AtmosphereResource atmosphereResource) {
 		Meteor m = Meteor.build(atmosphereResource.getRequest())
 				 .addListener(
 						 new AtmosphereResourceEventListenerAdapter()

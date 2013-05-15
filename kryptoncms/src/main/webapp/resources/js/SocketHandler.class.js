@@ -1,5 +1,5 @@
 //api encapsulation 3alashan el decoupling we kda :)
-define(["jquery","libraries/mootools-base","Logger.class","libraries/jquery.atmosphere"],function($,Mootools,Logger){
+define(["jquery","libraries/mootools-base","Logger.class","libraries/jquery.atmosphere","libraries/jquery.cookie"],function($,Mootools,Logger){
 var SocketHandler = new Mootools.Class({
 	Implements : [Mootools.Options],
 	options    : {
@@ -18,7 +18,7 @@ var SocketHandler = new Mootools.Class({
 			logLevel		  : Logger.logLevel,
 			//html5 server sent events (sse)
 //			transport:'streaming',
-			transport:'long-polling',
+			transport:'websocket',//
 //			transport		  : 'sse', // we can't use websockets untill we
 			//figure out away to send the JSESSIONID cookie with the handshake request headers :\
 			//apparently neither sse nor long-polling are working in opera browser ... WTF !
@@ -58,7 +58,7 @@ var SocketHandler = new Mootools.Class({
 		);
 	},
 	subscribe : function(){
-		this.subsocket = $.atmosphere.subscribe(this.options);
+		this.subsocket = $.atmosphere.subscribe(this.options,[{"key":"j_username","value":$.cookie("j_username")}]);
 		return this;
 	},
 	push : function(data){

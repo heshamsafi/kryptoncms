@@ -49,9 +49,10 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 	
 	@RequestMapping(value="/echo",method = RequestMethod.GET)
 	@ResponseBody
-	public synchronized void handshake(final AtmosphereResource atmosphereResource) throws IOException {
+	public synchronized void handshake(final AtmosphereResource atmosphereResource,@RequestParam(defaultValue="") String j_username) throws IOException {
 		logger.debug("i \"handshake\" got a request");
-		User user = getRegistrationService().getLoggedInUser();
+		edu.asu.krypton.model.persist.db.User user = getRegistrationService().getLoggedInDbUser();
+		if(user == null) user = getRegistrationService().findUserByUsername(j_username);
 		chatService.handShake(user,atmosphereResource);
 	}
 
@@ -69,7 +70,8 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		ObjectMapper objectMapper = new ObjectMapper();
 		ChatMessage chatMessage = objectMapper.readValue(requestBody, ChatMessage.class);
 		try{
-			username = getRegistrationService().getLoggedInUser().getUsername();
+			username = getRegistrationService().findUserByUsername(chatMessage.getSource()).getUsername();
+								//.getLoggedInUser().getUsername();
 		} catch(NullPointerException ex){
 			username = "Anonymous";
 		}

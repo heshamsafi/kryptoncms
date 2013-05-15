@@ -1,76 +1,70 @@
 package edu.asu.krypton.controllers;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.ui.Model;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.krypton.model.repository.DataAccessObject;
-import edu.asu.krypton.service.SessionDependant;
-
 @RequestMapping("/scaffold")
 @org.springframework.stereotype.Controller
 public class ScaffoldController extends Controller {
-
 	private final String DEFAULT_BODIES_DIR = "bodies/";
 	private final String SCAFFOLD_DIR = "scaffold/";
 	private final String DEFAULT_BODY = SCAFFOLD_DIR+"rows";
 	private final String MAIN_BODY = SCAFFOLD_DIR+"entities";
 	
 	@Autowired(required=true)
-	private DataAccessObject<?> dao;
-	
-	@Autowired(required=true)
-	private SessionFactory sessionFactory;
+	private MongoTemplate mongoTemplate;
 	
 	@RequestMapping(method=RequestMethod.GET,value="")
-	public String getAllEntities(Model model,HttpServletRequest request){
-	 Map<String, ClassMetadata>  map = (Map<String, ClassMetadata>) sessionFactory.getAllClassMetadata();
+	public String getAllEntities(Model model,HttpServletRequest request) throws IOException, ClassNotFoundException{
 	 List<String> entities = new ArrayList<String>();
-	 for(String entityName : map.keySet()){
-	     String[] segments = entityName.split("\\.");//get simple name
-	     entities.add(segments[segments.length-1]);
-	 }
+	 for(Class docName : findDocuments("edu.asu.krypton.model.persist.db"))
+	     entities.add(docName.getSimpleName());
+
 	 model.addAttribute("entities", entities);
 	 return appropriateView(request, DEFAULT_BODIES_DIR+MAIN_BODY, defaultView(model,MAIN_BODY));
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/{entity}")
-	@SessionDependant
 	public String getDefault(Model model,
 			HttpServletRequest request,
 			@PathVariable String entity,
-			@RequestParam(required=false,defaultValue="0") Long id,
+			@RequestParam(required=false,defaultValue="") String id,
 			@RequestParam(required=false,defaultValue="") String ownerType,
-			@RequestParam(required=false,defaultValue="0") Long ownerId) throws ClassNotFoundException{
+			@RequestParam(required=false,defaultValue="") String ownerId) throws ClassNotFoundException{
 		try {
-		    Criteria criteria;
-		    List<?> queryResult = null;
+		    Query query = new Query();
+		    Collection<?> queryResult = null;
 		    Class<?> entityClass = Class.forName("edu.asu.krypton.model.persist.db."+entity);
-		    if(ownerId>0){
+		    if(!ownerId.equals("")){
 		    	Class<?> ownerTypeClass = Class.forName("edu.asu.krypton.model.persist.db."+ownerType);
-		    	criteria = dao.getSession().createCriteria(ownerTypeClass)
-		    			.add(Restrictions.eq("id", ownerId));
+		    	query.addCriteria(Criteria.where("id").is(ownerId));
 		    	String fieldName = null;
 		    	
 		    	for(Field field : getAllFields(ownerTypeClass)){
@@ -80,19 +74,20 @@ public class ScaffoldController extends Controller {
 		    			break;
 		    		}
 		    	}
+		    	Class temp = ownerTypeClass;
 		    	if (fieldName!=null){
 		    		Method method;
 		    		do{
 		    			try{
-		    				method = ownerTypeClass.getDeclaredMethod("get"+WordUtils.capitalize(fieldName));
+		    				method = temp.getDeclaredMethod("get"+WordUtils.capitalize(fieldName));
 		    			}catch (Exception e) {
 							method = null;
-							ownerTypeClass = ownerTypeClass.getSuperclass();
-							if(ownerTypeClass == Object.class) break;
+							temp = temp.getSuperclass();
+							if(temp == Object.class) break;
 						}
 		    		}while(method == null);
 		    		method.setAccessible(true);
-		    		queryResult = (List<?>) method.invoke(criteria.uniqueResult());
+		    		queryResult = (Collection<?>) method.invoke(mongoTemplate.findOne(query, ownerTypeClass));
 		    	}
 		    	//3alashan el lazy loading
 		    	//invoke all getters
@@ -105,9 +100,9 @@ public class ScaffoldController extends Controller {
 		    		}
 		    	}
 		    } else {
-		    	criteria = dao.getSession().createCriteria(entityClass);
-		    	if(id>0) criteria.add(Restrictions.eq("id", id));
-		    	queryResult = criteria.list();
+		    	query = new Query();
+		    	if(!id.equals("")) query.addCriteria(Criteria.where("id").is(id));
+		    	queryResult = mongoTemplate.find(query, entityClass);
 		    }   
 
 			model.addAttribute("entityClassFields",getAllFields(entityClass))
@@ -122,14 +117,13 @@ public class ScaffoldController extends Controller {
 	}
 	
 	@RequestMapping(method=RequestMethod.DELETE,value="{entity}/{id}")
-	@SessionDependant
-	@Transactional
 	//this is a critical section
-	public @ResponseBody synchronized void delete(
+	public @ResponseBody //synchronized 
+			void delete(
 			@PathVariable String entity,
-			@PathVariable Long id) throws ClassNotFoundException{
+			@PathVariable String id) throws ClassNotFoundException{
 		Class<?> entityClass = Class.forName("edu.asu.krypton.model.persist.db."+entity);
-		dao.getSession().delete(dao.getSession().load(entityClass, id));
+		mongoTemplate.remove(new Query().addCriteria(Criteria.where("id").is(id)), entityClass);
 	}
 	
 	private List<Field> getAllFields(Class<?> entity){
@@ -142,4 +136,42 @@ public class ScaffoldController extends Controller {
 	    }
 	    return result;
 	}
+	
+	private List<Class> findDocuments(String basePackage) throws IOException, ClassNotFoundException
+	{
+	    ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+	    MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
+
+	    List<Class> candidates = new ArrayList<Class>();
+	    String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
+	                               resolveBasePackage(basePackage) + "/" + "**/*.class";
+	    org.springframework.core.io.Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
+	    for (org.springframework.core.io.Resource resource : resources) {
+	        if (resource.isReadable()) {
+	            MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
+	            if (isCandidate(metadataReader)) {
+	                candidates.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
+	            }
+	        }
+	    }
+	    return candidates;
+	}
+
+	private String resolveBasePackage(String basePackage) {
+	    return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
+	}
+
+	private boolean isCandidate(MetadataReader metadataReader) throws ClassNotFoundException
+	{
+	    try {
+	        Class c = Class.forName(metadataReader.getClassMetadata().getClassName());
+	        if (c.getAnnotation(Document.class) != null) {
+	            return true;
+	        }
+	    }
+	    catch(Throwable e){
+	    }
+	    return false;
+	}
+	
 }

@@ -4,7 +4,8 @@ define([
         "libraries/mootools-base",
         "message_proxies/ChatMessage.class",
         "Notifier.class",
-        "Logger.class"]
+        "Logger.class",
+        "libraries/jquery.cookie"]
 ,function(
 		$,
 		SocketHandler,
@@ -101,7 +102,10 @@ var Chatter = new Mootools.Class({
 			}
 			if(isValid){
 				var chatMessage 		 = new ChatMessage();
-				chatMessage.source 		 = "You";
+				if($.cookie("j_username"))
+					chatMessage.source 		 = $.cookie("j_username");
+				else 
+					chatMessage.source 		 = "You";
 				chatMessage.destinations = [];
 				thisChatterInstance.$elements.$destinationsPallette.find("[data-username]").each(function(){
 					chatMessage.destinations.push($(this).attr("data-username"));//building the destinations array to send to server

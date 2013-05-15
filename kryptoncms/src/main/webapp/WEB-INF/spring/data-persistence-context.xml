@@ -26,19 +26,18 @@
 
 	<mongo:db-factory host="localhost" port="27017" dbname="kryptoncms"/>
 
-    <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name = "classesToBeBound">
-            <array>
-                <value>edu.asu.krypton.model.persist.db.User</value>
-<!--                 <value>edu.asu.krypton.model.persist.db.Role</value> -->
-                <value>edu.asu.krypton.model.persist.db.Article</value>
-                <value>edu.asu.krypton.model.persist.db.ArticleComment</value>
-                <value>edu.asu.krypton.model.persist.db.CommentComment</value>
-                <value>edu.asu.krypton.model.persist.db.Comment</value>
-                <value>edu.asu.krypton.model.message_proxies.QueryMessage</value>
-            </array>
-        </property>
-    </bean>
+<!--     <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller"> -->
+<!--         <property name = "classesToBeBound"> -->
+<!--             <array> -->
+<!--                 <value>edu.asu.krypton.model.persist.db.User</value> -->
+<!--                 <value>edu.asu.krypton.model.persist.db.Article</value> -->
+<!--                 <value>edu.asu.krypton.model.persist.db.ArticleComment</value> -->
+<!--                 <value>edu.asu.krypton.model.persist.db.CommentComment</value> -->
+<!--                 <value>edu.asu.krypton.model.persist.db.Comment</value> -->
+<!--                 <value>edu.asu.krypton.model.message_proxies.QueryMessage</value> -->
+<!--             </array> -->
+<!--         </property> -->
+<!--     </bean> -->
 	<tx:annotation-driven />
 	
 	<beans profile="default">

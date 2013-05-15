@@ -27,6 +27,7 @@ public class User implements DbEntity {
 	
 	public User(){}
 	
+	
 	public String getId() {
 		return id;
 	}

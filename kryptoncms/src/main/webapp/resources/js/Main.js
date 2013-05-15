@@ -72,17 +72,22 @@ function(
 		});
 //		$("#admin_nav").hover(hoverHandler);
 	});
+	var membership = null;
 	function sessionScopeMain(){
 		if(!FormSerializer.getInstance())
 			FormSerializer.getInstance();//global configuration for singleton instance of
 		
-		var membership = Membership.getInstance();
+		membership = Membership.getInstance();
 		membership.bindRegisterForm("form.membership_register");
 		membership.bindLoginForm("form.membership_login");
 		membership.attachLogoutHandler();
 		membership.updateLoginStatus();
+		membership.attachLogoutHandler();
 	}
 	function pageScopeMain(){
+		if(membership != null)
+			membership.updateLoginStatus();
+		
 		new Scaffolder();
 		new ArticleEditor();
 		new WYSIWYG();
@@ -128,7 +133,7 @@ function(
 		
 		var photoAlbumManager = new PhotoAlbumManager();
 		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
-		photoAlbumManager.listPhotoAlbums();​
+		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){
 		if(chatter.activated){

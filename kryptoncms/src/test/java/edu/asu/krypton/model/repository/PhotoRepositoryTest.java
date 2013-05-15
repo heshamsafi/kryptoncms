@@ -45,7 +45,7 @@ public class PhotoRepositoryTest {
 				for(int k = 1; k <= 10; k++){
 					photoComment = new PhotoComment();
 					photoComment.setContent("Album (" + i + ") Photo (" + j + ") Comment Test (" + k + ")");
-					photoComment.setParent(photo);
+//					photoComment.setParent(photo);
 					photo.getComments().add(photoComment);
 					commentRepository.saveOrUpdate(photoComment);
 				}

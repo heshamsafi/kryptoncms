@@ -21,7 +21,7 @@ public class PhotoRepository extends edu.asu.krypton.model.repository.Repository
 		setPersistentClass(Photo.class);
 	}
 	
-	public List<Photo> getByParentId(Long parentId){
+	public List<Photo> getByParentId(String parentId){
 		//return getDao().getSession().createCriteria(Photo.class).add(Restrictions.eq("parent.id", parentId)).list();
 		Query query = new Query();
 		query.addCriteria(Criteria.where("parent.id").is(parentId));

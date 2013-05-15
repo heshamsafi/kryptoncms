@@ -105,6 +105,7 @@ var CommentManager = new Mootools.Class({
 	    			"contentType" : "application/json",
 	    			"success" : function(responseBody){
 	    				if(responseBody["successful"]){
+	    					if(responseBody["queryResult"] == null) responseBody["queryResult"] = [];
 	    					thisCommentManagerInstance.logger.log("debug","all went well");
 	    					thisCommentManagerInstance.logger.log("debug",responseBody["queryResult"]);
 	    					var comments = $("#comments-tmpl").tmpl(responseBody["queryResult"]);

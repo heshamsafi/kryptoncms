@@ -9,25 +9,21 @@ import org.springframework.stereotype.Service;
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.persist.db.Article;
 import edu.asu.krypton.model.repository.ArticleRepository;
+import edu.asu.krypton.model.repository.CommentRepository;
 
 @Service
 public class ArticleService extends edu.asu.krypton.service.CommentableService<Article> 
 {
-	
-	@Autowired(required=true)
-	private ArticleRepository articleRepository;
 
-	@SessionDependant
 	@Override
 	public Article findById(Serializable id){
-		return articleRepository.findById(id);
+		return repository.findById(id);
 	}
 	
 	@Override
-	@SessionDependant
 	public void saveOrUpdate(Article entity) {
 		try {
-			articleRepository.saveOrUpdate(entity);
+			repository.saveOrUpdate(entity);
 		} catch (CustomRuntimeException e) {
 			e.printStackTrace();
 		}
@@ -35,15 +31,20 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	
 	@SessionDependant
 	public List<Article> getAll(){
-		return articleRepository.getAll();
+		return repository.getAll();
 	}
 	
 	
 	public ArticleRepository getArticleRepository() {
-		return articleRepository;
+		return (ArticleRepository) repository;
 	}
 
 	public void setArticleRepository(ArticleRepository articleRepository) {
-		this.articleRepository = articleRepository;
+		this.repository = articleRepository;
+	}
+	
+	@Autowired(required=true)
+	public void setRepository(ArticleRepository repository){
+		this.repository = repository;
 	}
 }

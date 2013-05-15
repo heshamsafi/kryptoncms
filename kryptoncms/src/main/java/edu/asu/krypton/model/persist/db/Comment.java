@@ -1,8 +1,5 @@
 package edu.asu.krypton.model.persist.db;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -13,15 +10,11 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public abstract class Comment implements Commentable {
+public class Comment extends Commentable {
 	@Id
 	private String id;
 
 	private String content;
-	
-	@DBRef
-	@JsonIgnore
-	private Collection<CommentComment> comments = new ArrayList<CommentComment>();
 	
 	@DBRef
 	@JsonIgnore
@@ -35,7 +28,6 @@ public abstract class Comment implements Commentable {
 		this.id = id;
 	}
 
-	@XmlAttribute
 	public String getContent() {
 		return content;
 	}
@@ -43,10 +35,6 @@ public abstract class Comment implements Commentable {
 		this.content = content;
 	}
 	
-	public abstract void 	    setParent(Commentable parent);
-	
-	@XmlTransient
-	public abstract Commentable getParent();
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -54,24 +42,14 @@ public abstract class Comment implements Commentable {
 	 */
 	@Override
 	public String toString(){
-		return String.format("Comment(id=%d, content=%s)", getId(),getContent());
+		return String.format("Comment(id=%s, content=%s)", getId(),getContent());
 	}
-	@Transient
-	@XmlTransient
+
 	public User getAuthor() {
 		return author;
 	}
 	public void setAuthor(User author) {
 		this.author = author;
 	}
-	
-	@XmlTransient
-	@Transient
-	public Collection<CommentComment> getComments() {
-		return comments;
-	}
-	public void setComments(Collection<CommentComment> comments) {
-		this.comments = comments;
-	}
-	
+
 }

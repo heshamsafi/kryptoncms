@@ -16,51 +16,46 @@ import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.PhotoMessage;
 import edu.asu.krypton.model.persist.db.Album;
 import edu.asu.krypton.model.persist.db.Photo;
+import edu.asu.krypton.model.repository.ArticleRepository;
 import edu.asu.krypton.model.repository.PhotoRepository;
 
 @Service
 public class PhotoService extends CommentableService<Photo> {
-	
-	@Autowired(required = true)
-	private PhotoRepository photoRepository;
 
 	@Override
-	@SessionDependant
 	public Photo findById(Serializable id) {
-		return photoRepository.findById(id);
+		return repository.findById(id);
 	}
 
 	@Override
-	@SessionDependant
 	public void saveOrUpdate(Photo entity) {
 		try {
-			photoRepository.saveOrUpdate(entity);
+			repository.saveOrUpdate(entity);
 		} catch (CustomRuntimeException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@SessionDependant
 	public List<Photo> getAll() {
-		return photoRepository.getAll();
+		return repository.getAll();
 	}
 
 	public PhotoRepository getPhotoRepository() {
-		return photoRepository;
+		return (PhotoRepository) repository;
 	}
 
 	public void setPhotoRepository(PhotoRepository photoRepository) {
-		this.photoRepository = photoRepository;
+		this.repository = photoRepository;
 	}
 
 	@SessionDependant
-	public List<Photo> getByParentId(Long parentId) {
-		return photoRepository.getByParentId(parentId);
+	public List<Photo> getByParentId(String parentId) {
+		return ((PhotoRepository)repository).getByParentId(parentId);
 
 	}
 
 	@SessionDependant
-	public List<PhotoMessage> getProxyByParentId(Long parentId) throws CustomRuntimeException {
+	public List<PhotoMessage> getProxyByParentId(String parentId) throws CustomRuntimeException {
 		return convertEntitiesToProxies(getByParentId(parentId));
 	}
 
@@ -70,5 +65,10 @@ public class PhotoService extends CommentableService<Photo> {
 			proxies.add(new PhotoMessage(entity));
 		}
 		return proxies;
+	}
+	
+	@Autowired(required=true)
+	public void setRepository(PhotoRepository repository){
+		this.repository = repository;
 	}
 }

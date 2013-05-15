@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 @XmlRootElement
-public class Article implements Commentable {
+public class Article extends Commentable {
 	@Id
 	private String id;
 	
@@ -29,11 +29,6 @@ public class Article implements Commentable {
 	//@Column(unique=true)
 	private String title;
 	private String description;
-	
-	
-	@DBRef
-	@JsonIgnore
-	private Collection<ArticleComment> comments = new ArrayList<ArticleComment>();
 	
 	// momken ne7tag nzawed author ba3deen
 
@@ -65,14 +60,5 @@ public class Article implements Commentable {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	
-	@XmlTransient
-	public Collection<ArticleComment> getComments() {
-		return comments;
-	}
-	
-	public void setComments(Collection<ArticleComment> comments) {
-		this.comments = comments;
 	}
 }

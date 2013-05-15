@@ -10,7 +10,6 @@ public class OutBoundCommentProxy {
 	private String username;
 	private int noOfReplies;
 	
-	//for lazy loading
 	public OutBoundCommentProxy(Comment commentEntity){
 		setId(commentEntity.getId());
 		setContent(commentEntity.getContent());
@@ -18,14 +17,14 @@ public class OutBoundCommentProxy {
 			setUsername(commentEntity.getAuthor().getUsername());
 		else setUsername("Anonymous");
 		
-		setParentId(commentEntity.getParent().getId());
+//		setParentId(commentEntity.getParent().getId());
 		
 		setNoOfReplies(commentEntity.getComments().size());
 		
 		
 		
-		setParentType(commentEntity.getParent().getClass().getSimpleName().indexOf("Comment")>-1?
-				"Comment":commentEntity.getParent().getClass().getSimpleName());
+//		setParentType(commentEntity.getParent().getClass().getSimpleName().indexOf("Comment")>-1?
+//				"Comment":commentEntity.getParent().getClass().getSimpleName());
 	}
 	
 	public String getId() {

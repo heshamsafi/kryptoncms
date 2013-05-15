@@ -2,7 +2,10 @@ package edu.asu.krypton.service;
 
 import java.io.Serializable;
 
+import edu.asu.krypton.exceptions.CustomRuntimeException;
+import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.model.persist.db.Commentable;
+import edu.asu.krypton.model.repository.Repository;
 
 
 /**
@@ -15,7 +18,14 @@ import edu.asu.krypton.model.persist.db.Commentable;
  * @param <Entity>
  */
 
-public abstract class CommentableService<Entity extends Commentable> {
-	public abstract Entity findById(Serializable id);
-	public abstract void   saveOrUpdate(Entity entity);
+public abstract class CommentableService <Entity extends Commentable> {
+	protected Repository<Entity> repository;
+	public abstract Commentable findById(Serializable id);
+	public void saveOrUpdate(Entity commentable) {
+		try {
+			repository.saveOrUpdate(commentable);
+		} catch (CustomRuntimeException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -9,13 +9,4 @@ public class PhotoComment extends Comment{
 	@DBRef
 	private Photo parent;
 
-	@Override
-	public void setParent(Commentable parent) {
-		this.parent = (Photo) parent;		
-	}
-
-	@Override
-	public Commentable getParent() {
-		return parent;
-	}
 }

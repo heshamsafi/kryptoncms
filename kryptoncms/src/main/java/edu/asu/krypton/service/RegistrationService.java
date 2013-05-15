@@ -21,17 +21,17 @@ public class RegistrationService {
 	
 	private final static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 	
-	@SessionDependant
+	
 	public void unregisterUser(User user){
 		userRepository.delete(user);
 	}
-	@SessionDependant
+	
 	public void registerUser(User user) throws CustomRuntimeException{
 		if(userRepository.findByUsername(user.getUsername()) == null)
 			userRepository.saveOrUpdate(user);
 		else throw new CustomRuntimeException("This username is taken");
 	}
-	@SessionDependant
+	
 	public User findUserByUsername(User exampleUser){
 		User domainUser = null;
 		try{
@@ -43,14 +43,18 @@ public class RegistrationService {
 		} catch(ClassCastException ex){}
 		return domainUser;
 	}
+	public User findUserByUsername(String username){
+		User user = new User();
+		user.setUsername(username);
+		return findUserByUsername(user);
+	}
 	//dangerous
 	//check call hierarchy to make sure it is not called in deployment
-	@SessionDependant
 	public void flushUsers(){
 		userRepository.deleteAll();
 	}
 	
-	@SessionDependant
+	
 	public List<User> getAllUsers(boolean excludeSelf){
 		List<User> allUsers = userRepository.getAll();
 		if(excludeSelf){
@@ -61,14 +65,14 @@ public class RegistrationService {
 		return allUsers;
 	}
 	
-	@SessionDependant
+	
 	public List<String> getAllUsernames(boolean excludeSelf){
 		List<String> allUsernames = userRepository.getAllUsernames();
 		if(excludeSelf) allUsernames.remove(allUsernames.indexOf(getLoggedInUser().getUsername()));
 		return allUsernames;
 	}
 	
-	@SessionDependant
+	
 	public boolean isUserAdmin(User user){
 		try{
 			logger.debug(user.getUsername());
@@ -99,7 +103,7 @@ public class RegistrationService {
 			return null;
 		}
 	}
-	@SessionDependant
+	
 	public User getLoggedInDbUser(){
 		try{
 			UserDetails user = getLoggedInUser();

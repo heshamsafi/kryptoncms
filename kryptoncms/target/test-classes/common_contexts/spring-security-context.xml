@@ -16,7 +16,7 @@
 		<intercept-url pattern="/membership/login" access="permitAll" />
 		<intercept-url pattern="/membership/register" access="permitAll" />
 		<intercept-url pattern="/membership/register/**" access="permitAll" />
-<!-- 		<intercept-url pattern="/comments/**" access="isAuthenticated()" /> -->
+		<intercept-url pattern="/comments/**" access="isAuthenticated()" />
 		<intercept-url pattern="/chat/**" access="isAuthenticated()" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		<access-denied-handler error-page="/denied" />
