@@ -51,7 +51,7 @@ public class CommentService extends edu.asu.krypton.service.CommentableService<C
 	}
 	
 	@SessionDependant
-	public List<Comment> getByParentId(Long parentId,String parentType) throws CustomRuntimeException{
+	public List<Comment> getByParentId(String parentId,String parentType) throws CustomRuntimeException{
 		try{
 			Class<? extends Commentable> commentable = parentEntities.get(parentType).getCommentable();
 			if (commentable == null) throw new NullPointerException();
@@ -64,7 +64,7 @@ public class CommentService extends edu.asu.krypton.service.CommentableService<C
 	}
 	
 	@SessionDependant
-	public List<OutBoundCommentProxy> getProxyByParentId(Long parentId,String parentType) throws CustomRuntimeException{
+	public List<OutBoundCommentProxy> getProxyByParentId(String parentId,String parentType) throws CustomRuntimeException{
 		return convertEntitiesToProxies(
 				getByParentId(parentId, parentType)
 		);
@@ -76,12 +76,12 @@ public class CommentService extends edu.asu.krypton.service.CommentableService<C
 		return proxies;
 	}
 	
-	public Comment insert(Long parentId,String parentType,String commentContent) throws CustomRuntimeException{
+	public Comment insert(String parentId,String parentType,String commentContent) throws CustomRuntimeException{
 		return insert(parentId,parentType,commentContent,registrationService.getLoggedInDbUser());
 	}
 	
 	@SessionDependant
-	public Comment insert(Long parentId,String parentType,String commentContent,User author) throws CustomRuntimeException{
+	public Comment insert(String parentId,String parentType,String commentContent,User author) throws CustomRuntimeException{
 		edu.asu.krypton.service.CommentableService<?> service = parentEntities.get(parentType).getService();
 		Comment comment = parentEntities.get(parentType).instantiateDbEntity();
 		comment.setParent(service.findById(parentId));

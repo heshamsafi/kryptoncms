@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller
+//@Controller
 @RequestMapping(value="/membership/social/facebook")
 public class FacebookController extends edu.asu.krypton.controllers.Controller {
 	
-	@Inject
+//	@Inject
 	private ConnectionRepository connectionRepository;
 	
 	private final String DEFAULT_DIR  = "connect/facebook/";

@@ -1,11 +1,10 @@
 package edu.asu.krypton.model.message_proxies;
 
 import edu.asu.krypton.model.persist.db.Comment;
-import edu.asu.krypton.service.SessionDependant;
 
 public class OutBoundCommentProxy {
-	private Long id;
-	private Long parentId;
+	private String id;
+	private String parentId;
 	private String parentType;
 	private String content;
 	private String username;
@@ -29,10 +28,10 @@ public class OutBoundCommentProxy {
 				"Comment":commentEntity.getParent().getClass().getSimpleName());
 	}
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getContent() {
@@ -56,11 +55,11 @@ public class OutBoundCommentProxy {
 		this.noOfReplies = noOfReplies;
 	}
 
-	public Long getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(Long parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 

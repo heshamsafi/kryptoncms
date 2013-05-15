@@ -94,7 +94,7 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 		   	 @RequestBody String requestBody// i want to check it before de-serialializing it
 		   	 //otherwise i would have used jackson's interceptor
 			,@PathVariable String parentType
-			,@PathVariable long   parentId
+			,@PathVariable String parentId
 			,AtmosphereResource atmosphereResource) throws CustomRuntimeException, JsonGenerationException, JsonMappingException, IOException{
 		if(requestBody.equals("closing")){
 			System.err.println("comments -- close request but i am too much of a dumbass to close -----------------------------------");
@@ -128,7 +128,7 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 	@RequestMapping(value="/{parentType}/{parentId}",method=RequestMethod.GET)
 	public @ResponseBody QueryMessage<OutBoundCommentProxy> getComments(
 				@PathVariable String parentType,
-				@PathVariable long   parentId					){
+				@PathVariable String   parentId					){
 		QueryMessage<OutBoundCommentProxy> queryMessage = new QueryMessage<OutBoundCommentProxy>();
 		try{
 			queryMessage.setQueryResult(commentService.getProxyByParentId(parentId, parentType))

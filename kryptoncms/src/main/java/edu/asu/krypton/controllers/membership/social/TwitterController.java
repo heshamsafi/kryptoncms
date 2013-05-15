@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.krypton.model.message_proxies.membership.social.twitter.MessageForm;
 
-@Controller
+//@Controller
 @RequestMapping(value="/membership/social/twitter")
 public class TwitterController extends edu.asu.krypton.controllers.Controller {
 	
-	@Inject
+//	@Inject
 	private ConnectionRepository connectionRepository;
 	
 	// Yahoo Where On Earth ID representing the entire world

@@ -3,60 +3,35 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-/*
- * missing the relationship with the RegisteredUser entity
- */
-//Hesham : I am sorry toba but i am going to have to mess with your code :)
-
-// i thought about generics but i am not sure if and how hibernate can handle that .... lets try it
-// later when we have more time to spare
-@Inheritance(
-		//it cannot be Single table with a discriminator column 
-		//bcz that would violate foreign key constraint
-		strategy=InheritanceType.JOINED
-)
-//@DiscriminatorColumn(name="CommentType")
-//@MappedSuperclass//rather than an entity
-@Entity
+@Document
 public abstract class Comment implements Commentable {
 	@Id
-	@GeneratedValue
-	private Long id;
+	private String id;
 
 	private String content;
 	
-	@OneToMany(mappedBy="parent")
-	@Cascade({CascadeType.ALL})
+	@DBRef
 	@JsonIgnore
 	private Collection<CommentComment> comments = new ArrayList<CommentComment>();
 	
-	@ManyToOne
+	@DBRef
 	@JsonIgnore
 	private User author;
 	
 	@XmlAttribute
-	public Long getId() {
+	public String getId() {
 		return this.id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

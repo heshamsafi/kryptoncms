@@ -11,9 +11,9 @@
 	   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
 	   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<context:annotation-config />
-	<tx:annotation-driven  />
+<!-- 	<tx:annotation-driven  /> -->
 	<aop:aspectj-autoproxy />
-	<import resource="classpath:/common_contexts/hibernate-context.xml"/>
+	<import resource="classpath:/common_contexts/data-persistence-context.xml"/>
 	<!-- classes in src directory are annotated with stereotypes (auto-discovery annotations)
 		 but the their context is not loaded bcz this is unit testing ... each module should be
 		 tested separately ... instead we instantiate the beans we need here in xml.  -->
@@ -25,8 +25,8 @@
 		</constructor-arg>
 	</bean>	 
 	
-	<bean id="dao" 			        class="edu.asu.krypton.model.repository.DataAccessObject" />
-	<bean id="dataRepositoryAspect" class="edu.asu.krypton.aspects.DataRepositoryAspect" />
+<!-- 	<bean id="dao" 			        class="edu.asu.krypton.model.repository.DataAccessObject" /> -->
+<!-- 	<bean id="dataRepositoryAspect" class="edu.asu.krypton.aspects.DataRepositoryAspect" /> -->
 	<bean id="cryptoAspect"         class="edu.asu.krypton.aspects.CryptoAspect" />
 	<bean id="commentService"		class="edu.asu.krypton.service.CommentService" />
 	<bean id="articleService"		class="edu.asu.krypton.service.ArticleService" />
@@ -34,7 +34,7 @@
 	<bean id="articleRepository"    class="edu.asu.krypton.model.repository.ArticleRepository" />
 	<bean id="registrationService"  class="edu.asu.krypton.service.RegistrationService" />
 	<bean id="userRepository"       class="edu.asu.krypton.model.repository.UserRepository" />
-	<bean id="roleRepository"       class="edu.asu.krypton.model.repository.RoleRepository" />
+<!-- 	<bean id="roleRepository"       class="edu.asu.krypton.model.repository.RoleRepository" /> -->
 	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder" />
 	<bean id="hash" 				class="edu.asu.krypton.service.crypto.Hash" />
 </beans>

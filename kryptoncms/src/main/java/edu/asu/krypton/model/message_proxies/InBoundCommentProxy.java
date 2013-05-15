@@ -1,13 +1,13 @@
 package edu.asu.krypton.model.message_proxies;
 
 public class InBoundCommentProxy {
-	private Long parentId;
+	private String parentId;
 	private String commentableType;
 	private String content;
-	public Long getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
-	public void setParentId(Long parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 	public String getCommentableType() {

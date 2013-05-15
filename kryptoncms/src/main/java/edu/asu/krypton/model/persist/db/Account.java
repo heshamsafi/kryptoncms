@@ -2,24 +2,20 @@ package edu.asu.krypton.model.persist.db;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Account {
 
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
 	private int id;
 	
-	@Column(unique=true)
 	private String username;
 	
-	@Column(nullable=false)
 	private String password;
-	@Column(nullable=false)
 	private String firstName;
-	@Column(nullable=false)
 	private String lastName;
 	
 	public int getId() {

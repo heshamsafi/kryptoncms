@@ -14,7 +14,7 @@ public class CryptoAspect {
 	@Autowired(required=true)
 	private Hash hash;
 	
-	@Before("execution(public boolean edu.asu.krypton.service.RegistrationService.registerUser(..)) && args(user,..)")
+	@Before("execution(public void edu.asu.krypton.service.RegistrationService.registerUser(..)) && args(user,..)")
 	public void hashPassword(User user){
 		user.setPassword(
 				getHash().hash(

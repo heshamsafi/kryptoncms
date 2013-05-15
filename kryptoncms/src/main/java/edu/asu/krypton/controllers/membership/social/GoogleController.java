@@ -46,7 +46,7 @@ import edu.asu.krypton.service.membership.social.google.tasks.TaskSearchForm;
 
 
 
-@Controller
+//@Controller
 @RequestMapping(value="/membership/social/google")
 public class GoogleController extends edu.asu.krypton.controllers.Controller {
 
@@ -62,7 +62,7 @@ public class GoogleController extends edu.asu.krypton.controllers.Controller {
 	
 	private final String BODIES_PREFIX = "bodies/";
 	
-	@Inject
+//	@Inject
 	private ConnectionRepository connectionRepository;
 
 	

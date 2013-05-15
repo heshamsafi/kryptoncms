@@ -1,6 +1,7 @@
 package edu.asu.krypton.controllers;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.MembershipStatus;
 import edu.asu.krypton.model.message_proxies.Message;
-import edu.asu.krypton.model.message_proxies.QueryMessage;
-import edu.asu.krypton.model.persist.db.Role;
 import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.service.RegistrationService;
 
@@ -98,15 +97,10 @@ public class MembershipController extends edu.asu.krypton.controllers.Controller
 	public @ResponseBody Message register(@RequestBody User user,@PathVariable int roleRank){
 			logger.info("username = "+user.getUsername());
 			logger.info("password = "+user.getPassword());
-			//logger.info("rememberMe = "+Boolean.toString(user.isRememberMe()));
-			Role role = new Role();
-			role.setRole(roleRank);
-			role.setUser(user);
-			user.setRole(role);
+			user.setRole(BigInteger.valueOf(roleRank));
 			try{
-				return new Message().setSuccessful(
-						getRegistrationService().registerUser(user,role)
-					);
+				getRegistrationService().registerUser(user);
+				return new Message().setSuccessful(true);
 			}catch (CustomRuntimeException ex) {
 				return new Message().setSuccessful(false).setErrorMessage(ex.getMessage());
 			}

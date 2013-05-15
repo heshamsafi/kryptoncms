@@ -29,11 +29,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@Controller
+//@Controller
 @RequestMapping(value="/membership/social/linkedin")
 public class LinkedInController extends edu.asu.krypton.controllers.Controller {
 
-	@Inject
+//	@Inject
 	private ConnectionRepository connectionRepository;
 	
 	private final String DEFAULT_DIR  = "connect/linkedin/";

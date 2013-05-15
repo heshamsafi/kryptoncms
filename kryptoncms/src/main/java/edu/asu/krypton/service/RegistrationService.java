@@ -11,34 +11,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
-import edu.asu.krypton.model.persist.db.Role;
 import edu.asu.krypton.model.persist.db.User;
-import edu.asu.krypton.model.repository.RoleRepository;
 import edu.asu.krypton.model.repository.UserRepository;
 
 @Service
 public class RegistrationService {
 	@Autowired(required=true)
 	private UserRepository userRepository;
-	@Autowired(required=true)
-	private RoleRepository roleRepository;
 	
 	private final static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 	
 	@SessionDependant
-	public boolean unregisterUser(User user){
-		return userRepository.delete(user);
+	public void unregisterUser(User user){
+		userRepository.delete(user);
 	}
 	@SessionDependant
-	public boolean registerUser(User user,Role role) throws CustomRuntimeException{
-		return userRepository.saveOrUpdate(user)
-			    &roleRepository.saveOrUpdate(role);
+	public void registerUser(User user) throws CustomRuntimeException{
+		if(userRepository.findByUsername(user.getUsername()) == null)
+			userRepository.saveOrUpdate(user);
+		else throw new CustomRuntimeException("This username is taken");
 	}
 	@SessionDependant
 	public User findUserByUsername(User exampleUser){
 		User domainUser = null;
 		try{
-			domainUser = (User)userRepository.findByExample(exampleUser).get(0);
+			domainUser = //(User)userRepository.findByExample(exampleUser).get(0);
+						userRepository.findByUsername(exampleUser.getUsername());
 			logger.debug("db user" + domainUser.getUsername());
 		} catch(NullPointerException ex){
 		} catch(IndexOutOfBoundsException ex){
@@ -74,9 +72,11 @@ public class RegistrationService {
 	public boolean isUserAdmin(User user){
 		try{
 			logger.debug(user.getUsername());
-			user = userRepository.findByExample(user).get(0);
+			user = 
+					//userRepository.findByExample(user).get(0);
+					userRepository.findById(user.getId());
 			
-			return user.getRole().getRole() == 1;
+			return user.getRole().intValue() == 1;
 		}catch(NullPointerException ex){
 			return false;
 		}
@@ -109,12 +109,6 @@ public class RegistrationService {
 		}catch(NullPointerException ex){
 			return null;
 		}
-	}
-	public RoleRepository getRoleRepository() {
-		return roleRepository;
-	}
-	public void setRoleRepository(RoleRepository roleRepository) {
-		this.roleRepository = roleRepository;
 	}
 	public UserRepository getUserRepository() {
 		return userRepository;

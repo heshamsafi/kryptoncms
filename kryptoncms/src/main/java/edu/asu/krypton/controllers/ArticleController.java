@@ -31,11 +31,11 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	
 	@RequestMapping(method=RequestMethod.GET,value="edit")
 	public String getHome(HttpServletRequest request,Model model){
-		return getHome(new Long(0), request, model);
+		return getHome(null, request, model);
 	}
 	@RequestMapping(method=RequestMethod.GET,value="edit/{id}")
-	public String getHome(@PathVariable Long id,HttpServletRequest request,Model model){
-		if(id > 0){
+	public String getHome(@PathVariable String id,HttpServletRequest request,Model model){
+		if(id != null){
 			Article article= articleService.findById(id);
 			model.addAttribute("article", article);
 		}
@@ -57,27 +57,28 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	
 	
 	@RequestMapping(value = "edit/{id}",method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Message saveOrUpdate(@PathVariable Long id,@RequestBody Article article)throws Exception
+	public @ResponseBody Message saveOrUpdate(@PathVariable String id,@RequestBody Article article)throws Exception
 	{	
 		article.setId(id);
 		return saveOrUpdate(article);
 	}
 	
 	@RequestMapping(value="{id}",method=RequestMethod.GET)
-	public String getArticle(@PathVariable Long id,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+	public String getArticle(@PathVariable String id,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
 		Article article = articleService.findById(id);
 		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
-		Long nextId = articleService.findById(id+1) == null?0:id+1;
-		Long prevId = articleService.findById(id-1) == null?0:id-1;
+//		Long nextId = articleService.findById(id+1) == null?0:id+1;
+//		Long prevId = articleService.findById(id-1) == null?0:id-1;
 		
 		model.addAttribute("article", article)
-			 .addAttribute("nextId", nextId)
-			 .addAttribute("prevId", prevId);
+//			 .addAttribute("nextId", nextId)
+//			 .addAttribute("prevId", prevId)
+			 ;
 		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
 	}
-	@RequestMapping(value="",method=RequestMethod.GET)
-	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
-		return getArticle(new Long(1), request, model);
-	}
+//	@RequestMapping(value="",method=RequestMethod.GET)
+//	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+//		return getArticle(new Long(1), request, model);
+//	}
 	
 }

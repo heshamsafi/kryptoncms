@@ -30,12 +30,12 @@ import edu.asu.krypton.model.message_proxies.QueryMessage;
 import edu.asu.krypton.model.repository.DataAccessObject;
 import edu.asu.krypton.service.SessionDependant;
 
-@Controller
-@RequestMapping(value="webservice")
+//@Controller
+//@RequestMapping(value="webservice")
 public class GenericDatabaseWebServiceController {
 
-	@Autowired(required=true)
-	private DataAccessObject<?> dao;
+//	@Autowired(required=true)
+//	private DataAccessObject<?> dao;
 	 
 	@Autowired(required=true)
 	private Jaxb2Marshaller jaxbMarshaller;

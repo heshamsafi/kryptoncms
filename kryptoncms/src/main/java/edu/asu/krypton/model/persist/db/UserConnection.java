@@ -2,42 +2,32 @@ package edu.asu.krypton.model.persist.db;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import org.hibernate.annotations.Index;
-
-@Entity
+@Document
 public class UserConnection implements Serializable{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(nullable=false)
-	@Index(name="UserConnectionRank")
 	private String userId;
 	
-	@Id
-	@Column(nullable=false)
-	@Index(name="UserConnectionRank")
+	@Indexed
 	private String providerId;
 	
-	@Id
+	@Indexed
 	private String providerUserId;
 	
-	@Column(nullable=false)
-	@Index(name="UserConnectionRank")
+	@Indexed
 	private int rank;
 	
 	private String displayName;
 	private String profileUrl;
 	private String imageUrl;
 	
-	@Column(nullable=false)
 	private String accessToken;
 	
 	private String secret;

@@ -9,27 +9,25 @@
 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 	   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-	   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-	<context:annotation-config />
-	<tx:annotation-driven  />
-	<aop:aspectj-autoproxy />
-	<import resource="classpath:/common_contexts/hibernate-context.xml"/>
+	   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+	   >
+<!-- 	<context:annotation-config /> -->
+<!-- 	<aop:aspectj-autoproxy /> -->
+	<import resource="classpath:/common_contexts/root-context.xml"/>
 	<!-- classes in src directory are annotated with stereotypes (auto-discovery annotations)
 		 but the their context is not loaded bcz this is unit testing ... each module should be
 		 tested separately ... instead we instantiate the beans we need here in xml.  -->
-    <bean class="java.lang.String"  id="hashSalt" >
-		<constructor-arg type="java.lang.String" >
-			<value>
-				e99c9384694b3239059351543e0f737fcdb87b06
-			</value>
-		</constructor-arg>
-	</bean>
-	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder" />
-	<bean id="registrationService"  class="edu.asu.krypton.service.RegistrationService" />
-	<bean id="userRepository"       class="edu.asu.krypton.model.repository.UserRepository" />
-	<bean id="roleRepository"       class="edu.asu.krypton.model.repository.RoleRepository" />
-	<bean id="dao" 			        class="edu.asu.krypton.model.repository.DataAccessObject" />
-	<bean id="cryptoAspect"         class="edu.asu.krypton.aspects.CryptoAspect" />
-	<bean id="dataRepositoryAspect" class="edu.asu.krypton.aspects.DataRepositoryAspect" />
-	<bean id="hash" 				class="edu.asu.krypton.service.crypto.Hash" />
+<!--     <bean class="java.lang.String"  id="hashSalt" > -->
+<!-- 		<constructor-arg type="java.lang.String" > -->
+<!-- 			<value> -->
+<!-- 				e99c9384694b3239059351543e0f737fcdb87b06 -->
+<!-- 			</value> -->
+<!-- 		</constructor-arg> -->
+<!-- 	</bean> -->
+<!-- 	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder" /> -->
+<!-- 	<bean id="registrationService"  class="edu.asu.krypton.service.RegistrationService" /> -->
+<!-- 	<bean id="userRepository"       class="edu.asu.krypton.model.repository.UserRepository" /> -->
+<!-- 	<bean id="roleRepository"       class="edu.asu.krypton.model.repository.RoleRepository" /> -->
+<!-- 	<bean id="cryptoAspect"         class="edu.asu.krypton.aspects.CryptoAspect" /> -->
+<!-- 	<bean id="hash" 				class="edu.asu.krypton.service.crypto.Hash" /> -->
 </beans>

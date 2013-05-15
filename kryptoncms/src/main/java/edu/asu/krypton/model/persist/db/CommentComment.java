@@ -1,18 +1,17 @@
 package edu.asu.krypton.model.persist.db;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document
 @XmlRootElement
 public class CommentComment extends Comment {
 
-	@ManyToOne
+	@DBRef
 	@JsonIgnore
 	private Comment parent;
 

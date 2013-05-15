@@ -22,9 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired(required=true)
 	private RegistrationService registrationService;
 	
-//	@Autowired(required=true)
-//	private EhCacheBasedUserCache userCache;
-	
 	
 	/**
 	 * Returns a populated {@link UserDetails} object.
@@ -57,7 +54,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 					accountNonExpired,
 					credentialsNonExpired,
 					accountNonLocked,
-					getAuthorities(domainUser.getRole().getRole())
+					getAuthorities(domainUser.getRole().intValue())
 			);
 			//getLoggedInUser().setUsername(user.getPassword());
 			return user;

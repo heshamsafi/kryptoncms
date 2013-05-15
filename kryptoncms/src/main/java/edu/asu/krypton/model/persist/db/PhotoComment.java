@@ -1,12 +1,12 @@
 package edu.asu.krypton.model.persist.db;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document
 public class PhotoComment extends Comment{
 
-	@ManyToOne
+	@DBRef
 	private Photo parent;
 
 	@Override

@@ -17,5 +17,4 @@
 	<bean id="albumRepository" class="edu.asu.krypton.model.repository.AlbumRepository"></bean>
 	<bean id="photoRepository" class="edu.asu.krypton.model.repository.PhotoRepository"></bean>
 	<bean id="commentRepository" class="edu.asu.krypton.model.repository.CommentRepository"></bean>
-	<bean id="dao" 			  class="edu.asu.krypton.model.repository.DataAccessObject"></bean>
 </beans>

@@ -35,12 +35,12 @@ import edu.asu.krypton.service.membership.social.account.UsernameAlreadyInUseExc
 import edu.asu.krypton.service.membership.social.signin.SignInUtils;
 import edu.asu.krypton.service.membership.social.signup.SignupForm;
 
-@Controller
+//@Controller
 public class SignupController {
 
 	private final AccountRepository accountRepository;
 
-	@Inject
+//	@Inject
 	public SignupController(AccountRepository accountRepository) {
 		this.accountRepository = accountRepository;
 	}

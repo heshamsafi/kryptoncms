@@ -20,73 +20,17 @@
 <!-- 	    <cloud:service-properties id="serviceProperties"/> -->
 <!-- 	</beans> -->
 	
-	
-	<!-- Hesham: this is the datasource that works for me, declare your own 
-		and inject it in the session factory ... but don't modify this one .. de bta3ty !! :D -->
-	<bean id="dataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" >
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://#{serviceProperties['kryptoncms.db']}" />
-		<property name="username" value="#{serviceProperties['kryptoncms.username']}" />
-		<property name="password" value="#{serviceProperties['kryptoncms.password']}" />
-		<property name="initialSize" value="5" />
-		<property name="maxActive" value="10" />
-		<property name="dialect" value="org.hibernate.dialect.MySQLDialect"></property>
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
 	</bean>
-	
-	<!-- h2 databases have the advantage of having a server embedded in the app without so we don't have to start a standalone server -->
-	
-<!-- 	<bean id="dataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" > -->
-<!-- 		<property name="driverClassName" value="org.h2.Driver" /> -->
-<!-- 		<property name="url" value="jdbc:h2:mem:krypton" /> -->
-<!-- 		<property name="dialect" value="org.hibernate.dialect.H2Dialect"></property> -->
-<!-- 	</bean> -->
-	
-	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL" >
-		<jdbc:script location="classpath:/org/springframework/social/connect/jdbc/JdbcUsersConnectionRepository.sql" />
-		<jdbc:script location="classpath:/edu/asu/krypton/model/persist/db/scripts/Account.sql" />
-	</jdbc:initialize-database>
-	<!-- postgresql has problems because some of the entity names and property names conflict with some sql reserved words like `User` 
-	this is on our to do list  -->
-<!-- 	<bean id="postresqlDataSource" class="edu.asu.krypton.service.DialectAwareBasicDataSource" > -->
-<!-- 		<property name="driverClassName" value="org.postgresql.Driver" /> -->
-<!-- 		<property name="url" value="jdbc:postgresql://localhost:5432/krypton" /> -->
-<!-- 		<property name="username" value="postgres" /> -->
-<!-- 		<property name="password" value="root" /> -->
-<!-- 		<property name="initialSize" value="5" /> -->
-<!-- 		<property name="maxActive" value="10" /> -->
-<!-- 		<property name="dialect" value="org.hibernate.dialect.PostgreSQLDialect"></property> -->
-<!-- 	</bean> -->
-	
-	<!-- i upgraded hibernate to version 4.1 ! -->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="packagesToScan" value="edu.asu.krypton.model.persist.db" />
-		<property name="dataSource" ref="dataSource" />
-		<property name="hibernateProperties">
-			<props>
-<!-- 			Spring expression lang. (SPEL) -->
-				<prop key="dialect">
-<!-- 				    #{dataSource.dialect} -->
-<!-- 					org.hibernate.dialect.H2Dialect -->
-					org.hibernate.dialect.MySQLDialect
-				</prop>
-				<prop key="show_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-			</props>
-		</property>
-	</bean>
-	
-	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-       <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-	
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" c:_-ref="dataSource" />
-		
+
+	<mongo:db-factory host="localhost" port="27017" dbname="kryptoncms"/>
+
     <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name = "classesToBeBound">
             <array>
                 <value>edu.asu.krypton.model.persist.db.User</value>
-                <value>edu.asu.krypton.model.persist.db.Role</value>
+<!--                 <value>edu.asu.krypton.model.persist.db.Role</value> -->
                 <value>edu.asu.krypton.model.persist.db.Article</value>
                 <value>edu.asu.krypton.model.persist.db.ArticleComment</value>
                 <value>edu.asu.krypton.model.persist.db.CommentComment</value>
@@ -97,7 +41,7 @@
     </bean>
 	<tx:annotation-driven />
 	
-		<beans profile="default">
+	<beans profile="default">
 		<util:properties id="serviceProperties">
 			<prop key="kryptoncms.db">localhost:3306/krypton</prop>
 			<prop key="kryptoncms.username">root</prop>

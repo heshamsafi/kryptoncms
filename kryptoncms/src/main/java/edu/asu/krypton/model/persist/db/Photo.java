@@ -3,26 +3,22 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document
 public class Photo implements Commentable{
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	private String id;
 	
 	private String path;
 
-	@ManyToOne
+	@DBRef
 	private Album parent;
 	
-	@OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+	@DBRef
 	private Collection<PhotoComment> comments = new ArrayList<PhotoComment>();
 	
 	public Collection<PhotoComment> getComments() {
@@ -41,11 +37,11 @@ public class Photo implements Commentable{
 		this.parent = parent;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

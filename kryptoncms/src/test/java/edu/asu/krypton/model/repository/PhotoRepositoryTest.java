@@ -33,7 +33,7 @@ public class PhotoRepositoryTest {
 		Photo photo;
 		PhotoComment photoComment;
 		
-		photoRepository.getDao().openSession();
+//		photoRepository.getDao().openSession();
 		
 		for(int i = 1; i <=2; i++){
 			album = new Album();
@@ -75,7 +75,7 @@ public class PhotoRepositoryTest {
 //			albumRepository.saveOrUpdate(album2);
 //			commentRepository.saveOrUpdate(photoComment);
 //		}
-		photoRepository.getDao().killSession(true);
+//		photoRepository.getDao().killSession(true);
 	}
 
 	public AlbumRepository getAlbumRepository() {

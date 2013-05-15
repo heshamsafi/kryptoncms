@@ -92,11 +92,4 @@ public class ArticleRepository extends edu.asu.krypton.model.repository.Reposito
 //		return comments;
 //	}
 
-	public DataAccessObject<Article> getDao() {
-		return dao;
-	}
-
-	public void setDao(DataAccessObject<Article> dao) {
-		this.dao = dao;
-	}
 }

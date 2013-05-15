@@ -49,7 +49,7 @@ import org.springframework.web.util.WebUtils;
 //TODO: I did alot of copy and paste here feel free to refactor the code if you know how to do this through inheritance
 //keeping in mind that you will have to override private methods.
 //and you will have to somehow inherit edu.asu.krypton.controllers.Controller as well ! :)
-@Controller
+//@Controller
 @RequestMapping("/membership/social/")
 public class ConnectController extends edu.asu.krypton.controllers.Controller {
 	
@@ -74,7 +74,7 @@ public class ConnectController extends edu.asu.krypton.controllers.Controller {
 	 * @param connectionFactoryLocator the locator for {@link ConnectionFactory} instances needed to establish connections
 	 * @param connectionRepository the current user's {@link ConnectionRepository} needed to persist connections; must be a proxy to a request-scoped bean
 	 */
-	@Inject
+//	@Inject
 	public ConnectController(ConnectionFactoryLocator connectionFactoryLocator, ConnectionRepository connectionRepository) {
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.connectionRepository = connectionRepository;

@@ -3,13 +3,13 @@ package edu.asu.krypton.model;
 import edu.asu.krypton.model.message_proxies.Message;
 
 public class ArticleSubmitMessage extends Message {
-	private Long id;
+	private String id;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public ArticleSubmitMessage setId(Long id) {
+	public ArticleSubmitMessage setId(String id) {
 		this.id = id;
 		return this;
 	}

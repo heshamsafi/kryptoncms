@@ -54,6 +54,7 @@ function(
 		commentManager = null;
 	$(document).ready(function(){
 		pageScopeMain();
+		sessionScopeMain();
 		Ajaxifier.getInstance(pageScopeMain,collectGarbage);
 		var pin = false;
 		var hoverHandler = function(){
@@ -71,6 +72,16 @@ function(
 		});
 //		$("#admin_nav").hover(hoverHandler);
 	});
+	function sessionScopeMain(){
+		if(!FormSerializer.getInstance())
+			FormSerializer.getInstance();//global configuration for singleton instance of
+		
+		var membership = Membership.getInstance();
+		membership.bindRegisterForm("form.membership_register");
+		membership.bindLoginForm("form.membership_login");
+		membership.attachLogoutHandler();
+		membership.updateLoginStatus();
+	}
 	function pageScopeMain(){
 		new Scaffolder();
 		new ArticleEditor();
@@ -81,28 +92,18 @@ function(
 				      return $('#popover_content_wrapper').html();
 			   }
 		});
-//		$( "#testing" ).resizable({
-//		     // animate: true,
-//		      alsoResizeReverseX: "#body"
-//		});
-		if(!FormSerializer.getInstance())
-			FormSerializer.getInstance();//global configuration for singleton instance of
+
 		//form serializer
 		new DataToggleButton().patch();
 		new Translator();
 		
 		new FileUploader();
 		
-		var membership = Membership.getInstance();
-		membership.bindRegisterForm("form.membership_register");
-		membership.bindLoginForm("form.membership_login");
-		membership.attachLogoutHandler();
-		membership.updateLoginStatus();
 		
 		new Validator("form[data-validation-enable]").bind();
 		
 		if(!navigationMenu)
-		new NavigationMenu("#mainNav").highlightMenu();
+			new NavigationMenu("#mainNav").highlightMenu();
 		
 		chatter = new Chatter();
 		chatter.$elements.$chatterForm          = $("#chatter_form");
@@ -127,13 +128,7 @@ function(
 		
 		var photoAlbumManager = new PhotoAlbumManager();
 		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
-		photoAlbumManager.listPhotoAlbums();
-		
-
-//		$('#trig').click(function () {
-//			  $('#col1').toggleClass('span12 span3');
-//			  $('#col2').toggleClass('span0 span9');
-//	    });​
+		photoAlbumManager.listPhotoAlbums();​
 	}
 	function collectGarbage(){
 		if(chatter.activated){

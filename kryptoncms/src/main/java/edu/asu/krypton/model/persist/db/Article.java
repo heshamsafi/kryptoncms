@@ -3,12 +3,8 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -16,14 +12,15 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-//@AttributeOverrides(@AttributeOverride(name="name", column=@Column(name="name")))
+@Document
 @XmlRootElement
 public class Article implements Commentable {
 	@Id
-	@GeneratedValue
-	private Long id;
+	private String id;
 	
 	private String content;
 	
@@ -34,10 +31,7 @@ public class Article implements Commentable {
 	private String description;
 	
 	
-	@OneToMany(mappedBy="parent"
-			,fetch=FetchType.LAZY
-			)
-	@Cascade({CascadeType.ALL})
+	@DBRef
 	@JsonIgnore
 	private Collection<ArticleComment> comments = new ArrayList<ArticleComment>();
 	
@@ -66,10 +60,10 @@ public class Article implements Commentable {
 		this.description = description;
 	}
 	@XmlAttribute
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	

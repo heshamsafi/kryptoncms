@@ -19,7 +19,7 @@ import edu.asu.krypton.model.persist.db.User;
  * @author hesham
  * this is great for prefilling the database (Y) aswell as testing
  */
-@Transactional
+//@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class CommentServiceTest{
@@ -74,8 +74,6 @@ public class CommentServiceTest{
 			commentCounter = 1,
 			commentCommentCounter=1,
 			userCounter	   = 0;
-		//force open the session 3alashan el lazy loading
-		articleService.getArticleRepository().getDao().openSession();
 		
 		List<Article> allArticles = articleService.getAll();
 		for(Article article:allArticles){
@@ -98,7 +96,6 @@ public class CommentServiceTest{
 			}++articleCounter;
 			commentCounter = 0;
 		}
-		articleService.getArticleRepository().getDao().killSession(true);
 	}
 	
 	public CommentService getCommentService() {
