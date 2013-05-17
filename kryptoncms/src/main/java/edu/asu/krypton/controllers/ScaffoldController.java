@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.wiztools.paginationlib.PaginatedItems;
+import org.wiztools.paginationlib.PaginationUtil;
 
 @RequestMapping("/scaffold")
 @org.springframework.stereotype.Controller
@@ -43,7 +45,7 @@ public class ScaffoldController extends Controller {
 	
 	@RequestMapping(method=RequestMethod.GET,value="")
 	public String getAllEntities(Model model,HttpServletRequest request) throws IOException, ClassNotFoundException{
-	 List<String> entities = new ArrayList<String>();
+	 Collection<String> entities = new ArrayList<String>();
 	 for(Class docName : findDocuments("edu.asu.krypton.model.persist.db"))
 	     entities.add(docName.getSimpleName());
 
@@ -57,8 +59,12 @@ public class ScaffoldController extends Controller {
 			@PathVariable String entity,
 			@RequestParam(required=false,defaultValue="") String id,
 			@RequestParam(required=false,defaultValue="") String ownerType,
-			@RequestParam(required=false,defaultValue="") String ownerId) throws ClassNotFoundException{
+			@RequestParam(required=false,defaultValue="") String ownerId,
+			@RequestParam(required=false,defaultValue="1") int pageNo,
+			@RequestParam(required=false,defaultValue="30") int pageSize) throws ClassNotFoundException{
+		long totalSize = 0;
 		try {
+			
 		    Query query = new Query();
 		    Collection<?> queryResult = null;
 		    Class<?> entityClass = Class.forName("edu.asu.krypton.model.persist.db."+entity);
@@ -89,19 +95,24 @@ public class ScaffoldController extends Controller {
 		    		method.setAccessible(true);
 		    		queryResult = (Collection<?>) method.invoke(mongoTemplate.findOne(query, ownerTypeClass));
 		    	}
-		    	//3alashan el lazy loading
-		    	//invoke all getters
-		    	//TODO: this is a work around we should find a better way to do this
-		    	for(Object obj : queryResult){
-		    		for(Method method: obj.getClass().getDeclaredMethods()){
-		    			if(method.getName().indexOf("get") == 0){
-		    				method.invoke(obj);
-		    			}
-		    		}
-		    	}
+		    	//i know this next line sucks ... and if you don't know why it does i will tell you
+		    	//paginating directly from database using mongodb's indexes is way faster than fetching every thing into the memory and then 
+		    	//manipulating that collections inside the memory ... if the entire collection is larger than the available memory size (god forbid)
+		    	//the server will crash and burn :)
+		    	//but i don't know how to paginate a dbref using mongo ... and if you do please change this next line and let me know how you did it :)
+		    	totalSize = queryResult.size();
+		    	queryResult = PaginationUtil.getPaginatedItems(queryResult, pageSize, pageNo).getPaginatedItems();
 		    } else {
 		    	query = new Query();
-		    	if(!id.equals("")) query.addCriteria(Criteria.where("id").is(id));
+		    	Query counterQuery = new Query();
+		    	query.limit(pageSize);
+		    	query.skip(pageSize*(pageNo-1));
+		    	if(!id.equals("")){
+		    		 Criteria criteria = Criteria.where("id").is(id);
+		    		 query.addCriteria(criteria);
+		    		 counterQuery.addCriteria(criteria);
+		    	}
+		    	totalSize = mongoTemplate.count(counterQuery, entityClass);
 		    	queryResult = mongoTemplate.find(query, entityClass);
 		    }   
 
@@ -113,6 +124,9 @@ public class ScaffoldController extends Controller {
 			System.out.println(entity +" is not a valid entity");
 			e.printStackTrace();
 		}
+		model.addAttribute("totalSize",totalSize)
+			 .addAttribute("pageSize",pageSize)
+			 .addAttribute("pageNo",pageNo);
 		return appropriateView(request, DEFAULT_BODIES_DIR+DEFAULT_BODY, defaultView(model,DEFAULT_BODY));
 	}
 	

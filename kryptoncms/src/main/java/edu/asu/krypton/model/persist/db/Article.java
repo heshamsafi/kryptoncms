@@ -1,19 +1,12 @@
 package edu.asu.krypton.model.persist.db;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -31,7 +24,13 @@ public class Article extends Commentable {
 	private String description;
 	
 	// momken ne7tag nzawed author ba3deen
+	
+	@Indexed
+	private Date date;
 
+	public Article(){
+		this.date = new Date();
+	}
 	@XmlAttribute
 	public String getContent() {
 		return content;
@@ -61,4 +60,17 @@ public class Article extends Commentable {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	@Override
+	public String toString() {
+		return String.format("[id=%s,content=%s,title=%s,description=%s,date=%s,comments=%s]",id,content,title,description,date,getComments());
+	}
+	
 }

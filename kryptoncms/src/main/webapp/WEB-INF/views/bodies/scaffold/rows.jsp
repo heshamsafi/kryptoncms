@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
-
+<%@ taglib prefix="customUtils" uri="/WEB-INF/spring/el_functions/customUtils.tld" %>
 <div class="page-header">
       <h1>Scaffold</h1>
 </div>
@@ -15,7 +15,9 @@
 </div>
 
 <form action='<c:url value="/scaffold/${entityClassName}/" />' method="DELETE">
-	<table class="table" class="scaffold" data-enable-selectable>
+	<table class="table" class="scaffold" data-enable-selectable data-enable-pagination
+										  data-pagination-page-size="${pageSize}" data-pagination-page-no="${pageNo}"
+										  data-pagination-total-size="${totalSize}">
 	<c:choose>
 		<c:when test="${entities.size() gt 0}">
 		<thead>
@@ -46,10 +48,28 @@
 					<c:when test="${fn:contains(entity[entityField.name].getClass().name,'edu.asu.krypton.model')}">
 						<c:url var="url" value="/scaffold" />
 						<c:set var="url" value="${url}/${entity[entityField.name].getClass().simpleName}?id=${entity[entityField.name]['id']}" />
-						<a data-ajax-enable href='${url}'>${entity[entityField.name].getClass().simpleName}#${entity[entityField.name]['id']}</a>
+						<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='${url}' rel="popover" data-content="<h5><b>${entity[entityField.name]['id']}</b></h5>" data-title="<h4>Id</h4>">${entity[entityField.name].getClass().simpleName}</a>
 					</c:when>			
 					<c:otherwise>
-						${entity[entityField.name]}
+						<c:set var="escapedVal" value="${customUtils:escapeHtml(entity[entityField.name].toString())}"/> 
+						<c:set var="cutoff" value="20"/>
+						<c:choose>
+							<c:when test="${escapedVal eq '[]'}">
+								None
+							</c:when>
+							<c:otherwise>
+								<span data-trigger="hover" data-html="true" data-placement="right" data-content='<h5><b>${fn:escapeXml(escapedVal)}</b></h5>' data-title='<h4>${entityField.name}</h4>' rel="popover" >
+									<c:choose>
+										<c:when test="${cutoff < escapedVal.length()}">
+											${escapedVal.substring(0,cutoff)}....
+										</c:when>
+										<c:otherwise>
+											${escapedVal}
+										</c:otherwise>
+									</c:choose>
+								</span>
+							</c:otherwise>
+						</c:choose>
 					</c:otherwise>
 				</c:choose>
 			</td>
@@ -65,6 +85,7 @@
 	</c:choose>
 	</table>
 </form>
+
 <div id="edit-add-modal" class="modal hide  fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<h1>
 	Coming Soon ...

@@ -33,7 +33,7 @@ public class CommentServiceTest{
 	@Autowired
 	private RegistrationService registrationService;
 	
-	private final int NUMBER_OF_ARTICLES = 1; 
+	private final int NUMBER_OF_ARTICLES = 10; 
 	private final int NUMBER_OF_COMMENTS_PER_ARTICLE = 20;
 	private final int NUMBER_OF_COMMENT_PER_COMMENT = 20;
 	private final int NUMBER_OF_COMMENT_PER_COMMENT_PER_COMMENT = 20;
@@ -63,7 +63,6 @@ public class CommentServiceTest{
 	}
 	
 	@Test
-	@SessionDependant
 	public void insertCommentComments(){
 		List<User> allUsers = registrationService.getAllUsers(false);
 		int numberOfUsers = allUsers.size();
@@ -80,6 +79,8 @@ public class CommentServiceTest{
 			for(Comment articleComment : article.getComments()){
 				for(int i=1;i<=NUMBER_OF_COMMENT_PER_COMMENT;i++){
 					try {
+//						Comment commentEntity = commentService.insert(comment.getParentId(), comment.getCommentableType(),comment.getContent(),user);
+
 						comment = getCommentService().insert(articleComment.getId(), Comment.class.getSimpleName(),String.format("comment#%d for comment#%d for articleNo#%d",i,commentCounter,articleCounter),allUsers.get((userCounter++)%numberOfUsers));
 						for(int j=1;j<=NUMBER_OF_COMMENT_PER_COMMENT_PER_COMMENT;j++){
 							try {

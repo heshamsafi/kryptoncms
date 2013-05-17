@@ -48,13 +48,11 @@ public class PhotoService extends CommentableService<Photo> {
 		this.repository = photoRepository;
 	}
 
-	@SessionDependant
 	public List<Photo> getByParentId(String parentId) {
 		return ((PhotoRepository)repository).getByParentId(parentId);
 
 	}
 
-	@SessionDependant
 	public List<PhotoMessage> getProxyByParentId(String parentId) throws CustomRuntimeException {
 		return convertEntitiesToProxies(getByParentId(parentId));
 	}

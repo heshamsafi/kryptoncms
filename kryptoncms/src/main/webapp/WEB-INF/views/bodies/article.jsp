@@ -3,10 +3,10 @@
       <h1>${article.title}</h1>
 </div>
 <div class="row-fluid">
-      <c:if test="${prevId ne 0}">
+      <c:if test="${prevId ne null}">
       	<a class="carousel-control left" href='<c:url value="/article/${prevId}"/>'  data-ajax-enable style="position:fixed" >&lsaquo;</a>
       </c:if>
-      <c:if test="${nextId ne 0}">
+      <c:if test="${nextId ne null}">
 		<a class="carousel-control right" href='<c:url value="/article/${nextId}"/>' data-ajax-enable style="position:fixed" >&rsaquo;</a>
       </c:if>
 	${article.content}

@@ -28,6 +28,7 @@ require([
         ,"WYSIWYG.class"
         ,"ArticleEditor.class"
         ,"Scaffolder.class"
+        ,"Pagination.class"
         
         ,"./libraries/bootstrap"
         ,"./libraries/jquery.ui/selectable"
@@ -47,7 +48,8 @@ function(
 		PhotoAlbumManager    ,
 		WYSIWYG				 ,
 		ArticleEditor        ,
-		Scaffolder
+		Scaffolder			 ,
+		Pagination
 		) {
 	var navigationMenu = null;
 	var chatter = null,
@@ -88,7 +90,14 @@ function(
 		if(membership != null)
 			membership.updateLoginStatus();
 		
+		$('[rel=tooltip]').tooltip();
+		$('[rel=popover]').popover();
+		
 		new Scaffolder();
+		
+		var pagination = new Pagination();
+		pagination.generatePaginationElement();
+		
 		new ArticleEditor();
 		new WYSIWYG();
 		$("a[data-popover-enable]").popover({ 

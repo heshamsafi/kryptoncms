@@ -3,6 +3,9 @@ package edu.asu.krypton.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +31,9 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	
 	@Autowired(required=true)
 	private ArticleService articleService;
+	
+	@Autowired(required=true)
+	private MongoTemplate mongoTemplate;
 	
 	@RequestMapping(method=RequestMethod.GET,value="edit")
 	public String getHome(HttpServletRequest request,Model model){
@@ -67,18 +73,20 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	public String getArticle(@PathVariable String id,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
 		Article article = articleService.findById(id);
 		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
-//		Long nextId = articleService.findById(id+1) == null?0:id+1;
-//		Long prevId = articleService.findById(id-1) == null?0:id-1;
-		
+		Article nextArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").gt(article.getDate())), Article.class);
+		Article prevArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").lt(article.getDate())), Article.class);
+		String nextId = nextArticle == null?null:nextArticle.getId();
+		String prevId = prevArticle == null?null:prevArticle.getId();
+		;
 		model.addAttribute("article", article)
-//			 .addAttribute("nextId", nextId)
-//			 .addAttribute("prevId", prevId)
+			 .addAttribute("nextId", nextId)
+			 .addAttribute("prevId", prevId)
 			 ;
 		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
 	}
-//	@RequestMapping(value="",method=RequestMethod.GET)
-//	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
-//		return getArticle(new Long(1), request, model);
-//	}
+	@RequestMapping(value="",method=RequestMethod.GET)
+	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+		return getArticle(mongoTemplate.findOne(new Query(),Article.class).getId(), request, model);
+	}
 	
 }

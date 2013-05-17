@@ -1,8 +1,8 @@
 package edu.asu.krypton.model.persist.db;
 
-import javax.persistence.Transient;
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
@@ -16,9 +16,15 @@ public class Comment extends Commentable {
 
 	private String content;
 	
+	private Date date;
+	
 	@DBRef
-	@JsonIgnore
+//	@JsonIgnore
 	private User author;
+	
+	public Comment(){
+		this.date = new Date();
+	}
 	
 	@XmlAttribute
 	public String getId() {
@@ -50,6 +56,12 @@ public class Comment extends Commentable {
 	}
 	public void setAuthor(User author) {
 		this.author = author;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 }

@@ -18,14 +18,11 @@ public class AlbumService {
 
 	@Autowired(required=true)
 	private AlbumRepository albumRepository;
-	
-	
-	@SessionDependant
+		
 	public Album findById(Serializable id){
 		return albumRepository.findById(id);
 	}
 	
-	@SessionDependant
 	public void saveOrUpdate(Album entity) {
 		try {
 			albumRepository.saveOrUpdate(entity);
@@ -34,7 +31,6 @@ public class AlbumService {
 		}
 	}
 	
-	@SessionDependant
 	public List<Album> getAll(){
 		return albumRepository.getAll();
 	}
@@ -47,7 +43,6 @@ public class AlbumService {
 		this.albumRepository = albumRepository;
 	}
 	
-	@SessionDependant
 	public List<AlbumMessage> getProxyForAll() throws CustomRuntimeException{
 		return convertEntitiesToProxies(getAll());
 	}

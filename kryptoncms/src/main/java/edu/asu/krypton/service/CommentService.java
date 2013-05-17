@@ -53,7 +53,6 @@ public class CommentService extends
 						.setService(this));
 	}
 
-	@SessionDependant
 	public Collection<Comment> getByParentId(String parentId,String parentType) throws CustomRuntimeException{
 		try{
 			Class<? extends Commentable> commentable = parentEntities.get(parentType).getCommentable();
@@ -66,7 +65,6 @@ public class CommentService extends
 		}
 	}
 
-	@SessionDependant
 	public Collection<OutBoundCommentProxy> getProxyByParentId(String parentId,
 			String parentType) throws CustomRuntimeException {
 		return convertEntitiesToProxies(getByParentId(parentId, parentType));
@@ -85,7 +83,6 @@ public class CommentService extends
 		return insert(parentId, parentType, commentContent,registrationService.getLoggedInDbUser());
 	}
 
-	@SessionDependant
 	public Comment insert(String parentId, String parentType,String commentContent, User author) throws CustomRuntimeException {
 		 SupportClasses support = parentEntities.get(parentType);
 		 Comment comment = new Comment();
@@ -99,7 +96,6 @@ public class CommentService extends
 	}
 
 	@Override
-	@SessionDependant
 	public Comment findById(Serializable id) {
 		return repository.findById(id);
 	}

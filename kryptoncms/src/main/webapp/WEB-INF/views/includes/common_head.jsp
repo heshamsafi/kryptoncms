@@ -69,6 +69,20 @@
 	</div>
 </script>
 
+<script id="pagination-templ" type="text/x-jquery-tmpl">
+{{if pages.length>1}}
+	<div class="pagination pagination-large" align="center">
+		<ul>
+		  <li class="disabled"><a data-ajax-enable href="#">&laquo;</a></li>
+		  {{each pages}}
+		  	<li {{if active}} class="active" {{/if}}><a data-ajax-enable href="\${link}">\${caption}</a></li>
+		  {{/each}}
+		  <li class="disabled"><a data-ajax-enable href="#">&raquo;</a></li>
+		</ul>
+	</div>
+{{/if}}
+</script>
+
 <link rel="stylesheet" href="${pageScope.bootstrapCssUrl}" />
 <link rel="stylesheet" href="${pageScope.bootstrapResponsiveCssUrl}">
 <link rel="stylesheet" href="${pageScope.bootstrap_image_gallery}">

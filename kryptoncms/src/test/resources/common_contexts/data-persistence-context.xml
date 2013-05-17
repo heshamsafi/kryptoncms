@@ -25,6 +25,15 @@
 	</bean>
 
 	<mongo:db-factory host="localhost" port="27017" dbname="kryptoncms"/>
-
+    <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name = "classesToBeBound">
+            <array>
+                <value>edu.asu.krypton.model.persist.db.User</value>
+                <value>edu.asu.krypton.model.persist.db.Article</value>
+                <value>edu.asu.krypton.model.persist.db.Comment</value>
+                <value>edu.asu.krypton.model.message_proxies.QueryMessage</value>
+            </array>
+        </property>
+    </bean>
 
 </beans>

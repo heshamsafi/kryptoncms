@@ -29,7 +29,6 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		}
 	}
 	
-	@SessionDependant
 	public List<Article> getAll(){
 		return repository.getAll();
 	}

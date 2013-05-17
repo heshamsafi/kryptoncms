@@ -3,7 +3,7 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public abstract class Commentable implements DbEntity {
@@ -11,7 +11,8 @@ public abstract class Commentable implements DbEntity {
 	public abstract String getId();
 	
 	@DBRef
-	@JsonIgnore
+	@Indexed
+//	@JsonIgnore
 	private Collection<Comment> comments = new ArrayList<Comment>();
 	
 	public Collection<Comment> getComments() {
