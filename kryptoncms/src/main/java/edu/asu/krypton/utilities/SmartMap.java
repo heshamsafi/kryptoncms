@@ -41,8 +41,6 @@ public class SmartMap<KEY, VALUE> implements Serializable {
 			values.set(i, null);
 	}
 
-	//TODO : Hesham : why didn'y you just do this :)
-	//return keys.indexOf(sp) > -1;
 	public boolean containsKey(final KEY sp) {
 		for (final KEY s : keys)
 			if (sp == s)
@@ -83,11 +81,19 @@ public class SmartMap<KEY, VALUE> implements Serializable {
 		}
 		if (values.size() != keys.size())
 			keys.remove(count);
-
 	}
 
+	public void deleteByIndex(final int index){
+		keys.remove(index);
+		values.remove(index);
+	}
+	
 	public KEY getKey(final int i) {
 		return keys.get(i);
+	}
+	
+	public VALUE getValue(final int i){
+		return values.get(i);
 	}
 
 	public KEY getKey(final VALUE value) {
@@ -171,6 +177,10 @@ public class SmartMap<KEY, VALUE> implements Serializable {
 
 	}
 
+	public void setValue(final int index, VALUE value){
+		values.set(index, value);
+	}
+	
 	public int size() {
 		return keys.size();
 	}

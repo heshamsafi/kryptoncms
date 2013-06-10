@@ -20,8 +20,10 @@ public class Article extends Commentable {
 	//sheltaha 3alashan el testing law 7ad la2aha commented yeb2a ana neseet araga3ha
 	//e3mel ma3roof we sheel el comment elly 3ala @Column(unique=true)
 	//@Column(unique=true)
+	@Indexed(unique=true)
 	private String title;
 	private String description;
+	private boolean obsolete;
 	
 	// momken ne7tag nzawed author ba3deen
 	
@@ -61,6 +63,14 @@ public class Article extends Commentable {
 		this.id = id;
 	}
 
+	@XmlAttribute
+	public boolean isObsolete() {
+		return obsolete;
+	}
+	public void setObsolete(boolean obsolete) {
+		this.obsolete = obsolete;
+	}
+	
 	public Date getDate() {
 		return date;
 	}
