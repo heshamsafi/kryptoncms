@@ -9,7 +9,7 @@
 		<c:forEach var="entity" items="${entities}">
 			<tr>
 				<td><a data-ajax-enable
-					href='<c:url value="/scaffold/${entity}" />'>
+					href='<c:url value="/scaffold/${entity}?pageSize=10" />'>
 						<div align="center">${entity}</div>
 				</a></td>
 			</tr>

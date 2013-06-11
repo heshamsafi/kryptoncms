@@ -41,14 +41,14 @@
 
 						<c:url var="url" value="/scaffold" />
 						<c:set var="url" value="${url}/${entityField.getGenericType().getActualTypeArguments()[0].simpleName}?ownerType=${entity.getClass().simpleName}&ownerId=${entity['id']}" />
-						<a data-ajax-enable href='${url}'>
+						<a data-ajax-enable href='${url}&pageSize=10'>
 							See List
 						</a>
 					</c:when>
 					<c:when test="${fn:contains(entity[entityField.name].getClass().name,'edu.asu.krypton.model')}">
 						<c:url var="url" value="/scaffold" />
 						<c:set var="url" value="${url}/${entity[entityField.name].getClass().simpleName}?id=${entity[entityField.name]['id']}" />
-						<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='${url}' rel="popover" data-content="<h5><b>${entity[entityField.name]['id']}</b></h5>" data-title="<h4>Id</h4>">${entity[entityField.name].getClass().simpleName}</a>
+						<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='${url}&pageSize=10' rel="popover" data-content="<h5><b>${entity[entityField.name]['id']}</b></h5>" data-title="<h4>Id</h4>">${entity[entityField.name].getClass().simpleName}</a>
 					</c:when>			
 					<c:otherwise>
 						<c:set var="escapedVal" value="${customUtils:escapeHtml(entity[entityField.name].toString())}"/> 
