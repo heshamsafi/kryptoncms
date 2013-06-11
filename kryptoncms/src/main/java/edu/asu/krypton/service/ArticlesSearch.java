@@ -1,6 +1,10 @@
 package edu.asu.krypton.service;
 
-
+/**
+ * 
+ * @author Mostafa
+ * malhash ay 3 lazmah
+ */
 //@Service
 public class ArticlesSearch {
 
