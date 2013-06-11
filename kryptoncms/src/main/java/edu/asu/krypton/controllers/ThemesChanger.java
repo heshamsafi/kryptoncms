@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(value = "/themes")
 public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
-	private final String DEFAULT_VIEW = "home";
+	private final String DEFAULT_VIEW = "theme_changer";
 	private final String DEFAULT_BODY_DIR = "bodies/";
 	private final static Logger logger = LoggerFactory.getLogger(ThemesChanger.class);
 	@RequestMapping(method = RequestMethod.GET)
@@ -49,7 +49,7 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 		// Request parameters and other properties.
 		List<NameValuePair> params = new ArrayList<NameValuePair>(4);
 		params.add(new BasicNameValuePair("css", "[\"reset.less\",\"scaffolding.less\",\"grid.less\",\"layouts.less\",\"type.less\",\"code.less\",\"labels-badges.less\",\"tables.less\",\"forms.less\",\"buttons.less\",\"sprites.less\",\"button-groups.less\",\"navs.less\",\"navbar.less\",\"breadcrumbs.less\",\"pagination.less\",\"pager.less\",\"thumbnails.less\",\"alerts.less\",\"progress-bars.less\",\"hero-unit.less\",\"media.less\",\"tooltip.less\",\"popovers.less\",\"modals.less\",\"dropdowns.less\",\"accordion.less\",\"carousel.less\",\"wells.less\",\"close.less\",\"utilities.less\",\"component-animations.less\",\"responsive-utilities.less\",\"responsive-767px-max.less\",\"responsive-768px-979px.less\",\"responsive-1200px-min.less\",\"responsive-navbar.less\"]"));
-		params.add(new BasicNameValuePair("vars", "{\"@blue\":\"#ffffff\",\"@green\":\"#ffffff\",\"@red\":\"#ffffff\",\"@yellow\":\"#ffffff\",\"@orange\":\"#ffffff\",\"@pink\":\"#ffffff\",\"@purple\":\"#ffffff\",\"@warningText\":\"#ffffff\",\"@warningBackground\":\"#ffffff\",\"@errorText\":\"#ffffff\",\"@errorBackground\":\"#ffffff\",\"@successText\":\"#ffffff\",\"@successBackground\":\"#ffffff\",\"@infoText\":\"#ffffff\",\"@infoBackground\":\"#ffffff\",\"@navbarHeight\":\"200px\",\"@navbarBackground\":\"#ffffff\",\"@navbarBackgroundHighlight\":\"#ffffff\",\"@navbarText\":\"#ffffff\",\"@navbarBrandColor\":\"#ffffff\",\"@navbarLinkColor\":\"#ffffff\",\"@navbarLinkColorHover\":\"#ffffff\",\"@navbarLinkColorActive\":\"#ffffff\",\"@navbarLinkBackgroundHover\":\"#ffffff\",\"@navbarLinkBackgroundActive\":\"#ffffff\",\"@navbarSearchBackground\":\"#ffffff\",\"@navbarSearchBackgroundFocus\":\"#ffffff\",\"@navbarSearchBorder\":\"#ffffff\",\"@navbarSearchPlaceholderColor\":\"#ffffff\"}"));
+//		params.add(new BasicNameValuePair("vars", "{\"@blue\":\"#ffffff\",\"@green\":\"#ffffff\",\"@red\":\"#ffffff\",\"@yellow\":\"#ffffff\",\"@orange\":\"#ffffff\",\"@pink\":\"#ffffff\",\"@purple\":\"#ffffff\",\"@warningText\":\"#ffffff\",\"@warningBackground\":\"#ffffff\",\"@errorText\":\"#ffffff\",\"@errorBackground\":\"#ffffff\",\"@successText\":\"#ffffff\",\"@successBackground\":\"#ffffff\",\"@infoText\":\"#ffffff\",\"@infoBackground\":\"#ffffff\",\"@navbarHeight\":\"20px\",\"@navbarBackground\":\"#ffffff\",\"@navbarBackgroundHighlight\":\"#ffffff\",\"@navbarText\":\"#ffffff\",\"@navbarBrandColor\":\"#ffffff\",\"@navbarLinkColor\":\"#ffffff\",\"@navbarLinkColorHover\":\"#ffffff\",\"@navbarLinkColorActive\":\"#ffffff\",\"@navbarLinkBackgroundHover\":\"#ffffff\",\"@navbarLinkBackgroundActive\":\"#ffffff\",\"@navbarSearchBackground\":\"#ffffff\",\"@navbarSearchBackgroundFocus\":\"#ffffff\",\"@navbarSearchBorder\":\"#ffffff\",\"@navbarSearchPlaceholderColor\":\"#ffffff\"}"));
 		httppost.setEntity(new UrlEncodedFormEntity(params));
 		//Execute and get the response.
 		HttpResponse response = httpclient.execute(httppost);
@@ -96,6 +96,6 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 		    } 
 		}
 		
-		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, "home"));
+		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, DEFAULT_VIEW));
 	}
 }

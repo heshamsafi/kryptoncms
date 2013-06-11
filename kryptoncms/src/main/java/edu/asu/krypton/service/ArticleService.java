@@ -51,8 +51,8 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	public void saveOrUpdate(Article entity) {
 		try {
 			repository.saveOrUpdate(entity);
-			if(! entity.isObsolete())
-				refreshIndexTable(entity);
+//			if(! entity.isObsolete())
+//				refreshIndexTable(entity);
 		} catch (CustomRuntimeException e) {
 			e.printStackTrace();
 		}

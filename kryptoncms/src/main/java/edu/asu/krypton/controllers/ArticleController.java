@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,6 +34,8 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	private final String DEFAULT_VIEW = "article";
 	private final String EDIT_VIEW = "article_edit";
 	private final String DEFAULT_DIR = "bodies/";
+	
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ArticleController.class);
 	
 	@Autowired(required=true)
 	private ArticleService articleService;
@@ -63,8 +66,11 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 		ArticleSubmitMessage message = new ArticleSubmitMessage();
 		try{
 			articleService.saveOrUpdate(article);	
+			
 			return message.setId(article.getId()).setSuccessful(true);
 		}catch (Exception e) {
+			logger.debug(article.toString());
+			e.printStackTrace();
 			return message.setSuccessful(false);
 		}
 	}

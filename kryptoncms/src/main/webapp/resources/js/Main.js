@@ -32,6 +32,8 @@ require([
         
         ,"./libraries/bootstrap"
         ,"./libraries/jquery.ui/selectable"
+        ,"./libraries/jquery.ui/colorpicker"
+        ,"./libraries/jquery.ui/slider"
         ],
 function(
 		$	     		     ,
@@ -56,6 +58,17 @@ function(
 		commentManager = null;
 	$(document).ready(function(){
 		pageScopeMain();
+		$('.cp-basic').colorpicker();
+		$( "#slider-range-min" ).slider({
+	      range: "min",
+	      value: 37,
+	      min: 1,
+	      max: 700,
+	      slide: function( event, ui ) {
+	        $( "#amount" ).val( ui.value + "px" );
+	      }
+	    });
+	    $( "#amount" ).val( $( "#slider-range-min" ).slider( "value" ) + "px" );
 		sessionScopeMain();
 		Ajaxifier.getInstance(pageScopeMain,collectGarbage);
 		var pin = false;

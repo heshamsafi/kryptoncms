@@ -65,8 +65,8 @@ response.setHeader("Expires","0");
 <%-- libraries --%>
 <spring:url scope="page" var="bootstrapCssUrl"		     value="/resources/css/bootstrap.css" />
 <spring:url scope="page" var="bootstrapResponsiveCssUrl" value="/resources/css/bootstrap-responsive.css" />
-<spring:url scope="page" var="bootstrap_image_gallery" value="/resources/css/bootstrap-image-gallery.min.css" />
-
+<spring:url scope="page" var="bootstrap_image_gallery"   value="/resources/css/bootstrap-image-gallery.min.css" />
+<spring:url scope="page" var="colorpickerCss" 			 value="/resources/css/jquery.colorpicker.css" />
 
 <%-- css --%>
 <%-- application-code --%>
