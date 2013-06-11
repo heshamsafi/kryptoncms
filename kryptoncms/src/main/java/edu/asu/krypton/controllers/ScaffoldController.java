@@ -137,7 +137,11 @@ public class ScaffoldController extends Controller {
 			@PathVariable String entity,
 			@PathVariable String id) throws ClassNotFoundException{
 		Class<?> entityClass = Class.forName("edu.asu.krypton.model.persist.db."+entity);
+//		Query query = new Query();
+//		query.addCriteria(Criteria.where("id").is(id));
+//		Object root = mongoTemplate.findOne(query, entityClass);
 		mongoTemplate.remove(new Query().addCriteria(Criteria.where("id").is(id)), entityClass);
+//		mongoTemplate.remove(root);
 	}
 	
 	private List<Field> getAllFields(Class<?> entity){

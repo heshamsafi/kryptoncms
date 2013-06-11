@@ -25,7 +25,7 @@ public class Repository<T> {
 		mongoTemplate.remove(entity);
 	}
 
-	public void saveOrUpdate(T entity) throws CustomRuntimeException{
+	public void saveOrUpdate(T entity) throws CustomRuntimeException {
 		mongoTemplate.save(entity);
 	}
 
