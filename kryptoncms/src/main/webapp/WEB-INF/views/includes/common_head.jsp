@@ -37,6 +37,7 @@
 </script>
 
 <link rel="stylesheet" href="${pageScope.bootstrapCssUrl}" />
+<link rel="stylesheet" href="${pageScope.colorpickerCss}" />
 <link rel="stylesheet" href="${pageScope.bootstrapResponsiveCssUrl}">
 <link rel="stylesheet" href="${pageScope.main_style}" />
 
