@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +24,8 @@ import edu.asu.krypton.service.PhotoService;
 @RequestMapping(value = "/photo")
 public class PhotoGalleryController extends
 		edu.asu.krypton.controllers.Controller {
+	
+	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(PhotoGalleryController.class);
 
 	@Autowired(required=true)
 	private PhotoService photoService;
@@ -84,7 +87,7 @@ public class PhotoGalleryController extends
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
 	public @ResponseBody QueryMessage<AlbumMessage> getAlbums(){
 		QueryMessage<AlbumMessage> queryMessage = new QueryMessage<AlbumMessage>();
-		
+		logger.debug("Albums view");
 		try {
 			queryMessage.setQueryResult(albumService.getProxyForAll()).setSuccessful(true);
 		} catch (CustomRuntimeException e) {
@@ -92,6 +95,8 @@ public class PhotoGalleryController extends
 			e.printStackTrace();
 		}
 
+		
+		logger.debug(queryMessage.getQueryResult().toString());
 		return queryMessage;
 	}
 

@@ -33,6 +33,9 @@
                 <value>edu.asu.krypton.model.persist.db.Article</value>
                 <value>edu.asu.krypton.model.persist.db.Comment</value>
                 <value>edu.asu.krypton.model.message_proxies.QueryMessage</value>
+                <value>edu.asu.krypton.model.persist.db.Album</value>
+                <value>edu.asu.krypton.model.persist.db.Photo</value>
+                <value>edu.asu.krypton.model.persist.db.PhotoComment</value>
             </array>
         </property>
     </bean>
