@@ -3,15 +3,17 @@ package edu.asu.krypton.model.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import edu.asu.krypton.controllers.PhotoGalleryController;
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 
 public class Repository<T> {
 //	@Autowired(required=true)
 //	protected DataAccessObject<T> dao;
-	
+
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 	
