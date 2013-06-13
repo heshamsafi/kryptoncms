@@ -3,6 +3,7 @@ package edu.asu.krypton.model.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
