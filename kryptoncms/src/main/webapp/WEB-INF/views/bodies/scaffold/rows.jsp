@@ -1,5 +1,4 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
-<%@ taglib prefix="customUtils" uri="/WEB-INF/spring/el_functions/customUtils.tld" %>
 <div class="page-header">
       <h1>Scaffold</h1>
 </div>
@@ -9,12 +8,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu">
-	  <li><a tabindex="-1" href="#edit-add-modal" role="button" data-toggle="modal">Edit</a></li>
+	  <li><a tabindex="-1" id="edit"  href="#genericModal" role="button" data-toggle="modal">Edit</a></li>
 	  <li><a tabindex="-1" id="delete" href="javascript:void(0)">Delete</a></li>
+	  <li><a tabindex="-1" id="create" href="#genericModal" role="button" data-toggle="modal">Add a New One</a></li>
   </ul>
 </div>
 
-<form action='<c:url value="/scaffold/${entityClassName}/" />' method="DELETE">
+<form id="scaffoldForm" action='<c:url value="/scaffold/${entityClassName}/" />' data-edit-action='<c:url value="/form/${entityClassName}/" />' method="DELETE">
 	<table class="table" class="scaffold" data-enable-selectable data-enable-pagination
 										  data-pagination-page-size="${pageSize}" data-pagination-page-no="${pageNo}"
 										  data-pagination-total-size="${totalSize}">
@@ -51,7 +51,7 @@
 						<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='${url}&pageSize=10' rel="popover" data-content="<h5><b>${entity[entityField.name]['id']}</b></h5>" data-title="<h4>Id</h4>">${entity[entityField.name].getClass().simpleName}</a>
 					</c:when>			
 					<c:otherwise>
-						<c:set var="escapedVal" value="${customUtils:escapeHtml(entity[entityField.name].toString())}"/> 
+						<c:set var="escapedVal" value="${fn:escapeXml(entity[entityField.name].toString())}"/> 
 						<c:set var="cutoff" value="20"/>
 						<c:choose>
 							<c:when test="${escapedVal eq '[]'}">
@@ -85,17 +85,3 @@
 	</c:choose>
 	</table>
 </form>
-
-<div id="edit-add-modal" class="modal hide  fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<h1>
-	Coming Soon ...
-	As soon as Toba finishes form generation i will be useful :)
-	</h1>
-</div>
-<%-- <script id="context-menu-templ" type="text/x-jquery-tmpl">
-    <ul id="dropdown-menu" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="position:absolute;top:\${offset.top}px;left:\${offset.left}px;">
-	{{each items}}
-      <li {{if disabled}}class="disabled"{{/if}} \${dataAttributes} ><a tabindex="-1" href="\${href}">\${text}</a></li>
-	{{/each}}
-    </ul>	
-</script> --%>

@@ -216,7 +216,7 @@
 				  <ul class="dropdown-menu">
 				    <li class="out"> <a href="#myModal1" role="button" data-toggle="modal">Sign in</a> </li>
 					<li class="out"> <a href="#myModal2" role="button" data-toggle="modal">Sign up</a> </li>
-					<li class="in" > <a href="#" role="button" data-toggle="modal">Edit Account</a> </li>
+					<li class="in" > <a href="#genericModal" id="editAccount" role="button" data-toggle="modal">Edit Account</a> </li>
 					<li class="in" > <a href='<c:url value="/membership/logout" />' data-logout role="button" data-toggle="modal">Logout</a> </li>
 				  </ul>
 				</div>

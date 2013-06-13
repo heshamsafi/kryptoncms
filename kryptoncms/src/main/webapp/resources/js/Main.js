@@ -29,11 +29,13 @@ require([
         ,"ArticleEditor.class"
         ,"Scaffolder.class"
         ,"Pagination.class"
+        ,"MenuManager.class"
         
         ,"./libraries/bootstrap"
         ,"./libraries/jquery.ui/selectable"
         ,"./libraries/jquery.ui/colorpicker"
         ,"./libraries/jquery.ui/slider"
+        
         ],
 function(
 		$	     		     ,
@@ -51,7 +53,8 @@ function(
 		WYSIWYG				 ,
 		ArticleEditor        ,
 		Scaffolder			 ,
-		Pagination
+		Pagination			 ,
+		MenuManager
 		) {
 	var navigationMenu = null;
 	var chatter = null,
@@ -125,6 +128,8 @@ function(
 		$('[rel=popover]').popover();
 		
 		new Scaffolder();
+		
+		new MenuManager();
 		
 		var pagination = new Pagination();
 		pagination.generatePaginationElement();

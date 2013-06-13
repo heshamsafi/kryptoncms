@@ -37,4 +37,5 @@
 <!-- 	<bean id="roleRepository"       class="edu.asu.krypton.model.repository.RoleRepository" /> -->
 	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder" />
 	<bean id="hash" 				class="edu.asu.krypton.service.crypto.Hash" />
+	<bean id="indexRepository" 				class="edu.asu.krypton.model.repository.IndexRepository" />
 </beans>

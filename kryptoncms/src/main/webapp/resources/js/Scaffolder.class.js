@@ -40,6 +40,17 @@ define([
 				  });
 			  });
 			  
+			  $("#edit").click(function(){
+				  var $tr = thisInstance.$scaffoldTable.find("tr.ui-selected");
+				  var $form = $tr.parents("form");
+				  var id =$tr.attr("data-entity-id");
+				  $("#genericModal").load($form.attr("data-edit-action")+id);
+			  });
+			  
+			  $("#create").click(function(){
+				  $("#genericModal").load( $("#scaffoldForm").attr("data-edit-action"));
+			  });
+			  
 //			  thisInstance.contextMenu = new ContextMenu();
 			  //change in plans 
 			  //we are going to use a dropdown button instead of a context menu.

@@ -3,8 +3,11 @@ package edu.asu.krypton.model.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 
@@ -24,7 +27,11 @@ public class Repository<T> {
 	public void delete(T entity){
 		mongoTemplate.remove(entity);
 	}
-
+	public void deleteById(ObjectId id){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(id));
+		mongoTemplate.remove(query,getPersistentClass());
+	}
 	public void saveOrUpdate(T entity) throws CustomRuntimeException {
 		mongoTemplate.save(entity);
 	}

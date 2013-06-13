@@ -13,16 +13,21 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import edu.asu.krypton.form.annotations.InputText;
+
 @Document
 @XmlRootElement
 public class User implements DbEntity {
 	@Id
+	@InputText(readOnly=true)
 	private String id;
 	
 	@Indexed(unique=true)
+	@InputText
 	private String username;
+	@InputText(readOnly=true)
 	private String password;
-	
+	@InputText
 	private BigInteger role;
 	
 	public User(){}
