@@ -177,9 +177,9 @@ function(
 		});
 		
 		var photoAlbumManager = new PhotoAlbumManager();
-		console.log("Test - MAIN");
+//		console.log("Test - MAIN");
 		photoAlbumManager.listAlbums();
-		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
+//		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
 		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){

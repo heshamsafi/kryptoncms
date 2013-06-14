@@ -11,7 +11,6 @@
 <div class="container">
 	<div class="row-fluid">
 		<div id="albums" data-user-albums></div>
-		<p>TEST</p>
 	</div>
 </div>
 <!-- END ALBUM GALLERY -->

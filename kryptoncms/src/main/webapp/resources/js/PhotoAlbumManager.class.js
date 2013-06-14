@@ -51,7 +51,7 @@ define([
 			});
 		},
 		listPhotoAlbums : function(){
-			alert("LIST PHOTO ALBUMS");
+//			alert("LIST PHOTO ALBUMS");
 			var albumNumber = decodeURIComponent( (RegExp('album_number=' + '(.+?)(&|$)', 'i').exec(location.search) || [, ""])[1]);
 //			this.$photoAlbums.each(function(index,item){
 				$.ajax({
@@ -62,24 +62,24 @@ define([
 					"contentType" : "application/json",
 					"success" : function(responseBody) {
 //						alert("Test - LIST - PHOTOS");
-//						console.log("Test - LIST - PHOTOS");
+						console.log("Test - LIST - PHOTOS");
 						if (responseBody["successful"]) {
-//							console.log("Test - LIST - PHOTOS - SUCCESSFUL");
+							console.log("Test - LIST - PHOTOS - SUCCESSFUL");
 //							alert("Test - LIST - PHOTOS - SUCCESSFUL");
 							var photos = $("#photo-tmpl").tmpl(responseBody["queryResult"]);
-//							console.log("photos is");
-//							console.log(responseBody["queryResult"]);
+							console.log("photos is");
+							console.log(responseBody["queryResult"]);
 							//photos.appendTo($("#modal-gallery > .modal-body > .modal-image"));
 							photos.appendTo($("#gallery"));
 //							$("#gallery").html(photos);
 //							$("#gallery").html("<p>TEST2!!!</p>");
-//							console.log(photos);
+							console.log(photos);
 							//$("#modal-gallery > .modal-body > .modal-image:first-child").addClass("in");
 						} else
-//							alert("Success Else");
+							alert("Success Else");
 					},
 					"error" : function(responseBody) {
-//						console.log(responseBody);
+						console.log(responseBody);
 //						alert("Error - LIST - PHOTOS");
 					}
 				});
@@ -87,7 +87,8 @@ define([
 		},
 		listAlbums : function(){
 //			test = "<p>TEST2</p>";
-//			console.log("Test - LIST - ALBUMS");
+			console.log("Test - LIST - ALBUMS");
+//			alert("ALBUMS");
 //			test.appendTo($("#albums"));
 			$.ajax({
 				"url" : "http://localhost:8080/kryptoncms/photo/albums",
@@ -99,13 +100,13 @@ define([
 					if (responseBody["successful"]) {
 //						alert("Success - ALBUMS");
 						var albums = $("#album-tmpl").tmpl(	responseBody["queryResult"]);
-//						console.log(albums);
+						console.log(albums);
 						albums.appendTo($("#albums"));
 					} else
-//						alert("Success Else");
+						alert("Success Else");
 				},
 				"error" : function(responseBody) {
-//					console.log(responseBody);
+					console.log(responseBody);
 //					alert("Error - LIST - ALBUMS");
 				}
 			});
