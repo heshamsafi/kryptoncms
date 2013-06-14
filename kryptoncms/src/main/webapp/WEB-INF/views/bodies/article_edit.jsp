@@ -14,8 +14,8 @@
 				id="title" name="title" value="${article.title}"
 				placeholder="Title" data-required
 <!-- 				data-describedby="username-description" data-description="username" -->
-				data-pattern=".{3,}" /> <label
-				id="title-description" for="title" class="add-on"></label>
+				data-pattern=".{3,}" /> 
+				<label id="title-description" for="title" class="add-on"></label>
 		</div>
 	</div>
 	<div>

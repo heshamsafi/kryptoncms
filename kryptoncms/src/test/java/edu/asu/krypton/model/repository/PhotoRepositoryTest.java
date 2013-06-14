@@ -35,46 +35,54 @@ public class PhotoRepositoryTest {
 		
 //		photoRepository.getDao().openSession();
 		
-		for(int i = 1; i <=2; i++){
-			album = new Album();
-			album.setTitle("album" + i);
-			for(int j = 1; j <= 6; j++){
-				photo = new Photo();
-				photo.setPath(j + ".jpg");
-				photo.setParent(album);
-				for(int k = 1; k <= 10; k++){
-					photoComment = new PhotoComment();
-					photoComment.setContent("Album (" + i + ") Photo (" + j + ") Comment Test (" + k + ")");
-//					photoComment.setParent(photo);
-					photo.getComments().add(photoComment);
-					commentRepository.saveOrUpdate(photoComment);
-				}
-				album.getPhotos().add(photo);
-				photoRepository.saveOrUpdate(photo);
-			}
-			albumRepository.saveOrUpdate(album);
-		}
-		
-//		for(int i=1;i<=6;i++){
-//			logger.info("inserting photo #"+i);
-//			photo1 = new Photo();
-//			photo2 = new Photo();
+//		for(int i = 1; i <=2; i++){
+//			album = new Album();
+//			album.setTitle("album" + i);
+//			for(int j = 1; j <= 6; j++){
+//				photo = new Photo();
+//				photo.setPath(j + ".jpg");
+//				photo.setParent(album);
+//				for(int k = 1; k <= 10; k++){
+//					photoComment = new PhotoComment();
+//					photoComment.setContent("Album (" + i + ") Photo (" + j + ") Comment Test (" + k + ")");
+////					photoComment.setParent(photo);
+//					photo.getComments().add(photoComment);
+//					commentRepository.saveOrUpdate(photoComment);
+//				}
+//				album.getPhotos().add(photo);
+//				photoRepository.saveOrUpdate(photo);
+//			}
+//			albumRepository.saveOrUpdate(album);
+//		}
+
+		Photo photo1;
+		Photo photo2;
+		Album album1 = new Album();
+		album1.setTitle("al1");
+		logger.debug("Album1 id = " + album1.getId());
+		Album album2 = new Album();
+		album2.setTitle("al2");
+		logger.debug("Album2 id = " + album2.getId());
+		for(int i=1;i<=6;i++){
+			logger.debug("inserting photo #"+i);
+			photo1 = new Photo();
+			photo2 = new Photo();
 //			photoComment = new PhotoComment();
 //			photoComment.setContent("Photo Comment Test");
 //			photoComment.setParent(photo1);
-//			photo1.setPath(i + ".jpg");
-//			photo1.setParent(album1);
+			photo1.setPath(i + ".jpg");
+			photo1.setParent(album1);
 //			photo1.getComments().add(photoComment);
-//			photo2.setPath(i + ".jpg");
-//			photo2.setParent(album2);
+			photo2.setPath(i + ".jpg");
+			photo2.setParent(album2);
 //			album1.getPhotos().add(photo1);
 //			album2.getPhotos().add(photo2);
-//			photoRepository.saveOrUpdate(photo1);
-//			photoRepository.saveOrUpdate(photo2);
+			photoRepository.saveOrUpdate(photo1);
+			photoRepository.saveOrUpdate(photo2);
 //			albumRepository.saveOrUpdate(album1);
 //			albumRepository.saveOrUpdate(album2);
 //			commentRepository.saveOrUpdate(photoComment);
-//		}
+		}
 //		photoRepository.getDao().killSession(true);
 	}
 

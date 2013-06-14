@@ -49,6 +49,7 @@ public class PhotoGalleryController extends
 	@RequestMapping(value = "/photo", method = RequestMethod.GET)
 	public String photoView(ModelMap model, HttpServletRequest request){
 		model.addAttribute("album_number", request.getHeader("album_number"));
+		logger.debug("album_number = " + request.getHeader("album_number") + ", type = " + request.getHeader("album_number").getClass());
 		return appropriateView(request,
 				DEFAULT_BODIES_DIR + PHOTO_GALLERY_VIEW,
 				defaultView(model, PHOTO_GALLERY_VIEW));
@@ -56,14 +57,18 @@ public class PhotoGalleryController extends
 	
 	@RequestMapping(value = "/{parentType}/{parentId}", method = RequestMethod.GET)
 	public @ResponseBody QueryMessage<PhotoMessage> getPhotos(@PathVariable String parentType, @PathVariable String parentId){
+		logger.debug("Photos view : " + parentId.toString());
 		QueryMessage<PhotoMessage> queryMessage = new QueryMessage<PhotoMessage>();
 		
 		try {
 			queryMessage.setQueryResult(photoService.getProxyByParentId(parentId)).setSuccessful(true);
+			logger.debug("getPhotos in try");
 		} catch (CustomRuntimeException e) {
 			queryMessage.setSuccessful(false).setErrorMessage(e.getMessage());
+			logger.debug("getPhotos in catch");
 			e.printStackTrace();
 		}
+		logger.debug("photos is : " + queryMessage.getQueryResult().size());
 
 		return queryMessage;
 	}
@@ -96,7 +101,7 @@ public class PhotoGalleryController extends
 		}
 
 		
-		logger.debug(queryMessage.getQueryResult().toString());
+		logger.debug("albums view " + queryMessage.getQueryResult().toString());
 		return queryMessage;
 	}
 

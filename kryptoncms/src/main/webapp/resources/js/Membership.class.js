@@ -71,7 +71,13 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			"success":function(response){
 	    				if(response["successful"]){
 	    					$.cookie("j_username",payload["j_username"]);
-	    					//$.cookie("j_password",payload["j_password"]);
+	    					$.getJSON(DOMAIN_CONFIGURATIONS.BASE_URL+"membership/userid/"+encodeURIComponent(payload["j_username"]),function(data){
+	    						if(data.errorMessage == null && data.queryResult.length>0)
+	    							$.cookie("userId",data.queryResult.pop());
+	    					});
+	    					$("#editAccount").click(function(){
+	    					  $("#genericModal").load(DOMAIN_CONFIGURATIONS.BASE_URL+"form/User/"+$.cookie("userId"));
+	    					});
 	    					Notifier.getInstance().notify("Welcome, "+$.cookie("j_username"),"MEDIUM","VERY_FAST","alert-success");
 	    					thisInstance.$form_login.parents(".modal[aria-hidden=false]").modal("hide");
 	    					thisInstance.updateLoginStatus();

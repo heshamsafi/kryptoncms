@@ -7,6 +7,7 @@
 		
 		<p> I am running on the following profiles :</p>
 		<ul>
+
 		<c:forEach var="profile" items="${profiles}">
         	<li>${profile}</li>
         </c:forEach>

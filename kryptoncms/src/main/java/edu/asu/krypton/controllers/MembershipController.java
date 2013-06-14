@@ -2,6 +2,8 @@ package edu.asu.krypton.controllers;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.MembershipStatus;
 import edu.asu.krypton.model.message_proxies.Message;
+import edu.asu.krypton.model.message_proxies.QueryMessage;
 import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.service.RegistrationService;
 
@@ -66,6 +69,16 @@ public class MembershipController extends edu.asu.krypton.controllers.Controller
 	public String registerView(ModelMap model,HttpServletRequest request){
 		return appropriateView(request, BODIES_DIR+REGISTER_VIEW, defaultView(model, REGISTER_VIEW));
 	}
+
+	@RequestMapping(method=RequestMethod.GET,value="/userid/{username}")
+	public @ResponseBody QueryMessage<String> getUserId(ModelMap model,HttpServletRequest request,@PathVariable String username){
+		User user = registrationService.findUserByUsername(username);
+		QueryMessage<String> message = new QueryMessage<String>();
+		List<String> id = new ArrayList<String>();
+		id.add(user.getId());
+		message.setQueryResult(id);
+		return message;
+	}
 	
 	public void login(
 			HttpServletRequest request,
@@ -75,7 +88,7 @@ public class MembershipController extends edu.asu.krypton.controllers.Controller
 			AuthenticationException authEx) throws IOException, ServletException {
 
 		boolean status = securityHandler instanceof SimpleUrlAuthenticationSuccessHandler;
-		logger.info(String.format("user authenticated %ssuccessfully",(status?"":"un")));
+		logger.info(String.format("user authenticated %successfully",(status?"":"un")));
 		
 		if (isAjax(request)) {
 			response.getWriter().print(

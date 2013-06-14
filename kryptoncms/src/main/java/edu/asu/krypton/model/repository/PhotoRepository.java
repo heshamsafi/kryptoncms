@@ -17,6 +17,8 @@ import edu.asu.krypton.model.persist.db.Photo;
 @Repository
 public class PhotoRepository extends edu.asu.krypton.model.repository.Repository<Photo>{
 	
+	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(PhotoRepository.class);
+	
 	public PhotoRepository(){
 		setPersistentClass(Photo.class);
 	}
@@ -24,8 +26,10 @@ public class PhotoRepository extends edu.asu.krypton.model.repository.Repository
 	public List<Photo> getByParentId(String parentId){
 		//return getDao().getSession().createCriteria(Photo.class).add(Restrictions.eq("parent.id", parentId)).list();
 		Query query = new Query();
-		query.addCriteria(Criteria.where("parent.id").is(parentId));
-		 
+		query.addCriteria(Criteria.where("parent.id").is(Integer.parseInt(parentId)));
+		logger.debug("ALL PHOTOS = ");
+		logger.debug("ALL PHOTOS = " + mongoTemplate.findAll(Photo.class));
 		return mongoTemplate.find(query, Photo.class);
+//		return mongoTemplate.findAll(Photo.class);
 	}
 }
