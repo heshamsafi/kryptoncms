@@ -14,7 +14,7 @@ import edu.asu.krypton.model.persist.db.Album;
 import edu.asu.krypton.model.persist.db.Photo;
 import edu.asu.krypton.model.persist.db.PhotoComment;
 
-@Transactional
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class PhotoRepositoryTest {
@@ -75,12 +75,12 @@ public class PhotoRepositoryTest {
 //			photo1.getComments().add(photoComment);
 			photo2.setPath(i + ".jpg");
 			photo2.setParent(album2);
-//			album1.getPhotos().add(photo1);
-//			album2.getPhotos().add(photo2);
+			album1.getPhotos().add(photo1);
+			album2.getPhotos().add(photo2);
+			albumRepository.saveOrUpdate(album1);
+			albumRepository.saveOrUpdate(album2);
 			photoRepository.saveOrUpdate(photo1);
 			photoRepository.saveOrUpdate(photo2);
-//			albumRepository.saveOrUpdate(album1);
-//			albumRepository.saveOrUpdate(album2);
 //			commentRepository.saveOrUpdate(photoComment);
 		}
 //		photoRepository.getDao().killSession(true);

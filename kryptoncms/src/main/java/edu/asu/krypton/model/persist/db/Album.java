@@ -3,26 +3,25 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Id;
-
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Album {
-	@Id
-	private Long id;
+	@org.springframework.data.annotation.Id
+	private ObjectId id;
 	
 	private String title;
 	
 	@DBRef
 	private Collection<Photo> photos = new ArrayList<Photo>();
 
-	public Long getId() {
+	public ObjectId getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 

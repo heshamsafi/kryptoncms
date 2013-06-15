@@ -10,7 +10,7 @@
    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<context:annotation-config />
 	<tx:annotation-driven  />
-	<import resource="classpath:/common_contexts/hibernate-context.xml"/>
+	<import resource="classpath:/common_contexts/data-persistence-context.xml"/>
 	<!-- classes in src directory are annotated with stereotypes (auto-discovery annotations)
 		 but the their context is not loaded bcz this is unit testing ... each module should be
 		 tested separately ... instead we instantiate the beans we need here in xml.  -->
