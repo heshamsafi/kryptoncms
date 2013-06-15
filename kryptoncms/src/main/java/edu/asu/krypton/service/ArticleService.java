@@ -50,6 +50,8 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	@Override
 	public void saveOrUpdate(Article entity) {
 		try {
+			if(entity.getId() != null)
+				entity = repository.findById(entity.getId()).update(entity);
 			repository.saveOrUpdate(entity);
 //			if(! entity.isObsolete())
 //				refreshIndexTable(entity);

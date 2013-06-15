@@ -14,7 +14,7 @@ public class Menu {
 	private String name;
 	@InputText
 	private String url;
-	@InputText
+	
 	private int order;
 	@CheckBox
 	private boolean admin;

@@ -17,8 +17,8 @@ buster.testCase("Notifier", function(run) {
 //				})
 				;
 			},
-			"willy nilly" : function(){
-				this.socketHandler.push("crap");
+			"push test" : function(){
+				this.socketHandler.push("data");
 				this.socketHandler.close();
 				assert(true);
 			}

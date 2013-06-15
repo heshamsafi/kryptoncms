@@ -14,7 +14,7 @@
   </ul>
 </div>
 
-<form id="scaffoldForm" action='<c:url value="/scaffold/${entityClassName}/" />' data-edit-action='<c:url value="/form/${entityClassName}/" />' method="DELETE">
+<form id="scaffoldForm" className="${entityClassName}" action='<c:url value="/scaffold/${entityClassName}/" />' data-edit-action='<c:url value="/form/${entityClassName}/" />' method="DELETE">
 	<table class="table" class="scaffold" data-enable-selectable data-enable-pagination
 										  data-pagination-page-size="${pageSize}" data-pagination-page-no="${pageNo}"
 										  data-pagination-total-size="${totalSize}">

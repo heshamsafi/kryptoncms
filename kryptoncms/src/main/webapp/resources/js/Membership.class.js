@@ -75,9 +75,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    						if(data.errorMessage == null && data.queryResult.length>0)
 	    							$.cookie("userId",data.queryResult.pop());
 	    					});
-	    					$("#editAccount").click(function(){
-	    					  $("#genericModal").load(DOMAIN_CONFIGURATIONS.BASE_URL+"form/User/"+$.cookie("userId"));
-	    					});
+
 	    					Notifier.getInstance().notify("Welcome, "+$.cookie("j_username"),"MEDIUM","VERY_FAST","alert-success");
 	    					thisInstance.$form_login.parents(".modal[aria-hidden=false]").modal("hide");
 	    					thisInstance.updateLoginStatus();
@@ -102,6 +100,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    attachLogoutHandler : function(){
 	    	var thisInstance = this;
 	    	var $logout_anchor = $("#account_controls").find("[data-logout]");
+	    	$logout_anchor.unbind("click");
 	    	$logout_anchor.click(function(event){
 	    		event.preventDefault();
 	    		var url = $(this).attr("href");
@@ -133,10 +132,47 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	var $drpDwn_lis_in   = $drpDwn_lis.filter(".in");
 	    	var $drpDwn_lis_out  = $drpDwn_lis.filter(".out");
 	    	$drpDwn_lis.hide();
-	    	if($.cookie("j_username")){
+	    	if($.cookie("j_username")!=""){
 	    		$drpDwn_lis_in.show();
 	    		$accountControls_anchor.html($.cookie("j_username"));
-	    		
+				$("#editAccount").click(function(){
+				  $("#genericModal").load(DOMAIN_CONFIGURATIONS.BASE_URL+"form/edu.asu.krypton.model.persist.db.User/"+$.cookie("userId"),function(){
+					  $("#genericModal form").submit(function(event) {
+				    		event.preventDefault();
+				    		var $this = $(this);
+				    		var payload = FormSerializer.getInstance().serialize($this);
+				    		$.ajax({
+				    			"type" : $this.attr("method"),
+				    			"url" : $this.attr("action"),
+				    			"data" : JSON.stringify(payload),
+				    			"dataType": 'json',
+				    			"cache": false,
+				    			"contentType" : "application/json",
+				    			"success":function(data){
+				    				if(data["successful"])
+				    					$this.parents(".modal[aria-hidden=false]").modal("hide");
+				    				else 
+				    					Notifier.getInstance().notify("Something Went Wrong","FAST","VERY_FAST","alert-error");
+				    			},
+				    			"error":function(error){
+				    				Notifier.getInstance().notify("Something Went Wrong","FAST","VERY_FAST","alert-error");
+				    			},
+				    			"complete":function(){
+				    			}
+				    		});
+				    		return false;
+				    	});
+				  });
+				});
+//				  $("#edit").click(function(){
+//					  var $tr = thisInstance.$scaffoldTable.find("tr.ui-selected");
+//					  var $form = $tr.parents("form");
+//					  var id =$tr.attr("data-entity-id");
+//					  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
+//						  var $form = $("#genericModal form");
+//						  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler);
+//					  });
+//				  });
 		    	//are you admin
 		    	$.ajax({
 		    		"type" : "GET",
@@ -176,7 +212,8 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	}
 	    },
 	    destroyCookie : function(){
-	    	$.cookie("j_username",null);
+	    	$.cookie("j_username","");
+	    	$.cookie("userId","");
 	    	//$.cookie("j_password",null);
 	    }
 	});

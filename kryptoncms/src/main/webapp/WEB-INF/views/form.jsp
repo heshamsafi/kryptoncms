@@ -11,7 +11,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 	<% String formAction = (String)pageContext.findAttribute("URLTosubmit"); %>
-	<sf:form class="form-horizontal" method="POST" action="<%= formAction %>" commandName="formObject">
+	<sf:form class="form-horizontal" method="POST" className="${formObject.getClass().getName()}" commandName="formObject">
 	<div class="modal-header">
 	<!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button> -->
 	      <h1><%= pageContext.findAttribute("formObject").getClass().getSimpleName() %></h1>
@@ -73,11 +73,11 @@
 				} else if (annotations[j].toString().contains("CheckBox")) {
 					if (annotations[j].toString().contains("unChecked=false")) {%>
 							<label class="checkbox"><%= fields[i].getName() %>
-								<sf:checkbox value="true" checked="true" path="<%= fields[i].getName() %>" id="<%= fields[i].getName() %>"/>
+								<sf:checkbox checked="true" path="<%= fields[i].getName() %>" id="<%= fields[i].getName() %>"/>
 							</label>
 					<%} else {%>
 							<label class="checkbox"><%= fields[i].getName() %>
-								<sf:checkbox value="true" path="<%= fields[i].getName() %>" id="<%= fields[i].getName() %>"/>
+								<sf:checkbox path="<%= fields[i].getName() %>" id="<%= fields[i].getName() %>"/>
 							</label>
 					<%}
 				} else if (annotations[j].toString().contains("File")) {%>
@@ -123,7 +123,7 @@
 	</div>
 	<div class="modal-footer">
 		<div class="btn-group pull-left">
-			 <sf:input type = "submit" class="btn btn-primary" name="commit" value="Submit" path=""/>
+			 <sf:input type="submit" class="btn btn-primary" value="Submit" path=""/>
 		</div>
 	</div>
 	</sf:form>

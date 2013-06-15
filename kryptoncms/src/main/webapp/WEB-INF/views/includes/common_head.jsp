@@ -1,7 +1,8 @@
+<%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript">
 	var DOMAIN_CONFIGURATIONS = {
-			BASE_URL : "<c:url value='/' />"
+			BASE_URL : "<c:url value='/'  />"
 	};
 </script>
 <script id="comments-tmpl" type="text/x-jquery-tmpl">

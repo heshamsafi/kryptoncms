@@ -18,7 +18,7 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 				.success(function(response){
 					if(response["successful"]){
 						var id = response["id"];
-						if(url.match(new RegExp("\\d$")) == null){
+						if(url.match(new RegExp("(edit(/)?)$")) != null){
 							if( url.match(new RegExp("\\w$") ) )  url += "/"; 
 							if( url.match(new RegExp("/$")   ) )  url += id; 
 						}
