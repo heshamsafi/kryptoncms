@@ -1,6 +1,5 @@
 package edu.asu.krypton.controllers.webservices;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -12,13 +11,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamResult;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
-import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

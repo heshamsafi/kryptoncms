@@ -22,10 +22,6 @@ public abstract class CommentableService <Entity extends Commentable> {
 	protected Repository<Entity> repository;
 	public abstract Commentable findById(Serializable id);
 	public void saveOrUpdate(Entity commentable) {
-		try {
 			repository.saveOrUpdate(commentable);
-		} catch (CustomRuntimeException e) {
-			e.printStackTrace();
-		}
 	}
 }

@@ -1,23 +1,28 @@
 package edu.asu.krypton.service;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.atmosphere.cpr.MetaBroadcaster;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.OutBoundCommentProxy;
-import edu.asu.krypton.model.persist.db.Article;
+import edu.asu.krypton.model.message_proxies.QueryMessage;
 import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.model.persist.db.Commentable;
 import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.model.repository.CommentRepository;
-import edu.asu.krypton.model.repository.Repository;
 
 @Service
 public class CommentService extends
@@ -29,6 +34,8 @@ public class CommentService extends
 	@Autowired(required = true)
 	private RegistrationService registrationService;
 	
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
 
 	// each service class gets wired at setter and the instance
 	// goes into the parentEntities right after that
@@ -88,11 +95,26 @@ public class CommentService extends
 		 Comment comment = new Comment();
 		 comment.setContent(commentContent);
 		 comment.setAuthor(author);
-		 saveOrUpdate(comment);
+		
 		 Commentable commentable =  support.getService().findById(parentId);
 		 commentable.getComments().add(comment);
+		 comment.setParentId(commentable.getId());
+		 comment.setParentType(commentable.getClass().getName());
+		 saveOrUpdate(comment);
 		 support.getService().saveOrUpdate(commentable);
 		 return comment;
+	}
+	
+	public void broadcastCommment(OutBoundCommentProxy proxy) throws JsonGenerationException, JsonMappingException, IOException {
+		QueryMessage<OutBoundCommentProxy> queryMessage = new QueryMessage<OutBoundCommentProxy>();
+		queryMessage.setSuccessful(true);
+		List<OutBoundCommentProxy> list = new ArrayList<OutBoundCommentProxy>();
+		list.add(proxy);
+		queryMessage.setQueryResult(list);
+		String json = objectMapper.writeValueAsString(queryMessage);
+		String path = String.format("/comments/%s/%s", proxy.getParentType(), proxy.getParentId());
+		MetaBroadcaster.getDefault().broadcastTo(path, json);
+		System.out.println("broadcasting to " + path + " this message " + json);
 	}
 
 	@Override
@@ -104,10 +126,6 @@ public class CommentService extends
 	public void setRepository(CommentRepository repository){
 		this.repository = repository;
 	}
-	
-	
-
-	
 
 	public ArticleService getArticleService() {
 		return articleService;

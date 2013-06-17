@@ -10,6 +10,8 @@ public class OutBoundCommentProxy {
 	private String username;
 	private int noOfReplies;
 	
+	public OutBoundCommentProxy(){}
+	
 	public OutBoundCommentProxy(Comment commentEntity){
 		setId(commentEntity.getId());
 		setContent(commentEntity.getContent());

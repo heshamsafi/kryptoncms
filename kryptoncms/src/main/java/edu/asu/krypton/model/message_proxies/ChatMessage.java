@@ -22,5 +22,11 @@ public class ChatMessage {
 	}
 	public void setBody(String body) {
 		this.body = body;
+	}
+	@Override
+	public String toString() {
+		return String.format("ChatMessage[source=%s, destinations=%d, body=%s]",getSource(),getDestinations().length,getBody());
 	}	
+	
+	
 }

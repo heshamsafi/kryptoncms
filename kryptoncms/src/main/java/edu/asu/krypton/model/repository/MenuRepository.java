@@ -27,7 +27,7 @@ public class MenuRepository extends edu.asu.krypton.model.repository.Repository<
 
 	public void rearrangeMenu(MenuMessage menuMessage) {
 		int i = 1;
-		for(ObjectId id:menuMessage.getNewOrder()){
+		for(String id:menuMessage.getNewOrder()){
 			Query query = new Query();
 			query.addCriteria(Criteria.where("id").is(id));
 			Update update = new Update().set("order", i);

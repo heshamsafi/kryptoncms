@@ -16,9 +16,10 @@
 		<intercept-url pattern="/membership/login" access="permitAll" />
 		<intercept-url pattern="/membership/register" access="permitAll" />
 		<intercept-url pattern="/membership/register/**" access="permitAll" />
-		<intercept-url pattern="/comments/**" access="isAuthenticated()" />
+<!-- 		<intercept-url pattern="/comments/**" access="isAuthenticated()" /> -->
 		<intercept-url pattern="/chat/**" access="isAuthenticated()" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
+<!-- 		<intercept-url pattern="/article/edit" access="permitAll" requires-channel="https"/> -->
 		<access-denied-handler error-page="/denied" />
 		<logout invalidate-session="true"  logout-success-url="/membership/logout/success"
 			logout-url="/membership/logout" delete-cookies="JSESSIONID" />

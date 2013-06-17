@@ -29,11 +29,7 @@ public class PhotoService extends CommentableService<Photo> {
 
 	@Override
 	public void saveOrUpdate(Photo entity) {
-		try {
 			repository.saveOrUpdate(entity);
-		} catch (CustomRuntimeException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public List<Photo> getAll() {

@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * missing the relationship with the UserPrivilege entity, don't forget adding the new attribute
  * added in the inheriting entities in the @AttributeOverrides annotation
  */
-@Document
-public class Component implements DbEntity{
+//@Document
+public class Component {
 	@Id
 	private String id;
 	
