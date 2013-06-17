@@ -11,16 +11,26 @@ public class Photo extends Commentable{
 	private String id;
 	
 	private String path;
-
-	@DBRef
-	private Album parent;
 	
-	public Album getParent() {
-		return parent;
+	private String album;
+
+//	@DBRef
+//	private Album parent;
+	
+//	public Album getParent() {
+//		return parent;
+//	}
+
+//	public void setParent(Album parent) {
+//		this.parent = parent;
+//	}
+
+	public String getAlbum() {
+		return album;
 	}
 
-	public void setParent(Album parent) {
-		this.parent = parent;
+	public void setAlbum(String album) {
+		this.album = album;
 	}
 
 	public void setId(String id) {

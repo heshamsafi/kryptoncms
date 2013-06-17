@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.krypton.controllers.PhotoGalleryController;
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.AlbumMessage;
 import edu.asu.krypton.model.persist.db.Album;
@@ -15,6 +17,8 @@ import edu.asu.krypton.model.repository.AlbumRepository;
 
 @Service
 public class AlbumService {
+	
+	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(AlbumService.class);
 
 	@Autowired(required=true)
 	private AlbumRepository albumRepository;
@@ -32,6 +36,16 @@ public class AlbumService {
 	}
 	
 	public List<Album> getAll(){
+		List<Album> albums = albumRepository.getAll();
+		
+		for(Album album : albums){
+			logger.debug("Album " + album.getTitle());
+			for(Photo photo : album.getPhotos()){
+				logger.debug("Photo " + photo.getPath());
+			}
+		}
+		
+		
 		return albumRepository.getAll();
 	}
 

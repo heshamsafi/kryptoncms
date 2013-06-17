@@ -5,24 +5,26 @@ import java.util.Collection;
 
 import javax.persistence.Id;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Album {
 	@Id
-	private Long id;
+	private String id;
 	
 	private String title;
 	
 	@DBRef
 	private Collection<Photo> photos = new ArrayList<Photo>();
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

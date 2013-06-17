@@ -65,7 +65,7 @@ public class GenericRepositoryTest {
 		Album album = new Album();
 		album.setTitle("test title");
 		albumRepository.saveOrUpdate(album);
-		photo.setParent(album);
+		photo.setAlbum(album.getTitle());
 		photoRepository.saveOrUpdate(photo);
 
 		

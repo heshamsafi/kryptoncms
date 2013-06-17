@@ -4,7 +4,7 @@ import edu.asu.krypton.model.persist.db.Album;
 
 public class AlbumMessage {
 
-	private Long id;
+	private String id;
 	private String title;
 	
 	public AlbumMessage(Album albumEntity) {
@@ -12,11 +12,11 @@ public class AlbumMessage {
 		setTitle(albumEntity.getTitle());
 	}
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
