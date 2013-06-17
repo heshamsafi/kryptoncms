@@ -1,5 +1,7 @@
 package edu.asu.krypton.model.message_proxies;
 
+import org.bson.types.ObjectId;
+
 import edu.asu.krypton.model.persist.db.Album;
 
 public class AlbumMessage {

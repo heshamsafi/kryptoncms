@@ -1,9 +1,10 @@
-define(	  ["jquery","libraries/mootools-base","libraries/jquery.history"]
- ,function( $	   , Mootools				 , History){
+define(	  ["jquery","libraries/mootools-base","libraries/jquery.history","FormSerializer.class","SocketHandler.class"]
+ ,function( $	   , Mootools				 , History,FormSerializer){
 	var Ajaxifier = new Mootools.Class({
 		initialize:function(pageScopeMain,collectGarbage){
 			this.pageScopeMain = pageScopeMain;
 			this.collectGarbage= collectGarbage;
+			this.formSerializer = new FormSerializer();
 		    if ( !History.enabled ) {
 		         // History.js is disabled for this browser.
 		         // This is because we can optionally choose to support HTML4 browsers or not.
@@ -34,6 +35,20 @@ define(	  ["jquery","libraries/mootools-base","libraries/jquery.history"]
 			History.pushState(data, title, url);
 		},reload : function(){
 			this.loadDynamicContent(window.location.href,this.pageScopeMain,this.collectGarbage);
+		},
+		formSubmitHandler : function($form,socket){
+			var thisAjaxifierInstance = this;
+			$form.submit(function(event){
+				event.preventDefault();
+				var serializedForm = thisAjaxifierInstance.formSerializer.serialize($form);
+				console.log(serializedForm);
+				var serializedForm = JSON.stringify(serializedForm);
+				var scaffoldMessage = {"className":$form.attr('className'),actualEntity:serializedForm,action:"modify"};
+				var stringifiedScaffoldMessage = JSON.stringify(scaffoldMessage);
+				socket.push(stringifiedScaffoldMessage);
+				$form.parents(".modal[aria-hidden=false]").modal("hide");
+				return false;
+			});
 		}
 	});
 	//static fields

@@ -1,16 +1,12 @@
 package edu.asu.krypton.model.persist.db;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.InputText;
@@ -58,18 +54,7 @@ public class User implements DbEntity {
 	public void setRole(BigInteger role) {
 		this.role = role;
 	}
-	
-//	@XmlTransient
-//	public Collection<Comment> getComments() {
-//		return comments;
-//	}
-//
-//
-//	public void setComments(Collection<Comment> comments) {
-//		this.comments = comments;
-//	}
 
-	
 	@Override
 	public boolean equals(Object obj) {
 		User user = (User)obj;

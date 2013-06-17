@@ -118,7 +118,7 @@ public class ScaffoldController extends Controller {
 
 			model.addAttribute("entityClassFields",getAllFields(entityClass))
 				 .addAttribute("entities", queryResult)
-				 .addAttribute("entityClassName", entityClass.getSimpleName());
+				 .addAttribute("entityClassName", entityClass.getName());
 			System.out.println("this is a real entity");
 		} catch (Exception e) {
 			System.out.println(entity +" is not a valid entity");

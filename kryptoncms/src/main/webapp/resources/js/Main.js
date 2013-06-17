@@ -60,7 +60,6 @@ function(
 	var chatter = null,
 		commentManager = null;
 	$(document).ready(function(){
-		pageScopeMain();
 		$('.cp-basic').colorpicker();
 		$( "#slider-range-min" ).slider({
 	      range: "min",
@@ -74,6 +73,7 @@ function(
 	    $( "#amount" ).val( $( "#slider-range-min" ).slider( "value" ) + "px" );
 		sessionScopeMain();
 		Ajaxifier.getInstance(pageScopeMain,collectGarbage);
+		pageScopeMain();
 		var pin = false;
 		var hoverHandler = function(){
 			$("#admin_nav").toggleClass("span3 span0");
@@ -127,7 +127,7 @@ function(
 		$('[rel=tooltip]').tooltip();
 		$('[rel=popover]').popover();
 		
-		new Scaffolder();
+		new Scaffolder(Ajaxifier.getInstance());
 		
 		new MenuManager();
 		

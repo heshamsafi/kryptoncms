@@ -51,6 +51,13 @@
     	<listener-class>edu.asu.krypton.service.CleanupContextListener</listener-class>
 	</listener>
 	
+	<!-- this disables url rewrite ww.xxxx.xxx;jsessionid=XXXXXXXXXX 
+		 this was a major bug source-->
+	<session-config>
+	     <tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+			
+
 
 	<!-- Processes application requests -->
 

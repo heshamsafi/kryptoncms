@@ -23,7 +23,11 @@ define(["jquery","libraries/mootools-base"],function($,Mootools){
 		serializeTo_json : function($form){
 			var payload = {};
 			$form.find("[name]").each(function() {
-				payload[$(this).attr("name")] = $(this).val();
+				if($(this).attr("type")!="hidden"){
+					if($(this).attr("type")=="checkbox"){
+						payload[$(this).attr("name")] = $(this).is(":checked");
+					}else payload[$(this).attr("name")] = $(this).val() ==""?null:$(this).val();
+				}
 			});
 			return payload;
 		}.protect(),

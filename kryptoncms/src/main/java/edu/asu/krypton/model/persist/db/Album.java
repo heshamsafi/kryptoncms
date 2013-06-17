@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Id;
-
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 

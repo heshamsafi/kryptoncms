@@ -31,18 +31,24 @@ public class Article extends Commentable {
 	@InputText
 	private String description;
 
+	@Indexed
+	private Date date;
+	
 	@CheckBox
 	private boolean obsolete;
 	
 	// momken ne7tag nzawed author ba3deen
-	
-	@Indexed
-	private Date date;
 
-	public Article(){
-		this.date = new Date();
+	public Article update(Article newArticle){
+		this.date = newArticle.getDate();
+		this.description = newArticle.getDescription();
+		this.title = newArticle.getTitle();
+		this.obsolete = newArticle.isObsolete();
+		this.id = newArticle.getId();
+		this.content = newArticle.getContent();
+		return this;
 	}
-	@XmlAttribute
+		@XmlAttribute
 	public String getContent() {
 		return content;
 	}

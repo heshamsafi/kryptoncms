@@ -24,18 +24,19 @@ define(["jquery","libraries/mootools-base","SocketHandler.class","./libraries/jq
 	          activeClass: "ui-state-default",
 	          hoverClass: "ui-state-hover",
 	          accept: ":not(.ui-sortable-helper)",
+	          items: "",
 	          receive: function(event, ui ) {
 		        	thisMenuManager.socketHandler.push(JSON.stringify({"admin":true,"action":"delete","operandId":$(ui.item).find("a").attr("data-menu-id")}));
 		      }
 	        });
 			$("#addMenu").click(function(){
-				$("#genericModal").load(DOMAIN_CONFIGURATIONS.BASE_URL+"form/Menu/");
+				$("#genericModal").load(DOMAIN_CONFIGURATIONS.BASE_URL+"form/edu.asu.krypton.model.persist.db.Menu/");
 			});
 		},
 		subscribeSocket : function(){
 			var thisMenuManager = this;
 			thisMenuManager.socketHandler 
-				= new SocketHandler({ url : "http://localhost:8080/kryptoncms/navigation/menu/echo" })
+				= new SocketHandler({ url : DOMAIN_CONFIGURATIONS.BASE_URL+"navigation/menu/echo" })
 				  .setOnMessageHandler(
 				    	function(response) {
 				    		console.log(response);
