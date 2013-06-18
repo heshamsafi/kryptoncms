@@ -7,21 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.OutBoundCommentProxy;
-import edu.asu.krypton.model.persist.db.Article;
 import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.model.persist.db.Commentable;
 import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.model.repository.CommentRepository;
-import edu.asu.krypton.model.repository.Repository;
 
 @Service
 public class CommentService extends
 		edu.asu.krypton.service.CommentableService<Comment> {
+	
+	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(CommentService.class);
+
 
 	// autowired at setter
 	private ArticleService articleService;
@@ -29,12 +31,30 @@ public class CommentService extends
 	@Autowired(required = true)
 	private RegistrationService registrationService;
 	
+	// autowired at setter
+	private PhotoService photoService;
+	
 
 	// each service class gets wired at setter and the instance
 	// goes into the parentEntities right after that
 	// at the time this comment is written we have only ArticleService ... but
 	// the same goes
 	// for any Commentable Service instance field for this Service class
+
+	public PhotoService getPhotoService() {
+		return photoService;
+	}
+
+	@Autowired(required = true)
+	public void setPhotoService(PhotoService photoService) {
+		this.photoService = photoService;
+		parentEntities.put(
+				// edu.asu.krypton.model.persist.db.CommentComment.class.getSimpleName(),
+				edu.asu.krypton.model.persist.db.Photo.class.getSimpleName(),
+				new SupportClasses().setCommentable(
+						edu.asu.krypton.model.persist.db.Photo.class)
+						.setService(photoService));
+	}
 
 	private final Map<String, SupportClasses> parentEntities = new HashMap<String, SupportClasses>();
 
@@ -45,19 +65,17 @@ public class CommentService extends
 				new SupportClasses().setCommentable(
 						edu.asu.krypton.model.persist.db.Comment.class)
 						.setService(this));
-		parentEntities.put(
-				// edu.asu.krypton.model.persist.db.CommentComment.class.getSimpleName(),
-				edu.asu.krypton.model.persist.db.Photo.class.getSimpleName(),
-				new SupportClasses().setCommentable(
-						edu.asu.krypton.model.persist.db.Photo.class)
-						.setService(this));
 	}
 
 	public Collection<Comment> getByParentId(String parentId,String parentType) throws CustomRuntimeException{
 		try{
 			Class<? extends Commentable> commentable = parentEntities.get(parentType).getCommentable();
+			logger.debug("commentable : " + commentable);
 			if (commentable == null) throw new NullPointerException();
+			logger.debug("Parent ID : " + parentId + ", Parent type " + parentType );
 			Commentable commentableEntity = (Commentable)parentEntities.get(parentType).getService().findById(parentId);
+			logger.debug("commentableEntity : " + commentableEntity);
+			logger.debug("commentableEntity.getComments() : " + commentableEntity.getComments());
 			return commentableEntity.getComments();
 		}catch(NullPointerException ex){
 			ex.printStackTrace();
@@ -122,7 +140,8 @@ public class CommentService extends
 				edu.asu.krypton.model.persist.db.Article.class.getSimpleName(),
 				new SupportClasses().setCommentable(
 						edu.asu.krypton.model.persist.db.Article.class)
-						.setService(articleService));
+						.setService(articleService)
+				);
 	}
 
 }

@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.persist.db.Album;
+import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.model.persist.db.Photo;
 import edu.asu.krypton.model.persist.db.PhotoComment;
 
@@ -31,7 +31,7 @@ public class PhotoRepositoryTest {
 	public void save6Photos() throws CustomRuntimeException{
 		Album album;
 		Photo photo;
-		PhotoComment photoComment;
+		Comment photoComment;
 		
 //		photoRepository.getDao().openSession();
 		
@@ -43,7 +43,7 @@ public class PhotoRepositoryTest {
 				photo.setPath(j + ".jpg");
 				photo.setAlbum(album.getTitle());
 				for(int k = 1; k <= 10; k++){
-					photoComment = new PhotoComment();
+					photoComment = new Comment();
 					photoComment.setContent("Album (" + i + ") Photo (" + j + ") Comment Test (" + k + ")");
 //					photoComment.setParent(photo);
 					photo.getComments().add(photoComment);

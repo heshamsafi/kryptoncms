@@ -18,12 +18,17 @@ import edu.asu.krypton.model.persist.db.Album;
 import edu.asu.krypton.model.persist.db.Photo;
 import edu.asu.krypton.model.repository.ArticleRepository;
 import edu.asu.krypton.model.repository.PhotoRepository;
+import edu.asu.krypton.model.repository.PhotoRepositoryTest;
 
 @Service
 public class PhotoService extends CommentableService<Photo> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PhotoService.class);
 
 	@Override
 	public Photo findById(Serializable id) {
+		logger.debug("Photo id = " + id);
+		logger.debug("Photo = " + repository.findById(id));
 		return repository.findById(id);
 	}
 
