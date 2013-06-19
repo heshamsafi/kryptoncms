@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class PhotoComment extends Comment implements DbEntity{
 
-	@DBRef
-	private Photo parent;
+//	@DBRef
+//	private Photo parent;
 
 }

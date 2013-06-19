@@ -34,6 +34,9 @@ public class CommentService extends
 	@Autowired(required = true)
 	private RegistrationService registrationService;
 	
+	// autowired at setter
+	private PhotoService photoService;
+	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;
 
@@ -43,6 +46,21 @@ public class CommentService extends
 	// the same goes
 	// for any Commentable Service instance field for this Service class
 
+	public PhotoService getPhotoService() {
+		return photoService;
+	}
+
+	@Autowired(required = true)
+	public void setPhotoService(PhotoService photoService) {
+		this.photoService = photoService;
+		parentEntities.put(
+				// edu.asu.krypton.model.persist.db.CommentComment.class.getSimpleName(),
+				edu.asu.krypton.model.persist.db.Photo.class.getSimpleName(),
+				new SupportClasses().setCommentable(
+						edu.asu.krypton.model.persist.db.Photo.class)
+						.setService(photoService));
+	}
+
 	private final Map<String, SupportClasses> parentEntities = new HashMap<String, SupportClasses>();
 
 	public CommentService() {
@@ -51,12 +69,6 @@ public class CommentService extends
 				edu.asu.krypton.model.persist.db.Comment.class.getSimpleName(),
 				new SupportClasses().setCommentable(
 						edu.asu.krypton.model.persist.db.Comment.class)
-						.setService(this));
-		parentEntities.put(
-				// edu.asu.krypton.model.persist.db.CommentComment.class.getSimpleName(),
-				edu.asu.krypton.model.persist.db.Photo.class.getSimpleName(),
-				new SupportClasses().setCommentable(
-						edu.asu.krypton.model.persist.db.Photo.class)
 						.setService(this));
 	}
 
