@@ -15,7 +15,7 @@
 	<sf:form class="form-horizontal" method="POST" className="${formObject.getClass().getName()}" commandName="formObject">
 	<div class="modal-header">
 	<!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button> -->
-	      <h1><%= pageContext.findAttribute("formObject").getClass().getSimpleName() %></h1>
+	      <h1> <%= pageContext.findAttribute("formObject").getClass().getSimpleName() %></h1>
 	</div>
 	<div class="modal-body" >
 	<% 
