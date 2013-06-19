@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:annotation-config />
+	<tx:annotation-driven  />
+	<import resource="classpath:/common_contexts/root-context.xml"/>
+	<!-- classes in src directory are annotated with stereotypes (auto-discovery annotations)
+		 but the their context is not loaded bcz this is unit testing ... each module should be
+		 tested separately ... instead we instantiate the beans we need here in xml.  -->
+<!-- 	<bean id="userRepository" class="edu.asu.krypton.model.repository.UserRepository"></bean> -->
+<!-- 	<bean id="roleRepository" class="edu.asu.krypton.model.repository.RoleRepository"></bean> -->
+</beans>
