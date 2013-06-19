@@ -1,1 +1,0 @@
-define(["jquery","libraries/mootools-base","libraries/ckeditor/adapters/jquery"],function(e,t){var n=new t.Class({initialize:function(){e(".ckeditor").ckeditor()}});return n});

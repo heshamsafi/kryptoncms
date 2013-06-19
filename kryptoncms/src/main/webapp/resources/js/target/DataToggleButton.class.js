@@ -1,1 +1,0 @@
-define(["jquery","libraries/mootools-base"],function(e,t){var n=new t.Class({Implements:[t.Options],options:{},jquery:"DataToggleButton",initialize:function(){this.$elements=e("button[data-toggle=button]")},patch:function(){this.$elements.click(function(){e(this).val(e(this).val()==="true"?"false":"true")})}});return n});

@@ -1,1 +1,0 @@
-({baseUrl:".",dir:"target",name:"Main",paths:{jquery:"empty:"},preserveLicenseComments:!1});

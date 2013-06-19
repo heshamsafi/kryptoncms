@@ -1,1 +1,0 @@
-define([],function(){var e=function(e,t,n){this.source=null,this.body=null,this.destinations=null};return e});
