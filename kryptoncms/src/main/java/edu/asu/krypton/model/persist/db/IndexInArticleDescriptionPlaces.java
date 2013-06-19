@@ -3,6 +3,8 @@ package edu.asu.krypton.model.persist.db;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import edu.asu.krypton.model.repository.Repository;
+
 public class IndexInArticleDescriptionPlaces implements DbEntity{
 
 	@Id
@@ -38,6 +40,18 @@ public class IndexInArticleDescriptionPlaces implements DbEntity{
 
 	public IndexInArticleDescriptionPlaces() {
 		super();
+	}
+
+	@Override
+	public void onDelete(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onEdit(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

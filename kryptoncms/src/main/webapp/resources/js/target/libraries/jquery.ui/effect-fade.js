@@ -1,0 +1,1 @@
+define(["jquery","libraries/jquery.ui/effect"],function(e){(function(e,t){var n=e;e.effects.effect.fade=function(t,n){var r=e(this),i=e.effects.setMode(r,t.mode||"toggle");r.animate({opacity:i},{queue:!1,duration:t.duration,easing:t.easing,complete:n})}})(e)});

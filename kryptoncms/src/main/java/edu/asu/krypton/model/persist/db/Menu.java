@@ -5,11 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.model.repository.Repository;
 
 @Document
-public class Menu {
+public class Menu implements DbEntity {
 	@InputText(readOnly=true)
-	private ObjectId id;
+	private String id;
 	@InputText
 	private String name;
 	@InputText
@@ -18,10 +19,10 @@ public class Menu {
 	private int order;
 	@CheckBox
 	private boolean admin;
-	public ObjectId getId() {
+	public String getId() {
 		return id;
 	}
-	public Menu setId(ObjectId id) {
+	public Menu setId(String id) {
 		this.id = id;
 		return this;
 	}
@@ -52,5 +53,15 @@ public class Menu {
 	public Menu setOrder(int order) {
 		this.order = order;
 		return this;
+	}
+	@Override
+	public void onDelete(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onEdit(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -7,7 +7,6 @@ import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
-import org.atmosphere.cpr.MetaBroadcaster;
 import org.atmosphere.cpr.Meteor;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -29,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.krypton.model.message_proxies.Message;
 import edu.asu.krypton.model.message_proxies.ScaffoldMessage;
+import edu.asu.krypton.service.ScaffoldService;
+import edu.asu.krypton.service.redis.Publisher;
 
 @Controller
 @RequestMapping(value="/form")
@@ -37,9 +38,16 @@ public class FormController {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
+		
+	@Autowired(required=true)
+	private ScaffoldService scaffoldService;
 	
-	private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
 
+	@Autowired(required=true)
+	private Publisher publisher;
+	
 	@RequestMapping(value="echo",method = RequestMethod.GET)
 	@ResponseBody
 	public void handshake(final AtmosphereResource atmosphereResource,@RequestParam(defaultValue="") String j_username) throws IOException {
@@ -64,18 +72,7 @@ public class FormController {
 			atmosphereResource.resume();
 			return;
 		}
-		ScaffoldMessage scaffoldMessage = objectMapper.readValue(requestBody, ScaffoldMessage.class);
-		Class<?> type = Class.forName(scaffoldMessage.getClassName());
-		if(scaffoldMessage.getAction().equals("delete")){
-			Query query = new Query();
-			query.addCriteria(Criteria.where("id").is(scaffoldMessage.getId()));
-			mongoTemplate.remove(query, type);
-		}else{//modify or create
-			mongoTemplate.save(
-								objectMapper.readValue(scaffoldMessage.getActualEntity(), type)
-		    );
-		}
-		MetaBroadcaster.getDefault().broadcastTo("/form/echo", requestBody);
+		publisher.publish("scaffoldMessageBroadcast", requestBody);
 	}
 	
 	@RequestMapping(value={"/{fullClassName}","/{fullClassName}/{id}"},method=RequestMethod.POST)

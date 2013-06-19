@@ -18,7 +18,7 @@
 	
 	<import resource="aop-context.xml" />
 	
-	<import resource="social-context.xml" />
+<!-- 	<import resource="social-context.xml" /> -->
 	
 	<context:component-scan base-package="edu.asu.krypton.controllers, edu.asu.krypton.model.repository, edu.asu.krypton.service ,edu.asu.krypton.aspects" />
 	

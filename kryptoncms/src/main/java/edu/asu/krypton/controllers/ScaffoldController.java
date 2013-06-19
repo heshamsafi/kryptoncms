@@ -32,6 +32,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.wiztools.paginationlib.PaginatedItems;
 import org.wiztools.paginationlib.PaginationUtil;
 
+import edu.asu.krypton.model.persist.db.DbEntity;
+import edu.asu.krypton.model.repository.Repository;
+
 @RequestMapping("/scaffold")
 @org.springframework.stereotype.Controller
 public class ScaffoldController extends Controller {
@@ -42,6 +45,9 @@ public class ScaffoldController extends Controller {
 	
 	@Autowired(required=true)
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired(required=true)
+	private Repository<DbEntity> repository;
 	
 	@RequestMapping(method=RequestMethod.GET,value="")
 	public String getAllEntities(Model model,HttpServletRequest request) throws IOException, ClassNotFoundException{
@@ -140,7 +146,8 @@ public class ScaffoldController extends Controller {
 //		Query query = new Query();
 //		query.addCriteria(Criteria.where("id").is(id));
 //		Object root = mongoTemplate.findOne(query, entityClass);
-		mongoTemplate.remove(new Query().addCriteria(Criteria.where("id").is(id)), entityClass);
+		repository.delete(new Query().addCriteria(Criteria.where("id").is(id)), entityClass);
+//		mongoTemplate.remove(, );
 //		mongoTemplate.remove(root);
 	}
 	

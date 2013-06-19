@@ -5,6 +5,8 @@ import java.util.Collection;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import edu.asu.krypton.model.repository.Repository;
+
 public class Indices implements DbEntity{
 
 	@Id
@@ -42,5 +44,15 @@ public class Indices implements DbEntity{
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public void onDelete(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onEdit(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
 	}
 }

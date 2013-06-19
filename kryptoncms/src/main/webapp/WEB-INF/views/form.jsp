@@ -1,3 +1,4 @@
+<%@page import="javassist.bytecode.stackmap.TypeData.ClassName"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.lang.reflect.Type"%>
 <%@ page import="java.util.Collection"%>
@@ -65,9 +66,9 @@
 							</div>
 						<%}
 				} else if (annotations[j].toString().contains("TextArea")) {
-					if (annotations[j].toString().contains("applyCKEditor=true")) {
-						// Waleed
-					} else {%>
+					if (annotations[j].toString().contains("applyCKEditor=true")) { %>
+						<sf:textarea class="ckeditor" path="<%= fields[i].getName() %>" rows="5" cols="30" id="<%= fields[i].getName() %>"/>
+					<% } else {%>
 							<sf:textarea path="<%= fields[i].getName() %>" rows="5" cols="30" id="<%= fields[i].getName() %>"/>
 					<% }
 				} else if (annotations[j].toString().contains("CheckBox")) {

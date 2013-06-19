@@ -4,8 +4,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import edu.asu.krypton.model.repository.Repository;
+
 @Document
-public class Photo extends Commentable{
+public class Photo extends Commentable implements DbEntity{
 
 	@Id
 	private String id;
@@ -47,5 +49,17 @@ public class Photo extends Commentable{
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Override
+	public void onDelete(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onEdit(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
 	}
 }

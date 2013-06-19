@@ -5,26 +5,22 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.TextArea;
 
 @Document
 @XmlRootElement
-public class Article extends Commentable {
+public class Article extends Commentable implements DbEntity {
 	@Id
 	@InputText(readOnly=true)
 	private String id;
 	
-	@InputText
-	private String content;
-	
-	//sheltaha 3alashan el testing law 7ad la2aha commented yeb2a ana neseet araga3ha
-	//e3mel ma3roof we sheel el comment elly 3ala @Column(unique=true)
-	//@Column(unique=true)
 	@Indexed(unique=true)
 	@InputText
 	private String title;
@@ -34,21 +30,14 @@ public class Article extends Commentable {
 	@Indexed
 	private Date date;
 	
+	@TextArea(applyCKEditor=true)
+	private String content;
+	
 	@CheckBox
 	private boolean obsolete;
-	
 	// momken ne7tag nzawed author ba3deen
-
-	public Article update(Article newArticle){
-		this.date = newArticle.getDate();
-		this.description = newArticle.getDescription();
-		this.title = newArticle.getTitle();
-		this.obsolete = newArticle.isObsolete();
-		this.id = newArticle.getId();
-		this.content = newArticle.getContent();
-		return this;
-	}
-		@XmlAttribute
+	
+	@XmlAttribute
 	public String getContent() {
 		return content;
 	}

@@ -1,18 +1,24 @@
 package edu.asu.krypton.service;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
+import org.atmosphere.cpr.MetaBroadcaster;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.OutBoundCommentProxy;
+import edu.asu.krypton.model.message_proxies.QueryMessage;
 import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.model.persist.db.Commentable;
 import edu.asu.krypton.model.persist.db.User;
@@ -21,9 +27,6 @@ import edu.asu.krypton.model.repository.CommentRepository;
 @Service
 public class CommentService extends
 		edu.asu.krypton.service.CommentableService<Comment> {
-	
-	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(CommentService.class);
-
 
 	// autowired at setter
 	private ArticleService articleService;
@@ -34,6 +37,8 @@ public class CommentService extends
 	// autowired at setter
 	private PhotoService photoService;
 	
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
 
 	// each service class gets wired at setter and the instance
 	// goes into the parentEntities right after that
@@ -70,12 +75,8 @@ public class CommentService extends
 	public Collection<Comment> getByParentId(String parentId,String parentType) throws CustomRuntimeException{
 		try{
 			Class<? extends Commentable> commentable = parentEntities.get(parentType).getCommentable();
-			logger.debug("commentable : " + commentable);
 			if (commentable == null) throw new NullPointerException();
-			logger.debug("Parent ID : " + parentId + ", Parent type " + parentType );
 			Commentable commentableEntity = (Commentable)parentEntities.get(parentType).getService().findById(parentId);
-			logger.debug("commentableEntity : " + commentableEntity);
-			logger.debug("commentableEntity.getComments() : " + commentableEntity.getComments());
 			return commentableEntity.getComments();
 		}catch(NullPointerException ex){
 			ex.printStackTrace();
@@ -106,11 +107,27 @@ public class CommentService extends
 		 Comment comment = new Comment();
 		 comment.setContent(commentContent);
 		 comment.setAuthor(author);
-		 saveOrUpdate(comment);
+		
 		 Commentable commentable =  support.getService().findById(parentId);
 		 commentable.getComments().add(comment);
+		 comment.setParentId(commentable.getId());
+		 comment.setParentType(commentable.getClass().getName());
+		 saveOrUpdate(comment);
 		 support.getService().saveOrUpdate(commentable);
 		 return comment;
+	}
+	
+	public void broadcastCommment(OutBoundCommentProxy proxy) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println(proxy.toString());
+		QueryMessage<OutBoundCommentProxy> queryMessage = new QueryMessage<OutBoundCommentProxy>();
+		queryMessage.setSuccessful(true);
+		List<OutBoundCommentProxy> list = new ArrayList<OutBoundCommentProxy>();
+		list.add(proxy);
+		queryMessage.setQueryResult(list);
+		String json = objectMapper.writeValueAsString(queryMessage);
+//		String path = String.format("/comments/%s/%s", proxy.getParentType(), proxy.getParentId());
+		MetaBroadcaster.getDefault().broadcastTo(proxy.getPath(), json);
+		System.out.println("broadcasting to " + proxy.getPath() + " this message " + json);
 	}
 
 	@Override
@@ -122,10 +139,6 @@ public class CommentService extends
 	public void setRepository(CommentRepository repository){
 		this.repository = repository;
 	}
-	
-	
-
-	
 
 	public ArticleService getArticleService() {
 		return articleService;
@@ -140,8 +153,7 @@ public class CommentService extends
 				edu.asu.krypton.model.persist.db.Article.class.getSimpleName(),
 				new SupportClasses().setCommentable(
 						edu.asu.krypton.model.persist.db.Article.class)
-						.setService(articleService)
-				);
+						.setService(articleService));
 	}
 
 }

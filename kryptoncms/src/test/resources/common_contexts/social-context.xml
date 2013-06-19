@@ -63,7 +63,7 @@
 <!-- 		<constructor-arg value="Anonymous" /> -->
 <!-- 		<aop:scoped-proxy proxy-target-class="false" /> -->
 <!-- 	</bean> -->
-	
+
 <!-- 	<bean id="signInAdapter" class="edu.asu.krypton.service.membership.social.signin.SimpleSignInAdapter"/> -->
 	
 <!-- 	<bean id="usersConnectionRepository"  -->

@@ -91,4 +91,7 @@
 <link rel="stylesheet" href='<c:url value="/resources/css/jquery.fileupload-ui.css" />'>
 <link rel="stylesheet" href="<c:url value="/resources/css/jquery-ui.smoothness.css" />" />
 <noscript><link rel="stylesheet" href='<c:url value="/resources/css/jquery.fileupload-ui-noscript.css"/>'></noscript>
+<%-- <script data-main="${pageScope.CompiledMain}" src="${pageScope.compiledRequireJqueryJs}" ></script> --%>
 <script data-main="${pageScope.Main}" src="${pageScope.requireJqueryJs}" ></script>
+<!-- Compiled -->
+<%-- <script src="<c:url value='/resources/js/build.js' />" ></script> --%>

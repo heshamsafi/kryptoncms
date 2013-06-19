@@ -22,6 +22,7 @@ response.setHeader("Expires","0");
 <spring:url scope="page" var="ckeditor" value="/resources/js/ckeditor/ckeditor.js"/>
 <%-- js --%>
 <%-- libraries --%>
+<spring:url scope="page" var="compiledRequireJqueryJs"          value="/resources/js/target/libraries/require-jquery.js" />
 <spring:url scope="page" var="requireJqueryJs"          value="/resources/js/libraries/require-jquery.js" />
 <spring:url scope="page" var="requireJs"          value="/resources/js/libraries/require.js" />
 
@@ -60,6 +61,7 @@ response.setHeader("Expires","0");
 <spring:url scope="page" var="CommentManager_class"		 value="/resources/js/CommentManager.class.js" />
 <spring:url scope="page" var="ajaxifier"		 	     value="/resources/js/Ajaxifier.js" />
 <spring:url scope="page" var="Main"					     value="/resources/js/Main.js" />
+<spring:url scope="page" var="CompiledMain"					     value="/resources/js/target/Main.js" />
 
 <%-- css --%>
 <%-- libraries --%>

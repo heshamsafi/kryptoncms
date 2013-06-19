@@ -1,18 +1,15 @@
 package edu.asu.krypton.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
-import org.atmosphere.cpr.MetaBroadcaster;
 import org.atmosphere.cpr.Meteor;
-import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.krypton.model.message_proxies.ChatMessage;
-import edu.asu.krypton.model.message_proxies.InBoundCommentProxy;
 import edu.asu.krypton.model.message_proxies.MenuMessage;
-import edu.asu.krypton.model.message_proxies.OutBoundCommentProxy;
-import edu.asu.krypton.model.message_proxies.QueryMessage;
-import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.service.MenuService;
+import edu.asu.krypton.service.redis.Publisher;
 
 @org.springframework.stereotype.Controller
 @RequestMapping(value="navigation")
@@ -43,8 +36,11 @@ public class Navigation extends Controller {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Navigation.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	private MenuService menuService;
+	
+	@Autowired(required=true)
+	private Publisher publisher;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String defaultView(ModelMap model,HttpServletRequest request)  {
@@ -83,10 +79,6 @@ public class Navigation extends Controller {
 			atmosphereResource.resume();
 			return;
 		}
-		logger.debug(requestBody);
-		MenuMessage menuMessage = new ObjectMapper().readValue(requestBody,MenuMessage.class);
-		if(menuMessage.getAction().equals("rearrange")) menuService.rearrangeMenu(menuMessage);
-		if(menuMessage.getAction().equals("delete")) menuService.delete(menuMessage.getOperandId());
-		MetaBroadcaster.getDefault().broadcastTo("/menu/echo", requestBody);
+		publisher.publish("menuMessageBroadcast", requestBody);
 	}
 }

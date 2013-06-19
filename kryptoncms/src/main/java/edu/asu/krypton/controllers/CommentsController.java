@@ -38,6 +38,7 @@ import edu.asu.krypton.model.persist.db.Comment;
 import edu.asu.krypton.service.ArticleService;
 import edu.asu.krypton.service.CommentService;
 import edu.asu.krypton.service.RegistrationService;
+import edu.asu.krypton.service.redis.Publisher;
 
 @Controller
 @RequestMapping(value = "/comments")
@@ -57,11 +58,19 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 
 	@Autowired(required = true)
 	private ArticleService articleService;
+	
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
+	
+	@Autowired(required=true)
+	private Publisher publisher;
 
 	private final String COMMENTS_VIEW = "comments";
 	private final String FACEBOOK_COMMENTS_VIEW = "connect/facebook/"
 			+ COMMENTS_VIEW;
 	private final String BODIES_PREFIX = "bodies/";
+
+	
 
 	@RequestMapping(value = "/socket/{parentType}/{parentId}", method = RequestMethod.GET)
 	@ResponseBody
@@ -74,7 +83,8 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 		logger.debug("parent Id : " + parentId);
 		Meteor m = Meteor.build(atmosphereResource.getRequest()).addListener(
 				new AtmosphereResourceEventListenerAdapter());
-		String path = String.format("/comments/%s/%s", parentType, parentId);
+//		String path = String.format("/comments/%s/%s", parentType, parentId);
+		String path = String.format("/comments/%s", parentType, parentId);
 
 		BroadcasterFactory broadcasterFactory = BroadcasterFactory.getDefault();
 		Broadcaster broadcaster = null;
@@ -105,31 +115,25 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 			throws CustomRuntimeException, JsonGenerationException,
 			JsonMappingException, IOException {
 		if (requestBody.equals("closing")) {
-			System.err
-					.println("comments -- close request but i am too much of a dumbass to close -----------------------------------");
 			atmosphereResource.resume();
 			return;
 		}
 		InBoundCommentProxy comment = new ObjectMapper().readValue(requestBody,
 				InBoundCommentProxy.class);
-
+		String path = String.format("/comments/%s", parentType, parentId);
 		edu.asu.krypton.model.persist.db.User user = registrationService.getLoggedInDbUser();
 		if(user == null) user = registrationService.findUserByUsername(j_username);
 		Comment commentEntity = commentService.insert(comment.getParentId(), comment.getCommentableType(),comment.getContent(),user);
 
-
-		QueryMessage<OutBoundCommentProxy> queryMessage = new QueryMessage<OutBoundCommentProxy>();
-		queryMessage.setSuccessful(true);
-		List<OutBoundCommentProxy> list = new ArrayList<OutBoundCommentProxy>();
 		OutBoundCommentProxy outBoundCommentProxy = new OutBoundCommentProxy(commentEntity);
 		outBoundCommentProxy.setParentId(comment.getParentId());
 		outBoundCommentProxy.setParentType(comment.getCommentableType());
-		list.add(outBoundCommentProxy);
-		queryMessage.setQueryResult(list);
-		String json = new ObjectMapper().writeValueAsString(queryMessage);
-		String path = String.format("/comments/%s/%s", parentType, parentId);
-		MetaBroadcaster.getDefault().broadcastTo(path, json);
-		System.out.println("broadcasting to " + path + " this message " + json);
+		outBoundCommentProxy.setPath(path);
+		
+		
+		
+		publisher.publish("commentMessageBroadcast",objectMapper.writeValueAsString(outBoundCommentProxy));
+//		commentService.broadcastCommment(json, parentType, parentId);
 	}
 
 	/**

@@ -9,7 +9,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.krypton.model.message_proxies.ChatMessage;
 import edu.asu.krypton.service.RegistrationService;
 import edu.asu.krypton.service.atmosphere.chat.ChatService;
+import edu.asu.krypton.service.redis.Publisher;
 
 /**
  * Handles requests for the application home page.
@@ -35,6 +35,9 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 	
 	@Autowired(required=true)
 	private RegistrationService registrationService;
+	
+	@Autowired(required=true)
+	private Publisher publisher;
 	
 	private final String CHAT_VIEW		    = "chat";
 	private final String DEFAULT_BODIES_DIR = "bodies/";
@@ -77,7 +80,8 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		}
 		chatMessage.setSource(username);
 		logger.debug(chatMessage.getSource()+ " : sent a message");
-		chatService.broadcast(chatMessage);
+		publisher.publish("chatMessageBroadcast",objectMapper.writeValueAsString(chatMessage));
+//		chatService.broadcast(chatMessage);
 	}
 	
 	public RegistrationService getRegistrationService() {

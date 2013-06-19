@@ -5,24 +5,24 @@ import java.util.ArrayList;
 import org.bson.types.ObjectId;
 
 public class MenuMessage {
-	private ArrayList<ObjectId> newOrder = new ArrayList<ObjectId>();
+	private ArrayList<String> newOrder = new ArrayList<String>();
 	private boolean admin;
-	private ObjectId parentId;
+	private String parentId;
 	private String action;
-	private ObjectId operandId;
-	public ArrayList<ObjectId> getNewOrder() {
+	private String operandId;
+	public ArrayList<String> getNewOrder() {
 		return newOrder;
 	}
 
-	public void setNewOrder(ArrayList<ObjectId> newOrder) {
+	public void setNewOrder(ArrayList<String> newOrder) {
 		this.newOrder = newOrder;
 	}
 
-	public ObjectId getParentId() {
+	public String getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(ObjectId parentId) {
+	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
 
@@ -34,11 +34,11 @@ public class MenuMessage {
 		this.admin = admin;
 	}
 
-	public ObjectId getOperandId() {
+	public String getOperandId() {
 		return operandId;
 	}
 
-	public void setOperandId(ObjectId operandId) {
+	public void setOperandId(String operandId) {
 		this.operandId = operandId;
 	}
 

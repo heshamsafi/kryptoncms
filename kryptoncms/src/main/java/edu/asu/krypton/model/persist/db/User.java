@@ -1,6 +1,7 @@
 package edu.asu.krypton.model.persist.db;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -8,8 +9,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.model.repository.Repository;
 
 @Document
 @XmlRootElement
@@ -63,6 +67,25 @@ public class User implements DbEntity {
 	
 	@Override
 	public String toString(){
-		return String.format("[type=DbUser, id=%s , username=%s]", id,username);
+		return String.format("[type=DbUser, id=%s , username=%s, role=%s]", id,username,role);
+	}
+
+
+	@Override
+	public void onDelete(Repository<?> repository) {
+		@SuppressWarnings("unchecked")
+		List<Comment> hisComments = (List<Comment>) repository.findByQuery(new Query().addCriteria(Criteria.where("author").is(this)), Comment.class);
+		System.out.println("these comments will be deleted");
+		for(Comment comment : hisComments){
+			repository.delete(comment);
+		}
+		
+	}
+
+
+	@Override
+	public void onEdit(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
 	}
 }

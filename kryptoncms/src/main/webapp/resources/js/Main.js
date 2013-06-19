@@ -176,11 +176,11 @@ function(
 			return false;
 		});
 		
-		var photoAlbumManager = new PhotoAlbumManager();
+//		var photoAlbumManager = new PhotoAlbumManager();
 //		console.log("Test - MAIN");
-		photoAlbumManager.listAlbums();
+//		photoAlbumManager.listAlbums();
 //		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
-		photoAlbumManager.listPhotoAlbums();
+//		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){
 		if(chatter.activated){

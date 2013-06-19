@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+//@Document
 public class Account {
 
 	@Id

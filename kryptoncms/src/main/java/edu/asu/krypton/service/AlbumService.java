@@ -28,11 +28,7 @@ public class AlbumService {
 	}
 	
 	public void saveOrUpdate(Album entity) {
-		try {
 			albumRepository.saveOrUpdate(entity);
-		} catch (CustomRuntimeException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public List<Album> getAll(){

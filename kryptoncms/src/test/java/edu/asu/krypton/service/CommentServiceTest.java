@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.persist.db.Article;
@@ -34,9 +33,9 @@ public class CommentServiceTest{
 	private RegistrationService registrationService;
 	
 	private final int NUMBER_OF_ARTICLES = 5; 
-	private final int NUMBER_OF_COMMENTS_PER_ARTICLE = 20;
-	private final int NUMBER_OF_COMMENT_PER_COMMENT = 8;
-	private final int NUMBER_OF_COMMENT_PER_COMMENT_PER_COMMENT = 3;
+	private final int NUMBER_OF_COMMENTS_PER_ARTICLE = 10;
+	private final int NUMBER_OF_COMMENT_PER_COMMENT = 4;
+	private final int NUMBER_OF_COMMENT_PER_COMMENT_PER_COMMENT = 2;
 	
 	@Test
 	public void insertArticleComments(){
