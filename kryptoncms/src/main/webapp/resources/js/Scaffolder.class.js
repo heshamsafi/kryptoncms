@@ -4,9 +4,10 @@ define([
         "ContextMenu.class",
         "Notifier.class",
         "SocketHandler.class",
+        "Ajaxifier.class",
         "libraries/jquery.ui/selectable"
         ]
-,function($,Mootools,ContextMenu,Notifier,SocketHandler){
+,function($,Mootools,ContextMenu,Notifier,SocketHandler,Ajaxifier){
 	var Scaffolder = new Mootools.Class({
 		$scaffoldTable : null,
 		contextMenu : null,
@@ -36,6 +37,7 @@ define([
 				  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
 					  var $form = $("#genericModal form");
 					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler);
+					  Ajaxifier.getInstance().passiveReload();
 				  });
 			  });
 			  

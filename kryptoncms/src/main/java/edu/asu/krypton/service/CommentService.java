@@ -106,15 +106,16 @@ public class CommentService extends
 	}
 	
 	public void broadcastCommment(OutBoundCommentProxy proxy) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println(proxy.toString());
 		QueryMessage<OutBoundCommentProxy> queryMessage = new QueryMessage<OutBoundCommentProxy>();
 		queryMessage.setSuccessful(true);
 		List<OutBoundCommentProxy> list = new ArrayList<OutBoundCommentProxy>();
 		list.add(proxy);
 		queryMessage.setQueryResult(list);
 		String json = objectMapper.writeValueAsString(queryMessage);
-		String path = String.format("/comments/%s/%s", proxy.getParentType(), proxy.getParentId());
-		MetaBroadcaster.getDefault().broadcastTo(path, json);
-		System.out.println("broadcasting to " + path + " this message " + json);
+//		String path = String.format("/comments/%s/%s", proxy.getParentType(), proxy.getParentId());
+		MetaBroadcaster.getDefault().broadcastTo(proxy.getPath(), json);
+		System.out.println("broadcasting to " + proxy.getPath() + " this message " + json);
 	}
 
 	@Override

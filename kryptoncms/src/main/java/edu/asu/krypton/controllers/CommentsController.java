@@ -83,7 +83,8 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 		logger.debug("parent Id : " + parentId);
 		Meteor m = Meteor.build(atmosphereResource.getRequest()).addListener(
 				new AtmosphereResourceEventListenerAdapter());
-		String path = String.format("/comments/%s/%s", parentType, parentId);
+//		String path = String.format("/comments/%s/%s", parentType, parentId);
+		String path = String.format("/comments/%s", parentType, parentId);
 
 		BroadcasterFactory broadcasterFactory = BroadcasterFactory.getDefault();
 		Broadcaster broadcaster = null;
@@ -119,7 +120,7 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 		}
 		InBoundCommentProxy comment = new ObjectMapper().readValue(requestBody,
 				InBoundCommentProxy.class);
-
+		String path = String.format("/comments/%s", parentType, parentId);
 		edu.asu.krypton.model.persist.db.User user = registrationService.getLoggedInDbUser();
 		if(user == null) user = registrationService.findUserByUsername(j_username);
 		Comment commentEntity = commentService.insert(comment.getParentId(), comment.getCommentableType(),comment.getContent(),user);
@@ -127,6 +128,7 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 		OutBoundCommentProxy outBoundCommentProxy = new OutBoundCommentProxy(commentEntity);
 		outBoundCommentProxy.setParentId(comment.getParentId());
 		outBoundCommentProxy.setParentType(comment.getCommentableType());
+		outBoundCommentProxy.setPath(path);
 		
 		
 		

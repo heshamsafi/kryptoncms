@@ -9,6 +9,10 @@ public class OutBoundCommentProxy {
 	private String content;
 	private String username;
 	private int noOfReplies;
+	private String path;
+	public String toString(){
+		return String.format("id=%s,parentId=%s,parentType=%s,content=%s,username=%s,noOfReplies=%s",id,parentId,parentType,content,username,noOfReplies);
+	}
 	
 	public OutBoundCommentProxy(){}
 	
@@ -70,6 +74,14 @@ public class OutBoundCommentProxy {
 
 	public void setParentType(String parentType) {
 		this.parentType = parentType;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	

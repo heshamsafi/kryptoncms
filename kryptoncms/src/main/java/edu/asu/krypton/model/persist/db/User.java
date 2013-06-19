@@ -67,7 +67,7 @@ public class User implements DbEntity {
 	
 	@Override
 	public String toString(){
-		return String.format("[type=DbUser, id=%s , username=%s]", id,username);
+		return String.format("[type=DbUser, id=%s , username=%s, role=%s]", id,username,role);
 	}
 
 

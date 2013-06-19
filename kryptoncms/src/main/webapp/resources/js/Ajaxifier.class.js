@@ -36,6 +36,9 @@ define(	  ["jquery","libraries/mootools-base","libraries/jquery.history","FormSe
 		},reload : function(){
 			this.loadDynamicContent(window.location.href,this.pageScopeMain,this.collectGarbage);
 		},
+		passiveReload : function(){
+			this.pageScopeMain();
+		},
 		formSubmitHandler : function($form,socket){
 			var thisAjaxifierInstance = this;
 			$form.submit(function(event){
