@@ -121,4 +121,10 @@ public class Comment extends Commentable implements DbEntity {
 		}
 	}
 
+	@Override
+	public void onInsert(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

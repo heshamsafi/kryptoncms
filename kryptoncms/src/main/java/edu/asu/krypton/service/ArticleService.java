@@ -708,4 +708,8 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	private boolean ableToDelete() {
 		return indexRepository.ableToDelete();
 	}
+
+	public Article findHomeArticle() {
+		return articleRepository.findHomeArticle();
+	}
 }

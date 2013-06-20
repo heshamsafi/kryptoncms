@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.model.message_proxies.MenuMessage;
-import edu.asu.krypton.model.persist.db.Menu;
+import edu.asu.krypton.model.persist.db.MenuItem;
 import edu.asu.krypton.model.repository.MenuRepository;
 
 @Service
@@ -24,11 +24,11 @@ public class MenuService {
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;
 	
-	public List<Menu> getItems(boolean admin) {
+	public List<MenuItem> getItems(boolean admin) {
 		return menuRepository.getItems(admin);
 	}
 
-	public void insert(Menu menu) throws CustomRuntimeException{
+	public void insert(MenuItem menu) throws CustomRuntimeException{
 		menuRepository.saveOrUpdate(menu);
 	}
 
@@ -44,5 +44,9 @@ public class MenuService {
 		if(menuMessage.getAction().equals("rearrange")) this.rearrangeMenu(menuMessage);
 		if(menuMessage.getAction().equals("delete")) this.delete(menuMessage.getOperandId());
 		MetaBroadcaster.getDefault().broadcastTo("/menu/echo", objectMapper.writeValueAsString(menuMessage));		
+	}
+
+	public Object getRootItems(boolean admin) {
+		return menuRepository.getRootItems(admin);
 	}
 }

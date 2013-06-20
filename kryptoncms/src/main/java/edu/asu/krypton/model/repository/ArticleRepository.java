@@ -63,4 +63,10 @@ public class ArticleRepository extends edu.asu.krypton.model.repository.Reposito
 		Article article = getArticleByID(articleID);
 		return article.getContent().length() + article.getTitle().length() + article.getDescription().length();
 	}
+
+	public Article findHomeArticle() {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("home").is(true));
+		return mongoTemplate.findOne(query, getPersistentClass());
+	}
 }

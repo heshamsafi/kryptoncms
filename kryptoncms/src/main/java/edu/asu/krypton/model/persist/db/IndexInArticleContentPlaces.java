@@ -45,5 +45,10 @@ public class IndexInArticleContentPlaces implements DbEntity{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void onInsert(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

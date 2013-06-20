@@ -6,7 +6,8 @@
 	<%@include file="/WEB-INF/views/includes/common_head.jsp"%>
 </head>
 <body style="margin: 10px 10px 10px 10px;">
-<%@ include file="/WEB-INF/views/includes/nav.jsp"%>
+<c:import url="/navigation/menu/user" />
+<%-- <%@ include file="/WEB-INF/views/includes/nav.jsp"%> --%>
 <!-- <div id="trig" class="well">Admin Navigation</div> -->
 	<div class="row-fluid">
 <%-- 	<%@ include file="/WEB-INF/views/includes/admin_nav.jsp"%> --%>
@@ -26,6 +27,9 @@
 	</div>
 	<div id="myModal2" class="modal hide  fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <%@ include file="/WEB-INF/views/bodies/register.jsp"%>
+	</div>
+	<div id="chat" class="modal hide  fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 1200px;margin: 0 0 0 -600px; ">
+	  <c:import url="/chat" />
 	</div>
 	<div id="genericModal" class="modal hide  fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<h1>

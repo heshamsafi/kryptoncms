@@ -8,18 +8,34 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.krypton.model.message_proxies.MenuMessage;
-import edu.asu.krypton.model.persist.db.Menu;
+import edu.asu.krypton.model.persist.db.MenuItem;
 
 @Repository
-public class MenuRepository extends edu.asu.krypton.model.repository.Repository<Menu>{
+public class MenuRepository extends edu.asu.krypton.model.repository.Repository<MenuItem>{
 
 	public MenuRepository() {
-		setPersistentClass(Menu.class);
+		setPersistentClass(MenuItem.class);
 	}
 
-	public List<Menu> getItems(boolean admin){
+	
+	
+	@Override
+	public void saveOrUpdate(MenuItem entity) {
+		for(MenuItem menuItem : entity.getMenuItems())
+			saveOrUpdate(menuItem);
+		mongoTemplate.save(entity);
+		for(MenuItem menuItem : entity.getMenuItems()){
+			menuItem.setParentId(entity.getId());
+			mongoTemplate.save(menuItem);
+		}
+	}
+
+
+
+	public List<MenuItem> getItems(boolean admin){
 		Query query = new Query();
 		query.with(new org.springframework.data.domain.Sort("order"));
+		query.addCriteria(Criteria.where("admin").is(admin));
 		return mongoTemplate.find(query, getPersistentClass());
 	}
 
@@ -32,6 +48,15 @@ public class MenuRepository extends edu.asu.krypton.model.repository.Repository<
 			mongoTemplate.findAndModify(query, update, getPersistentClass());
 			++i;
 		}
+	}
+
+
+
+	public Object getRootItems(boolean admin) {
+		Query query = new Query();
+		query.with(new org.springframework.data.domain.Sort("order"));
+		query.addCriteria(Criteria.where("admin").is(admin).andOperator(Criteria.where("parentId").is(null)));
+		return mongoTemplate.find(query, getPersistentClass());
 	}
 	
 	

@@ -42,11 +42,11 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 	private final String CHAT_VIEW		    = "chat";
 	private final String DEFAULT_BODIES_DIR = "bodies/";
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String defaultView(ModelMap model,HttpServletRequest request) {
 		logger.debug("chat page invoked !!!");
 		model.addAttribute("usernames", registrationService.getAllUsernames(true));
-		return appropriateView(request, DEFAULT_BODIES_DIR+CHAT_VIEW, defaultView(model,CHAT_VIEW));
+		return DEFAULT_BODIES_DIR+CHAT_VIEW;
 	}
 
 	
