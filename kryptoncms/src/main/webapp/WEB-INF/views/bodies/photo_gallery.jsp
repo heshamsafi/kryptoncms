@@ -10,8 +10,7 @@
 <style>
 <!--
 body{
- overflow: scroll; 
- max-height: 400px;
+ overflow: auto; 
 }
 -->
 </style>
@@ -58,7 +57,7 @@ body{
 		<!-- Modal -->
 		<div class="modal-container draggable">
 			<div id="modal-gallery" class="modal modal-gallery hide fade in draggable"
-				tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="background-attachment: scroll; overflow: scroll; max-height: 600px;">
+				tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="background-attachment: scroll; overflow: auto; max-height: 900px;">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">×</button>
@@ -76,7 +75,7 @@ body{
 						data-slideshow="5000"><i class="icon-play icon-white"></i>
 						Slideshow</a> <a class="btn btn-primary modal-next">Next <i
 						class="icon-arrow-right icon-white"></i></a>
-					<div id="commentBody" style="overflow: auto; max-height: 400px"></div>
+					<div id="commentBody"></div>
 				</div>
 			</div>
 		</div>
