@@ -7,6 +7,13 @@
 </div>
 
 <div class="modal-body" style="max-height: 800px;" >
+<div class="tabbable tabs-left">
+  <ul id="chatterConv" class="nav nav-tabs nav-pills">
+    <li               ><a href="javascript:void(0)" class="add" data-toggle="tab">+ Add Conversation</a></li>
+
+  </ul>
+  
+<div class="tab-content">
 <div class="row-fluid">
 	<div class="span10">
 		<div class="input-prepend input-block-level">
@@ -45,6 +52,9 @@
 	<script type="text/x-jquery-tmpl" id="chat-message-tmpl">
 		<span style="font-size:20px"><b>\${source}</b> : \${body}<br /></span>
 	</script>
+	<script type="text/x-jquery-tmpl" id="convTabTmpl">
+		<li><button type="button" class="close">&times;</button><a href="javascript:void(0)" data-toggle="tab">\${convName}</a></li>
+	</script>
 
 	<div class="span2">
 		<div class="pull-right" id="destinations_pallette"<%-- style="height:300px;overflow-y:scroll" --%>
@@ -55,4 +65,7 @@
 		</div>
 	</div>
 </div>
+</div>
+
+  </div>
 </div>

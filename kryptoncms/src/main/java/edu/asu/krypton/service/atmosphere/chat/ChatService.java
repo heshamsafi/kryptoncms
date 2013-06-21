@@ -2,6 +2,7 @@ package edu.asu.krypton.service.atmosphere.chat;
 
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
@@ -10,18 +11,29 @@ import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.atmosphere.cpr.MetaBroadcaster;
 import org.atmosphere.cpr.Meteor;
+import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.model.message_proxies.ChatMessage;
+import edu.asu.krypton.model.persist.db.ChatConversation;
+import edu.asu.krypton.model.persist.db.DbEntity;
+import edu.asu.krypton.model.persist.db.User;
+import edu.asu.krypton.model.repository.Repository;
 
 @Service
 public class ChatService {
 	private final static Logger logger = LoggerFactory.getLogger(ChatService.class);
+	
+	@Autowired(required=true)
+	private Repository<Object> repository;
 	
 	private long anonymousCount;
 
@@ -61,7 +73,17 @@ public class ChatService {
 			logger.debug(String.format("broadcasting \"%s\" to the following path \"%s\"",chatMessage.getBody(),path));
 		}
 	}
+
+	public Collection<ChatConversation> getChatConversations(User user) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("parties.$id").is(new ObjectId(user.getId())));
+		@SuppressWarnings("unchecked")
+		Collection<ChatConversation> chatConversations = (Collection<ChatConversation>) repository.findByQuery(query, ChatConversation.class);
+		return chatConversations;
+	}
 	
-	
+	public void saveOrUpdateConversation(ChatConversation chatConversation){
+		repository.saveOrUpdate(chatConversation);
+	}
 
 }

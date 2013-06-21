@@ -1,7 +1,7 @@
 define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
-       ,"Notifier.class","libraries/jquery.cookie","libraries/jquery.tmpl"]
+       ,"Notifier.class","Chatter.class","libraries/jquery.cookie","libraries/jquery.tmpl"]
 ,function($		,Mootools				  ,Logger		 , FormSerializer
-		,Notifier){
+		,Notifier, Chatter){
 	var Membership = new Mootools.Class({
 	    Implements: [Mootools.Options],
 	    options: {},
@@ -92,6 +92,8 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			},
 	    			"complete":function(){
 	    				$this.find("input,button").attr("disabled",null).removeClass("disabled");
+	    				thisInstance.chatter = new Chatter();		
+	    				thisInstance.chatter.attachHandlers();
 	    			}
 	    		});
 	    		return false;
@@ -120,9 +122,16 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			thisInstance.destroyCookie();
 	    			thisInstance.updateLoginStatus();
 	    			thisInstance.logger.log("info","logout success");
+	    			if(thisInstance.chatter && thisInstance.chatter.activated){
+	    				thisInstance.chatter.closeSockets();
+	    				delete thisInstance.chatter;
+	    			}
 	    		});
 	    		return false;
 	    	});
+	    },
+	    setChatter : function(chatter){
+	    	this.chatter = chatter;
 	    },
 	    updateLoginStatus : function(){
 	    	var thisInstance = this;

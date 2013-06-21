@@ -95,12 +95,17 @@ function(
 		if(!FormSerializer.getInstance())
 			FormSerializer.getInstance();//global configuration for singleton instance of
 		
+		chatter = new Chatter();		
+		chatter.attachHandlers();
+		
 		membership = Membership.getInstance();
 		membership.bindRegisterForm("form.membership_register");
 		membership.bindLoginForm("form.membership_login");
 		membership.attachLogoutHandler();
 		membership.updateLoginStatus();
 		membership.attachLogoutHandler();
+		membership.setChatter(chatter);
+	
 	}
 	function pageScopeMain(){
 		
@@ -155,17 +160,6 @@ function(
 		if(!navigationMenu)
 			new NavigationMenu("#mainNav").highlightMenu();
 		
-		chatter = new Chatter();
-		chatter.$elements.$chatterForm          = $("#chatter_form");
-		chatter.$elements.$destination          = $("#destination");
-		chatter.$elements.$messageBody          = $("#message");
-		chatter.$elements.$messageBoard         = $("#message_board");
-		chatter.$elements.$submitBtn            = $("#btn_submit");
-		chatter.$elements.$destinationsPallette = $("#destinations_pallette");
-		chatter.$elements.$destinationAdderBtn  = $("#destination_adder");
-		
-		chatter.attachHandlers();
-		
 		commentManager = new CommentManager();
 		commentManager.attachHandlersToSections();
 		
@@ -183,10 +177,10 @@ function(
 //		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){
-		if(chatter.activated){
-			chatter.closeSockets();
-			delete chatter;
-		}
+//		if(chatter.activated){
+//			chatter.closeSockets();
+//			delete chatter;
+//		}
 		if(commentManager.activated){
 			commentManager.closeSockets();
 			delete commentManager;

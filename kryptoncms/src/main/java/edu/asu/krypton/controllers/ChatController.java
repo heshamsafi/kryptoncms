@@ -1,16 +1,22 @@
 package edu.asu.krypton.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.atmosphere.cpr.AtmosphereResource;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.krypton.model.message_proxies.ChatMessage;
+import edu.asu.krypton.model.message_proxies.QueryMessage;
+import edu.asu.krypton.model.persist.db.ChatConversation;
+import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.service.RegistrationService;
 import edu.asu.krypton.service.atmosphere.chat.ChatService;
 import edu.asu.krypton.service.redis.Publisher;
@@ -39,6 +48,9 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 	@Autowired(required=true)
 	private Publisher publisher;
 	
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
+	
 	private final String CHAT_VIEW		    = "chat";
 	private final String DEFAULT_BODIES_DIR = "bodies/";
 	
@@ -48,7 +60,43 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		model.addAttribute("usernames", registrationService.getAllUsernames(true));
 		return DEFAULT_BODIES_DIR+CHAT_VIEW;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET,value="conversations")
+	public @ResponseBody String getChatConversations() throws JsonGenerationException, JsonMappingException, IOException{
+		QueryMessage<ChatConversation> message =new QueryMessage<ChatConversation>();
+		message.setSuccessful(false);
+		try{
+			User user = registrationService.getLoggedInDbUser();
+			Collection<ChatConversation> chatConversations = chatService.getChatConversations(user);
+			message.setQueryResult(chatConversations);
+			message.setSuccessful(true);
+			return objectMapper.writeValueAsString(message);
+		}catch (Exception e) {
+			return objectMapper.writeValueAsString(message);
+		}
 
+	}
+	
+	@RequestMapping(method=RequestMethod.POST,value="conversations")
+	public @ResponseBody String saveOrUpdateCoversation(@RequestBody ChatConversation chatConversation) throws JsonGenerationException, JsonMappingException, IOException{
+		QueryMessage<ChatConversation> queryMessage = new QueryMessage<ChatConversation>();
+		queryMessage.setSuccessful(false);
+		try{
+			chatService.saveOrUpdateConversation(chatConversation);
+			queryMessage.setSuccessful(true);
+			List<ChatConversation> list = new ArrayList<ChatConversation>();
+			list.add(chatConversation);
+			queryMessage.setQueryResult(list);
+			return objectMapper.writeValueAsString(queryMessage);
+		}catch (Exception e) {
+			return objectMapper.writeValueAsString(queryMessage);
+		}
+	}
+	
+//	@RequestMapping(method=RequestMethod.POST,value="conversations/{converationId}/{username}")
+//	public @ResponseBody String removeUserFromConversation(@PathVariable String converationId,@PathVariable String username){
+//		
+//	}
 	
 	@RequestMapping(value="/echo",method = RequestMethod.GET)
 	@ResponseBody

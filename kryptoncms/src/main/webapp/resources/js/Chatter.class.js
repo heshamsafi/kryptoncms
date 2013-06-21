@@ -36,12 +36,19 @@ var Chatter = new Mootools.Class({
 			$destinationsPallette : $(),
 			$destinationAdderBtn  : $()
 		};
+		thisChatterInstance.$elements.$chatterForm          = $("#chatter_form");
+		thisChatterInstance.$elements.$destination          = $("#destination");
+		thisChatterInstance.$elements.$messageBody          = $("#message");
+		thisChatterInstance.$elements.$messageBoard         = $("#message_board");
+		thisChatterInstance.$elements.$submitBtn            = $("#btn_submit");
+		thisChatterInstance.$elements.$destinationsPallette = $("#destinations_pallette");
+		thisChatterInstance.$elements.$destinationAdderBtn  = $("#destination_adder");
 	},
 	attachHandlers : function(){
 		var thisChatterInstance = this;
 		//validation
 		for(var key in thisChatterInstance.$elements){
-			if(thisChatterInstance.$elements[key].length != 1){
+			if(thisChatterInstance.$elements[key].length != 1 || $.cookie("j_username") == ""){
 				thisChatterInstance.logger.log("error","aborting chat bcz these element(s) are not right");
 				thisChatterInstance.logger.log("error",key);
 				thisChatterInstance.logger.log("error",thisChatterInstance.$elements[key]);
@@ -54,6 +61,21 @@ var Chatter = new Mootools.Class({
 		thisChatterInstance.attachDestinationAdderHandler(
 			eval(thisChatterInstance.$elements.$destination.attr("data-source"))
 		);
+		thisChatterInstance.attachConversationsPalletteHandler();
+	},
+	attachConversationsPalletteHandler : function(){
+		var thisChatterInstance = this;
+		thisChatterInstance.i = 1;
+		var closeHandler = function(event){
+			$(event.target).parent().remove();
+		};
+		$("#chatterConv .close").click(closeHandler);
+		$("#chatterConv .add").click(function(event){
+			var $ul = $(event.target).parents("ul");
+			var $convLi = $("script#convTabTmpl").tmpl({"convName":"Conversation "+thisChatterInstance.i++});
+			$convLi.find(".close").click(closeHandler);
+			$convLi.prependTo($ul);
+		});
 	},
 	subscribeSocket : function(){
 		var thisChatterInstance = this;
@@ -61,7 +83,9 @@ var Chatter = new Mootools.Class({
 			= new SocketHandler({ url : thisChatterInstance.$elements.$chatterForm.attr("action") })
 			  .setOnMessageHandler(
 			    	function(response) {
-			    		thisChatterInstance.appendToMessageBoard(JSON.parse(response.responseBody));
+			    		try{
+			    			thisChatterInstance.appendToMessageBoard(JSON.parse(response.responseBody));
+			    		}catch(ex){}
 			    	}
 			  ).subscribe();
 	}.protect(),
@@ -80,6 +104,7 @@ var Chatter = new Mootools.Class({
 			"keyup" :changeHandlerForMessage
 		});
 		
+		thisChatterInstance.$elements.$submitBtn.unbind("click");
 		thisChatterInstance.$elements.$submitBtn.click(function(){
 			var validityReport = {
 					"nonEmptyMessage":{
@@ -145,6 +170,7 @@ var Chatter = new Mootools.Class({
 			"keyup" :changeHandlerForDestination
 		});
 		
+		thisChatterInstance.$elements.$destinationAdderBtn.unbind("click");
 		thisChatterInstance.$elements.$destinationAdderBtn.click(function(){
 			var destination = thisChatterInstance.$elements.$destination.val();
 			
@@ -208,6 +234,21 @@ var Chatter = new Mootools.Class({
 	,
 	closeSockets : function(){
 		this.socketHandler.close();
+	},
+	loadConversations : function(){
+		$.ajax({
+    		"type" : "GET",
+    		"url" : DOMAIN_CONFIGURATIONS.BASE_URL+"chat/conversations",
+    		"cache": false,
+    		//"contentType" : "application/json",
+
+    		"error":function(){
+
+    		}
+    	}).always(function(){
+
+		});
+
 	}
 });
 return Chatter;
