@@ -25,7 +25,10 @@ public class Article extends Commentable implements DbEntity {
 	private String title;
 	@InputText
 	private String description;
-
+	
+	private String version;
+	
+	private String patches;
 	@Indexed
 	private Date date;
 	
@@ -84,6 +87,22 @@ public class Article extends Commentable implements DbEntity {
 	@Override
 	public String toString() {
 		return String.format("[id=%s,content=%s,title=%s,description=%s,date=%s,comments=%s]",id,content,title,description,date,getComments());
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getPatches() {
+		return patches;
+	}
+
+	public void setPatches(String patches) {
+		this.patches = patches;
 	}
 	
 }

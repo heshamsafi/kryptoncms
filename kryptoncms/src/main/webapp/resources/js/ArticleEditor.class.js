@@ -18,9 +18,22 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 				.success(function(response){
 					if(response["successful"]){
 						var id = response["id"];
+						var version = response["version"];
 						if(url.match(new RegExp("(edit(/)?)$")) != null){
-							if( url.match(new RegExp("\\w$") ) )  url += "/"; 
-							if( url.match(new RegExp("/$")   ) )  url += id; 
+							if( url.match(new RegExp("\\w$") ) )  {
+								url += "/"; 
+								url+=version;
+							}
+							if( url.match(new RegExp("/$")   ) ){ 
+								url += id;
+								url+="/";
+								url+=version;
+							}
+							
+						}
+						else{
+							url+="/";
+							url+=version;
 						}
 						if(url === window.location.pathname)
 							Ajaxifier.getInstance().reload();

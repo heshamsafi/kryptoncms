@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
-<form id="article_form" action='<c:url value="/article/edit/${id}" />' method="post" style="margin-bottom: 0px" data-validation-enable>
+<form id="article_form" action='<c:url value="/article/edit/${id}"/>' method="post" style="margin-bottom: 0px" data-validation-enable>
 <div class="modal-header">
 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button> -->
       <h1>Article</h1>

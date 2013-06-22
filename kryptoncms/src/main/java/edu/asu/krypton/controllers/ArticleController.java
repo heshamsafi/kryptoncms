@@ -1,7 +1,9 @@
 package edu.asu.krypton.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,10 @@ import edu.asu.krypton.model.message_proxies.Message;
 import edu.asu.krypton.model.persist.db.Article;
 import edu.asu.krypton.model.repository.ArticleRepository;
 import edu.asu.krypton.service.ArticleService;
+import edu.asu.krypton.sourceControl.helperClass;
+import edu.asu.krypton.sourceControl.difflib.DiffUtils;
+import edu.asu.krypton.sourceControl.difflib.Patch;
+import edu.asu.krypton.sourceControl.difflib.PatchFailedException;
 
 @Controller
 @RequestMapping(value="/article")
@@ -47,14 +53,67 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	private MongoTemplate mongoTemplate;
 	
 	@RequestMapping(method=RequestMethod.GET,value="edit")
-	public String getHome(HttpServletRequest request,Model model){
-		return getHome(null, request, model);
+	public String getHome(HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
+		return getHome(null,null, request, model);
 	}
-	@RequestMapping(method=RequestMethod.GET,value="edit/{id}")
-	public String getHome(@PathVariable String id,HttpServletRequest request,Model model){
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="edit/{id}/{version}")
+	public String getHome(@PathVariable String id,@PathVariable String version,HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
 		if(id != null){
+			
 			Article article= articleService.findById(id);
-			model.addAttribute("article", article);
+//							 articleService.findByTitle(id);
+			ArrayList<Patch<String>>patches;
+			if(article.getPatches()==null){
+				model.addAttribute("article", article);
+			}
+			else{
+				String patchesString=article.getPatches();
+				patches=(ArrayList<Patch<String>>) helperClass.fromString(patchesString);
+			
+			
+			
+				StringTokenizer original=new StringTokenizer(article.getContent(),"\n");
+				
+				List<String>originalTokens=new ArrayList<String>();
+				
+				while(original.hasMoreTokens()){
+					originalTokens.add(original.nextToken());
+				}
+				
+				int counter=0;
+				
+				int ver=Integer.parseInt(version);
+				if(patches.size()<ver){
+					//el version mesh mowgowda
+					throw new NoSuchRequestHandlingMethodException(request);
+//					return appropriateView(request, DEFAULT_DIR+EDIT_VIEW, defaultView(model,EDIT_VIEW));
+				}
+				List<String>Result=originalTokens;
+				for(Patch<String>patch:patches){
+					if(counter==ver){
+						break;
+					}
+					Result=DiffUtils.patch(Result, patch);
+					System.out.println(patches);
+					counter++;
+				}
+				
+				String content= "";
+
+				for (String s : Result)
+				{
+				    content += s + "\n";
+				}
+				
+				article.setContent(content);	
+				
+				
+				model.addAttribute("article", article);
+			}
+			
+			
 		}
 		return appropriateView(request, DEFAULT_DIR+EDIT_VIEW, defaultView(model,EDIT_VIEW));
 	}
@@ -65,8 +124,61 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	{	
 		ArticleSubmitMessage message = new ArticleSubmitMessage();
 		try{
+			if(article.getId()!=null){
+				Article articleOld=articleService.findById(article.getId());
+				
+				ArrayList<Patch<String>>patches;
+				if(articleOld.getPatches()==null){
+					patches=new ArrayList<Patch<String>>();
+				}
+				else{
+					String patchesString=articleOld.getPatches();
+					patches=(ArrayList<Patch<String>>) helperClass.fromString(patchesString);
+				}
+				
+				StringTokenizer original=new StringTokenizer(articleOld.getContent(),"\n");
+				StringTokenizer revised=new StringTokenizer(article.getContent(),"\n");
+				
+				List<String>originalTokens=new ArrayList<String>();
+				List<String>revisedTokens=new ArrayList<String>();
+				
+				while(original.hasMoreTokens()){
+					originalTokens.add(original.nextToken());
+				}
+					
+				while(revised.hasMoreTokens()){
+					revisedTokens.add(revised.nextToken());
+				}
+				
+				
+				List<String>Result=originalTokens;
+				for(Patch<String>patch:patches){
+					Result=DiffUtils.patch(Result, patch);
+					System.out.println(patches);
+				}
+				
+				patches.add(DiffUtils.diff(Result, revisedTokens));
+				article.setPatches(helperClass.toString(patches));
+				
+				
+				
+				int ver=Integer.parseInt(articleOld.getVersion());
+				ver++;
+				article.setVersion(new String(Integer.toString(ver)));
+				
+				
+				article.setContent(articleOld.getContent());
+				
+				
+				message.setVersion(article.getVersion());
+				
+			}
+			else{
+				article.setVersion("0");
+				message.setVersion(new String("0"));
+			}
 			articleService.saveOrUpdate(article);	
-			
+
 			return message.setId(article.getId()).setSuccessful(true);
 		}catch (Exception e) {
 			logger.debug(article.toString());
@@ -82,6 +194,8 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 		article.setId(id);
 		return saveOrUpdate(article);
 	}
+	
+	
 	
 	@RequestMapping(value="{id}",method=RequestMethod.GET)
 	public String getArticle(@PathVariable String id,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
