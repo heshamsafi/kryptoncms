@@ -1,7 +1,14 @@
 package edu.asu.krypton.model.persist.db;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import edu.asu.krypton.model.repository.Repository;
 
@@ -14,11 +21,23 @@ public class ChatMessage implements DbEntity {
 	@DBRef
 	private User source;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onDelete(Repository<?> repository)
 			throws ClassNotFoundException {
-		// TODO Auto-generated method stub
-		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("messages.$id").is(new ObjectId(getId())));
+		for(ChatConversation chatConversation : ((ArrayList<ChatConversation>) repository.findByQuery(query, ChatConversation.class) )){
+			Iterator<ChatMessage> iterator = chatConversation.getMessages().iterator();
+			while(iterator.hasNext()){
+				ChatMessage chatMessage = iterator.next();
+				if(chatMessage.getId().equals(getId())){
+					iterator.remove();
+					break;
+				}
+			}
+			repository.saveOrUpdate(chatConversation);
+		}
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package edu.asu.krypton.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +27,6 @@ import edu.asu.krypton.model.persist.db.ChatConversation;
 import edu.asu.krypton.model.persist.db.User;
 import edu.asu.krypton.service.RegistrationService;
 import edu.asu.krypton.service.atmosphere.chat.ChatService;
-import edu.asu.krypton.service.redis.Publisher;
 
 /**
  * Handles requests for the application home page.
@@ -44,9 +41,6 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 	
 	@Autowired(required=true)
 	private RegistrationService registrationService;
-	
-	@Autowired(required=true)
-	private Publisher publisher;
 	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;
@@ -74,29 +68,13 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		}catch (Exception e) {
 			return objectMapper.writeValueAsString(message);
 		}
-
 	}
 	
-	@RequestMapping(method=RequestMethod.POST,value="conversations")
-	public @ResponseBody String saveOrUpdateCoversation(@RequestBody ChatConversation chatConversation) throws JsonGenerationException, JsonMappingException, IOException{
-		QueryMessage<ChatConversation> queryMessage = new QueryMessage<ChatConversation>();
-		queryMessage.setSuccessful(false);
-		try{
-			chatService.saveOrUpdateConversation(chatConversation);
-			queryMessage.setSuccessful(true);
-			List<ChatConversation> list = new ArrayList<ChatConversation>();
-			list.add(chatConversation);
-			queryMessage.setQueryResult(list);
-			return objectMapper.writeValueAsString(queryMessage);
-		}catch (Exception e) {
-			return objectMapper.writeValueAsString(queryMessage);
-		}
+	@RequestMapping(method= RequestMethod.GET,value="conversation/{id}")
+	public @ResponseBody String getConversation(@PathVariable String id) throws JsonGenerationException, JsonMappingException, IOException{
+		ChatConversation chatConversation = chatService.getChatConversation(id,true);
+		return objectMapper.writeValueAsString(chatConversation);
 	}
-	
-//	@RequestMapping(method=RequestMethod.POST,value="conversations/{converationId}/{username}")
-//	public @ResponseBody String removeUserFromConversation(@PathVariable String converationId,@PathVariable String username){
-//		
-//	}
 	
 	@RequestMapping(value="/echo",method = RequestMethod.GET)
 	@ResponseBody
@@ -121,15 +99,14 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		ObjectMapper objectMapper = new ObjectMapper();
 		ChatMessage chatMessage = objectMapper.readValue(requestBody, ChatMessage.class);
 		try{
-			username = getRegistrationService().findUserByUsername(chatMessage.getSource()).getUsername();
+			username = getRegistrationService().findUserByUsername(chatMessage.getSourceUsername()).getUsername();
 								//.getLoggedInUser().getUsername();
 		} catch(NullPointerException ex){
 			username = "Anonymous";
 		}
-		chatMessage.setSource(username);
-		logger.debug(chatMessage.getSource()+ " : sent a message");
-		publisher.publish("chatMessageBroadcast",objectMapper.writeValueAsString(chatMessage));
-//		chatService.broadcast(chatMessage);
+		chatMessage.setSourceUsername(username);
+		logger.debug(chatMessage.getSourceUsername()+ " : sent a message");
+		chatService.serveCommand(chatMessage);
 	}
 	
 	public RegistrationService getRegistrationService() {

@@ -35,6 +35,7 @@ require([
         ,"./libraries/jquery.ui/selectable"
         ,"./libraries/jquery.ui/colorpicker"
         ,"./libraries/jquery.ui/slider"
+        ,"./libraries/jquery.ui/draggable"
         
         ],
 function(
@@ -57,8 +58,7 @@ function(
 		MenuManager
 		) {
 	var navigationMenu = null;
-	var chatter = null,
-		commentManager = null;
+	var commentManager = null;
 	$(document).ready(function(){
 		$('.cp-basic').colorpicker();
 		$( "#slider-range-min" ).slider({
@@ -95,8 +95,7 @@ function(
 		if(!FormSerializer.getInstance())
 			FormSerializer.getInstance();//global configuration for singleton instance of
 		
-		chatter = new Chatter();		
-		chatter.attachHandlers();
+		Chatter.getInstance().reconnect();
 		
 		membership = Membership.getInstance();
 		membership.bindRegisterForm("form.membership_register");
@@ -104,8 +103,8 @@ function(
 		membership.attachLogoutHandler();
 		membership.updateLoginStatus();
 		membership.attachLogoutHandler();
-		membership.setChatter(chatter);
-	
+		
+		$(".modal").draggable();
 	}
 	function pageScopeMain(){
 		
@@ -177,10 +176,6 @@ function(
 //		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){
-//		if(chatter.activated){
-//			chatter.closeSockets();
-//			delete chatter;
-//		}
 		if(commentManager.activated){
 			commentManager.closeSockets();
 			delete commentManager;

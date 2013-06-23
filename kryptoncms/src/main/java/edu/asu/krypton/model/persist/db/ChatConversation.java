@@ -2,12 +2,15 @@ package edu.asu.krypton.model.persist.db;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.model.repository.Repository;
 
+@Document
 public class ChatConversation implements DbEntity {
 
 	@Id
@@ -19,11 +22,23 @@ public class ChatConversation implements DbEntity {
 	@DBRef
 	private Collection<ChatMessage> messages = new ArrayList<ChatMessage>();
 	
+	
+	
+	
+	@Override
+	public String toString() {
+		return String.format("id = %s, parties = %s, messages = %s", id,parties,messages);
+	}
+
 	@Override
 	public void onDelete(Repository<?> repository)
 			throws ClassNotFoundException {
-		// TODO Auto-generated method stub
-		
+		Iterator<ChatMessage> iterator = messages.iterator();
+		while(iterator.hasNext()){
+			ChatMessage chatMessage = iterator.next();
+			repository.delete(chatMessage);
+			iterator.remove();
+		}
 	}
 
 	@Override

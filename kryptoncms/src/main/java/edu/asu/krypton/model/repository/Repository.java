@@ -41,6 +41,11 @@ public class Repository<T> {
 		query.addCriteria(Criteria.where("id").is(id));
 		mongoTemplate.remove(query,getPersistentClass());
 	}
+	public void deleteById(String id,Class<?> docClass){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(id));
+		mongoTemplate.remove(query,docClass);
+	}
 	public void saveOrUpdate(T entity)  {
 		mongoTemplate.save(entity);
 	}

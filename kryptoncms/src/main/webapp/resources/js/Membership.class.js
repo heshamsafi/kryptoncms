@@ -92,8 +92,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			},
 	    			"complete":function(){
 	    				$this.find("input,button").attr("disabled",null).removeClass("disabled");
-	    				thisInstance.chatter = new Chatter();		
-	    				thisInstance.chatter.attachHandlers();
+	    				Chatter.getInstance().reconnect();
 	    			}
 	    		});
 	    		return false;
@@ -122,16 +121,10 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			thisInstance.destroyCookie();
 	    			thisInstance.updateLoginStatus();
 	    			thisInstance.logger.log("info","logout success");
-	    			if(thisInstance.chatter && thisInstance.chatter.activated){
-	    				thisInstance.chatter.closeSockets();
-	    				delete thisInstance.chatter;
-	    			}
+	    			Chatter.getInstance().reconnect();
 	    		});
 	    		return false;
 	    	});
-	    },
-	    setChatter : function(chatter){
-	    	this.chatter = chatter;
 	    },
 	    updateLoginStatus : function(){
 	    	var thisInstance = this;
