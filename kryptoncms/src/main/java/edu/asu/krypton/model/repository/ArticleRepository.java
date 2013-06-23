@@ -1,5 +1,6 @@
 package edu.asu.krypton.model.repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +56,15 @@ public class ArticleRepository extends edu.asu.krypton.model.repository.Reposito
 		return mongoTemplate.find(query, Article.class);
 	}
 
-	public Article getArticleByID(Long id){
+	public Article getArticleByID(String id){
 		return mongoTemplate.findById(id, Article.class);
 	}
 	
-	public int getArticleLength(Long articleID){
-		Article article = getArticleByID(articleID);
+	public int getArticleLength(BigInteger articleID){
+		Article article = getArticleByID(articleID.toString(16));
+		System.out.println("-------------------");
+		System.out.println(articleID);
+		System.out.println("-------------------");
 		return article.getContent().length() + article.getTitle().length() + article.getDescription().length();
 	}
 

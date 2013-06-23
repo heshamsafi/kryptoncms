@@ -3,17 +3,21 @@ package edu.asu.krypton.model.persist.db;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Arrays;
-import java.util.Collection;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.model.repository.Repository;
 
+@Document
+@XmlRootElement
 public class IndexArticleStatistics implements DbEntity{
 
 	@Id
-	private Long id;
+	private String id;
 	private byte[] articleNumber;
 	private byte[] score;
 	private byte[] numberOfOccurencesInTitle = toByteArray(0);
@@ -21,12 +25,12 @@ public class IndexArticleStatistics implements DbEntity{
 	private byte[] numberOfOccurencesInContent = toByteArray(0);
 	@DBRef
 	private Indices index;
-	@DBRef
-	private Collection<IndexInArticleContentPlaces> indexInArticleContentPlaces;
-	@DBRef
-	private Collection<IndexInArticleTitlePlaces> indexInArticleTitlePlaces;
-	@DBRef
-	private Collection<IndexInArticleDescriptionPlaces> indexInArticleDescriptionPlaces;
+//	@DBRef
+//	private Collection<IndexInArticleContentPlaces> indexInArticleContentPlaces;
+//	@DBRef
+//	private Collection<IndexInArticleTitlePlaces> indexInArticleTitlePlaces;
+//	@DBRef
+//	private Collection<IndexInArticleDescriptionPlaces> indexInArticleDescriptionPlaces;
 
 	public byte[] getScore() {
 		return score;
@@ -36,42 +40,42 @@ public class IndexArticleStatistics implements DbEntity{
 		this.score = score;
 	}
 	
-	public Collection<IndexInArticleContentPlaces> getIndexInArticleContentPlaces() {
-		return indexInArticleContentPlaces;
-	}
-
-	public void setIndexInArticleContentPlaces(
-			Collection<IndexInArticleContentPlaces> indexInArticleContentPlaces) {
-		this.indexInArticleContentPlaces = indexInArticleContentPlaces;
-	}
-
-	public Collection<IndexInArticleTitlePlaces> getIndexInArticleTitlePlaces() {
-		return indexInArticleTitlePlaces;
-	}
-
-	public void setIndexInArticleTitlePlaces(
-			Collection<IndexInArticleTitlePlaces> indexInArticleTitlePlaces) {
-		this.indexInArticleTitlePlaces = indexInArticleTitlePlaces;
-	}
-
-	public Collection<IndexInArticleDescriptionPlaces> getIndexInArticleDescriptionPlaces() {
-		return indexInArticleDescriptionPlaces;
-	}
-
-	public void setIndexInArticleDescriptionPlaces(
-			Collection<IndexInArticleDescriptionPlaces> indexInArticleDescriptionPlaces) {
-		this.indexInArticleDescriptionPlaces = indexInArticleDescriptionPlaces;
-	}
+//	public Collection<IndexInArticleContentPlaces> getIndexInArticleContentPlaces() {
+//		return indexInArticleContentPlaces;
+//	}
+//
+//	public void setIndexInArticleContentPlaces(
+//			Collection<IndexInArticleContentPlaces> indexInArticleContentPlaces) {
+//		this.indexInArticleContentPlaces = indexInArticleContentPlaces;
+//	}
+//
+//	public Collection<IndexInArticleTitlePlaces> getIndexInArticleTitlePlaces() {
+//		return indexInArticleTitlePlaces;
+//	}
+//
+//	public void setIndexInArticleTitlePlaces(
+//			Collection<IndexInArticleTitlePlaces> indexInArticleTitlePlaces) {
+//		this.indexInArticleTitlePlaces = indexInArticleTitlePlaces;
+//	}
+//
+//	public Collection<IndexInArticleDescriptionPlaces> getIndexInArticleDescriptionPlaces() {
+//		return indexInArticleDescriptionPlaces;
+//	}
+//
+//	public void setIndexInArticleDescriptionPlaces(
+//			Collection<IndexInArticleDescriptionPlaces> indexInArticleDescriptionPlaces) {
+//		this.indexInArticleDescriptionPlaces = indexInArticleDescriptionPlaces;
+//	}
 
 	public IndexArticleStatistics() {
 		super();
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -143,7 +147,8 @@ public class IndexArticleStatistics implements DbEntity{
 	}
 
 	@Override
-	public void onDelete(Repository<?> repository) {
+	public void onDelete(Repository<?> repository)
+			throws ClassNotFoundException {
 		// TODO Auto-generated method stub
 		
 	}

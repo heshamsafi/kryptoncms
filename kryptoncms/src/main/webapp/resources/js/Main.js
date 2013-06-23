@@ -107,6 +107,17 @@ function(
 		$(".modal").draggable();
 	}
 	function pageScopeMain(){
+		$("#searchArticles").attr("disabled",true);
+		$("#searchArticlesPhrase").keyup(function(){
+			$("#searchArticles").attr("disabled",$("#searchArticlesPhrase").val().length>0?false:true);
+		});
+		$("#searchArticles").click(function() {
+			$.get($("#searchArticlesForm").attr('action'), {
+				phrase : $("#searchArticlesPhrase").val()
+			}, function(articles) {
+				$("#bod").html(articles);
+			});
+		});
 		
 		$('select').each(function(i, e){
 	        if (!($(e).data('convert') == 'no')) {

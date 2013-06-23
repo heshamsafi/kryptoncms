@@ -181,9 +181,12 @@ public class SmartMap<KEY, VALUE> implements Serializable {
 		values.set(index, value);
 	}
 	
+	public void setKey(final int index, KEY key){
+		keys.set(index, key);
+	}
+	
 	public int size() {
 		return keys.size();
 	}
 
 }
-

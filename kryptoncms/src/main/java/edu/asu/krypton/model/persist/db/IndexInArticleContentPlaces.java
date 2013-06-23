@@ -1,14 +1,19 @@
 package edu.asu.krypton.model.persist.db;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.model.repository.Repository;
 
+@Document
+@XmlRootElement
 public class IndexInArticleContentPlaces implements DbEntity{
 
 	@Id
-	private Long id;
+	private String id;
 	@DBRef
 	private IndexArticleStatistics indexArticleStatistics;
 	private byte[] place;
@@ -19,10 +24,10 @@ public class IndexInArticleContentPlaces implements DbEntity{
 	public void setPlace(byte[] place) {
 		this.place = place;
 	}
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public IndexArticleStatistics getIndexArticleStatistics() {
@@ -36,7 +41,8 @@ public class IndexInArticleContentPlaces implements DbEntity{
 		super();
 	}
 	@Override
-	public void onDelete(Repository<?> repository) {
+	public void onDelete(Repository<?> repository)
+			throws ClassNotFoundException {
 		// TODO Auto-generated method stub
 		
 	}

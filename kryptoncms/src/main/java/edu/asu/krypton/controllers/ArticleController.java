@@ -1,6 +1,7 @@
 package edu.asu.krypton.controllers;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -187,6 +188,7 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 				article.setVersion("0");
 				message.setVersion(new String("0"));
 			}
+			article.reIndex = true;
 			articleService.saveOrUpdate(article);	
 
 //			return message.setId(article.getId()).setSuccessful(true);
@@ -231,19 +233,22 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public @ResponseBody String getCertainArticle(@RequestParam("phrase") String phrase) throws Exception {
 		try{
-			List<Long> articlesIDs = articleService.search(phrase);
+			System.out.println("Searching for " + phrase + "...");
+			List<BigInteger> articlesIDs = articleService.search(phrase);
 			if(articlesIDs == null || articlesIDs.size()==0)
 				return "<h3>No results exist for " + phrase + "</h3>";
 			String content = "<h3>Search results: " + articlesIDs.size() + " articles found for \"" + phrase + "\"</h3>";
 			content += "<div style=\"margin-left:25px\">";
 			List<Article> articles = new ArrayList<Article>();
-			for(Long id : articlesIDs){
-				articles.add(articleRepository.getArticleByID(id));
+			for(BigInteger id : articlesIDs){
+				articles.add(articleRepository.getArticleByID(id.toString(16)));
 			}
+			
 			for(Article article : articles) {
 				content += "<div>";
+				content += "<a href=\"/kryptoncms/article/"+ article.getTitle() + "\">";
 				content += "<h3>"+article.getTitle()+"</h3>";
-				content += article.getContent();
+				content += "</a>";
 				content += "</div>";
 			}
 			content += "</div><br>";
@@ -254,5 +259,4 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 			return "<h3>Not finished yet</h3>";
 		}
 	}
-	
 }

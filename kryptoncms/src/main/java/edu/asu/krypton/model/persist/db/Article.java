@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,6 +21,9 @@ public class Article extends Commentable implements DbEntity {
 	@Id
 	@InputText(readOnly=true)
 	private String id;
+	
+	@Transient
+	public boolean reIndex = false;
 	
 	@Indexed(unique=true)
 	@InputText
@@ -92,6 +96,20 @@ public class Article extends Commentable implements DbEntity {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+//	public Article(Article old){
+//		this.id=old.getId();
+//		this.content=old.getContent();
+//		this.title=old.getTitle();
+//		this.obsolete=old.isObsolete();
+//		this.reIndex=old.reIndex;
+//		this.commentMode=old.getCommentMode();
+//		this.date=old.getDate();
+//		this.description=getDescription();
+//		this.home=old.isHome();
+//		this.patches=old.getPatches();
+//		this.version=old.getVersion();
+//		
+//	}
 	@Override
 	public String toString() {
 		return String.format("[id=%s,content=%s,title=%s,description=%s,date=%s,comments=%s]",id,content,title,description,date,getComments());
