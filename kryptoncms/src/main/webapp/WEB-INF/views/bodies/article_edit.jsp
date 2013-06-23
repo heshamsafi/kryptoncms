@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
-<form id="article_form" action='<c:url value="/article/edit/${id}"/>' method="post" style="margin-bottom: 0px" data-validation-enable>
+<form id="article_form" action='<c:url value="/article/edit/${title}"/>' method="post" style="margin-bottom: 0px" data-validation-enable>
 <div class="modal-header">
 <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button> -->
       <h1>Article</h1>
@@ -11,7 +11,7 @@
 			<label for="title" class="add-on pull-left"> <span
 				class="icon-asterisk"></span>Title
 			</label> <input type="text" class="pull-left"
-				id="title" name="title" value="${article.title}"
+				id="title" name="title" value="${title}"
 				placeholder="Title" data-required
 <!-- 				data-describedby="username-description" data-description="username" -->
 				data-pattern=".{3,}" /> 
@@ -28,6 +28,10 @@
 <!-- 				data-describedby="password-description" data-description="password" -->
 				data-pattern=".{5,}" /> <label for="description"
 				class="add-on" id="description-description"></label>
+		</div>
+		<div>
+			
+			<input type="text" name="id" value="${article.id}" disabled /><br />
 		</div>
 	</div>
 	<div>

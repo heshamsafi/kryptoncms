@@ -4,6 +4,7 @@ import edu.asu.krypton.model.message_proxies.Message;
 
 public class ArticleSubmitMessage extends Message {
 	private String id;
+	private String title;
 	private String version;
 	public String getId() {
 		return id;
@@ -20,5 +21,16 @@ public class ArticleSubmitMessage extends Message {
 
 	public void setVersion(String version) {
 		this.version = version;
+		
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public ArticleSubmitMessage setTitle(String title) {
+		this.title = title;
+		return this;
+
 	}
 }

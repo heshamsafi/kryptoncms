@@ -58,12 +58,12 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	}
 	
 	
-	@RequestMapping(method=RequestMethod.GET,value="edit/{id}/{version}")
-	public String getHome(@PathVariable String id,@PathVariable String version,HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
-		if(id != null){
+	@RequestMapping(method=RequestMethod.GET,value="edit/{title}/{version}")
+	public String getHome(@PathVariable String title,@PathVariable String version,HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
+		if(title != null){
 			
-			Article article= articleService.findById(id);
-//							 articleService.findByTitle(id);
+			//Article article= articleService.findById(id);
+			Article article= articleService.findByTitle(title);
 			ArrayList<Patch<String>>patches;
 			if(article.getPatches()==null){
 				model.addAttribute("article", article);
@@ -124,9 +124,19 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	{	
 		ArticleSubmitMessage message = new ArticleSubmitMessage();
 		try{
+			Article articleOld=null;
 			if(article.getId()!=null){
-				Article articleOld=articleService.findById(article.getId());
+				articleOld=articleService.findById(article.getId());
+			}
+			else if(articleService.findByTitle(article.getTitle())!=null){
+				articleOld=articleService.findByTitle(article.getTitle());
+			}
+			if(articleOld!=null)
+			{
 				
+				
+			
+			
 				ArrayList<Patch<String>>patches;
 				if(articleOld.getPatches()==null){
 					patches=new ArrayList<Patch<String>>();
@@ -169,7 +179,7 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 				
 				article.setContent(articleOld.getContent());
 				
-				
+				article.setId(articleOld.getId());
 				message.setVersion(article.getVersion());
 				
 			}
@@ -179,7 +189,8 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 			}
 			articleService.saveOrUpdate(article);	
 
-			return message.setId(article.getId()).setSuccessful(true);
+//			return message.setId(article.getId()).setSuccessful(true);
+			return message.setTitle(article.getTitle()).setSuccessful(true);
 		}catch (Exception e) {
 			logger.debug(article.toString());
 			e.printStackTrace();
@@ -188,10 +199,11 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	}
 	
 	
-	@RequestMapping(value = "edit/{id}",method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Message saveOrUpdate(@PathVariable String id,@RequestBody Article article)throws Exception
+	@RequestMapping(value = "edit/{title}",method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Message saveOrUpdate(@PathVariable String title,@RequestBody Article article)throws Exception
 	{	
-		article.setId(id);
+		article.setTitle(title);
+//		article.setId(article.getId());
 		return saveOrUpdate(article);
 	}
 	

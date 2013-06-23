@@ -6,6 +6,19 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 				var url = $thisArticleForm.attr("action");
 				for (instance in CKEDITOR.instances)
 					CKEDITOR.instances[instance].updateElement();
+				var newTitle= $('#title').val();
+				{
+					
+					var Url = url;
+					var toRemove = '/kryptoncms/article/edit/';
+					var title = Url.replace(toRemove,'')
+					if(title!=newTitle){
+						url=toRemove
+					}
+				}	
+					
+					
+					
 				$('textarea').trigger('keyup');//what is this for ?
 				$.ajax({
 					"dataType": 'json',
@@ -17,7 +30,7 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 				})
 				.success(function(response){
 					if(response["successful"]){
-						var id = response["id"];
+						var title = response["title"];
 						var version = response["version"];
 						if(url.match(new RegExp("(edit(/)?)$")) != null){
 							if( url.match(new RegExp("\\w$") ) )  {
@@ -25,7 +38,7 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 								url+=version;
 							}
 							if( url.match(new RegExp("/$")   ) ){ 
-								url += id;
+								url += title;
 								url+="/";
 								url+=version;
 							}
