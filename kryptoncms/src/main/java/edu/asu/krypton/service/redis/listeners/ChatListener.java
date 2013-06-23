@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 
-import edu.asu.krypton.model.message_proxies.ChatMessage;
+import edu.asu.krypton.service.atmosphere.chat.BroadcastMessage;
 import edu.asu.krypton.service.atmosphere.chat.ChatService;
 
 public class ChatListener implements MessageListener {
@@ -23,9 +23,8 @@ public class ChatListener implements MessageListener {
     @Override
     public void onMessage( final Message message, final byte[] pattern ) {
     	try {
-			ChatMessage chatMessage = objectMapper.readValue(message.toString(), ChatMessage.class);
-			System.out.println(chatMessage);
-			chatService.broadcast(chatMessage);
+			BroadcastMessage broadcastMessage = objectMapper.readValue(message.toString(), BroadcastMessage.class);
+			chatService.broadcastMessage(broadcastMessage);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {

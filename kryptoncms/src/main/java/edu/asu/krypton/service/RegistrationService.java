@@ -68,7 +68,7 @@ public class RegistrationService {
 	
 	public List<String> getAllUsernames(boolean excludeSelf){
 		List<String> allUsernames = userRepository.getAllUsernames();
-		if(excludeSelf) allUsernames.remove(allUsernames.indexOf(getLoggedInUser().getUsername()));
+		if(excludeSelf && getLoggedInUser() != null) allUsernames.remove(allUsernames.indexOf(getLoggedInUser().getUsername()));
 		return allUsernames;
 	}
 	

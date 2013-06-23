@@ -32,10 +32,6 @@ public class RedisMessagingTest{
 
 	@Test
 	public void test() throws JsonGenerationException, JsonMappingException, IOException {
-		ChatMessage chatMessage = new ChatMessage();
-		chatMessage.setBody("body set");
-		chatMessage.setDestinations(new String[]{"dest1","dest2"});
-		chatMessage.setSource("source set");
-		publisher.publish("chatMessageBroadcast",objectMapper.writeValueAsString(chatMessage));
+
 	}
 }

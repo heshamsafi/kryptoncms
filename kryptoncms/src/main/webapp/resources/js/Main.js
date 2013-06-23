@@ -35,6 +35,7 @@ require([
         ,"./libraries/jquery.ui/selectable"
         ,"./libraries/jquery.ui/colorpicker"
         ,"./libraries/jquery.ui/slider"
+        ,"./libraries/jquery.ui/draggable"
         
         ],
 function(
@@ -57,8 +58,7 @@ function(
 		MenuManager
 		) {
 	var navigationMenu = null;
-	var chatter = null,
-		commentManager = null;
+	var commentManager = null;
 	$(document).ready(function(){
 		$('.cp-basic').colorpicker();
 		$( "#slider-range-min" ).slider({
@@ -95,12 +95,16 @@ function(
 		if(!FormSerializer.getInstance())
 			FormSerializer.getInstance();//global configuration for singleton instance of
 		
+		Chatter.getInstance().reconnect();
+		
 		membership = Membership.getInstance();
 		membership.bindRegisterForm("form.membership_register");
 		membership.bindLoginForm("form.membership_login");
 		membership.attachLogoutHandler();
 		membership.updateLoginStatus();
 		membership.attachLogoutHandler();
+		
+		$(".modal").draggable();
 	}
 	function pageScopeMain(){
 		
@@ -155,17 +159,6 @@ function(
 		if(!navigationMenu)
 			new NavigationMenu("#mainNav").highlightMenu();
 		
-		chatter = new Chatter();
-		chatter.$elements.$chatterForm          = $("#chatter_form");
-		chatter.$elements.$destination          = $("#destination");
-		chatter.$elements.$messageBody          = $("#message");
-		chatter.$elements.$messageBoard         = $("#message_board");
-		chatter.$elements.$submitBtn            = $("#btn_submit");
-		chatter.$elements.$destinationsPallette = $("#destinations_pallette");
-		chatter.$elements.$destinationAdderBtn  = $("#destination_adder");
-		
-		chatter.attachHandlers();
-		
 		commentManager = new CommentManager();
 		commentManager.attachHandlersToSections();
 		
@@ -183,10 +176,6 @@ function(
 		photoAlbumManager.listPhotoAlbums();
 	}
 	function collectGarbage(){
-		if(chatter.activated){
-			chatter.closeSockets();
-			delete chatter;
-		}
 		if(commentManager.activated){
 			commentManager.closeSockets();
 			delete commentManager;

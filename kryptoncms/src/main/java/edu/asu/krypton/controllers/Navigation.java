@@ -29,8 +29,11 @@ import edu.asu.krypton.service.redis.Publisher;
 public class Navigation extends Controller {
 	
 	private final String DEFAULT_VIEW = "navigation";
-	private final String MENU_VIEW = "admin_nav";
+	private final String MENU_VIEW = "nav";
+	private final String ADMIN_MENU_VIEW = "admin_nav";
+	
 	private final String DEFAULT_BODY_DIR = "bodies/";
+	private final String DEFAULT_INCLUDES_DIR = "includes/";
 	
 	private static final Logger logger = LoggerFactory.getLogger(Navigation.class);
 	
@@ -47,8 +50,9 @@ public class Navigation extends Controller {
 	
 	@RequestMapping(method = RequestMethod.GET,value="/menu/{role}")
 	public String menus(ModelMap model,HttpServletRequest request,@PathVariable String role)  {
-		model.addAttribute("items", menuService.getItems(role.equals("admin")));
-		return DEFAULT_BODY_DIR+MENU_VIEW;
+		boolean admin = role.equals("admin");
+		model.addAttribute("items", menuService.getRootItems(admin));
+		return DEFAULT_INCLUDES_DIR+(admin?ADMIN_MENU_VIEW:MENU_VIEW);
 	}
 	
 	@RequestMapping(value="/menu/echo",method = RequestMethod.GET)

@@ -4,7 +4,7 @@ define(["jquery","libraries/mootools-base","SocketHandler.class","./libraries/jq
 			var thisMenuManager = this;
 			thisMenuManager.subscribeSocket();
 		    
-	        $( ".nav,.dropdown-menu" ).sortable({
+	        $( "#admin_nav" ).sortable({
 				placeholder: "ui-state-highlight",
 				connectWith: "#bod",
 				items: "li:not(.exclude)",
@@ -17,7 +17,7 @@ define(["jquery","libraries/mootools-base","SocketHandler.class","./libraries/jq
 		        	});
 		        }
 			}).droppable();
-		    $( ".nav,.dropdown-menu" ).disableSelection();
+		    $( "#admin_nav" ).disableSelection();
 
 	        $( "#bod" ).sortable({
 	          connectWith: "#admin_nav",

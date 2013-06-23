@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,13 @@ public class CascadeAspect {
 		delete(entity);
 	}
 	
+	@Before("execution(public void edu.asu.krypton.model.repository.Repository.delete(..)) && args(id,docClass)")
+	public void delete(String id,Class<?> docClass) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(id));
+		delete(query,docClass);
+	}
+	
 	@Before("execution(public void edu.asu.krypton.model.repository.Repository.delete(..)) && args(dbEntity)")
 	public void delete(DbEntity dbEntity) {
 		try{
@@ -36,7 +44,6 @@ public class CascadeAspect {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		logger.debug("Whooo ! ,article is being deleted ! \n" +dbEntity.toString());
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
 import edu.asu.krypton.form.annotations.TextArea;
+import edu.asu.krypton.model.repository.Repository;
 
 @Document
 @XmlRootElement
@@ -32,12 +33,19 @@ public class Article extends Commentable implements DbEntity {
 	@Indexed
 	private Date date;
 	
+	@InputText
+	private String commentMode = "custom";
+	
 	@TextArea(applyCKEditor=true)
 	private String content;
 	
 	@CheckBox
 	private boolean obsolete;
 	// momken ne7tag nzawed author ba3deen
+	
+	@Indexed
+	@CheckBox
+	private boolean home;
 	
 	@XmlAttribute
 	public String getContent() {
@@ -89,7 +97,28 @@ public class Article extends Commentable implements DbEntity {
 		return String.format("[id=%s,content=%s,title=%s,description=%s,date=%s,comments=%s]",id,content,title,description,date,getComments());
 	}
 
-	public String getVersion() {
+	@Override
+	public void onInsert(Repository<?> repository) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isHome() {
+		return home;
+	}
+
+	public void setHome(boolean home) {
+		this.home = home;
+	}
+
+	public String getCommentMode() {
+		return commentMode;
+	}
+
+	public void setCommentMode(String commentMode) {
+		this.commentMode = commentMode;
+	}
+		public String getVersion() {
 		return version;
 	}
 
