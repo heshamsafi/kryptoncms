@@ -209,9 +209,9 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	
 	
 	
-	@RequestMapping(value="{id}",method=RequestMethod.GET)
-	public String getArticle(@PathVariable String id,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
-		Article article = articleService.findById(id);
+	@RequestMapping(value="{title}",method=RequestMethod.GET)
+	public String getArticle(@PathVariable String title,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+		Article article = articleService.findByTitle(title);
 		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
 		Article nextArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").gt(article.getDate())), Article.class);
 		Article prevArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").lt(article.getDate())), Article.class);
