@@ -26,7 +26,10 @@ public class Article extends Commentable implements DbEntity {
 	private String title;
 	@InputText
 	private String description;
-
+	
+	private String version;
+	
+	private String patches;
 	@Indexed
 	private Date date;
 	
@@ -114,6 +117,21 @@ public class Article extends Commentable implements DbEntity {
 
 	public void setCommentMode(String commentMode) {
 		this.commentMode = commentMode;
+	}
+		public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getPatches() {
+		return patches;
+	}
+
+	public void setPatches(String patches) {
+		this.patches = patches;
 	}
 	
 }

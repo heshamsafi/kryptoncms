@@ -712,4 +712,9 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	public Article findHomeArticle() {
 		return articleRepository.findHomeArticle();
 	}
+	
+	public Article findByTitle(String title) {
+		return articleRepository.findArticleByTitle(title);
+		
+	}
 }
