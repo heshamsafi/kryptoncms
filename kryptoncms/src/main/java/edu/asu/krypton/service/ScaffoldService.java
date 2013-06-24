@@ -30,15 +30,15 @@ public class ScaffoldService {
 
 	public void serviceScaffoldCommand(ScaffoldMessage scaffoldMessage) throws JsonGenerationException, JsonMappingException, IOException, ClassNotFoundException {
 		Class<?> type = Class.forName(scaffoldMessage.getClassName());
-		if(scaffoldMessage.getAction().equals("delete")){
+		if(scaffoldMessage.getAction().equals("DELETE")){
 			Query query = new Query();
 			query.addCriteria(Criteria.where("id").is(scaffoldMessage.getId()));
 //			mongoTemplate.remove(query, type);
 			repository.delete(query, type);
-		}else{//modify or create
-			mongoTemplate.save(
-					objectMapper.readValue(scaffoldMessage.getActualEntity(), type)
-		    );
+		}else if(scaffoldMessage.getAction().equals("MODIFY") || scaffoldMessage.getAction().equals("CREATE")){//modify or create
+			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
+			mongoTemplate.save(object);
+			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
 		}
 		MetaBroadcaster.getDefault().broadcastTo("/form/echo", objectMapper.writeValueAsString(scaffoldMessage));
 	}

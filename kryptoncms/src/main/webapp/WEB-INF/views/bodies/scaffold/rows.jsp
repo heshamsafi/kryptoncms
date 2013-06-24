@@ -29,7 +29,7 @@
 		</thead>
 		<tbody>
 		<c:forEach var="entity" items="${entities}">
-			<tr data-enable-context-menu data-entity-id="${entity.id}" > 
+			<tr data-enable-context-menu data-entity-id="${entity.id}" >
 			<c:forEach var="entityField" items="${entityClassFields}">
 			<td data-attr="${entityField.name}">
 			
@@ -61,7 +61,7 @@
 								<span data-trigger="hover" data-html="true" data-placement="right" data-content='<h5><b>${fn:escapeXml(escapedVal)}</b></h5>' data-title='<h4>${entityField.name}</h4>' rel="popover" >
 									<c:choose>
 										<c:when test="${cutoff < escapedVal.length()}">
-											${escapedVal.substring(0,cutoff)}....
+											${escapedVal.substring(0,cutoff)}...
 										</c:when>
 										<c:otherwise>
 											${escapedVal}
@@ -85,3 +85,23 @@
 	</c:choose>
 	</table>
 </form>
+
+<script type="text/x-jquery-tmpl" id="scaffold-row-tmpl">
+	<tr data-enable-context-menu data-entity-id="\${owner.id}" >
+		{{each tds}}
+			<td data-attr="\${$value.name}">
+			{{if $value.type == "collection"}}
+			<a data-ajax-enable 
+				href='\${DOMAIN_CONFIGURATIONS.BASE_URL}/scaffold/\${$value.type}?ownerType=\${owner.type}&ownerId=\${owner.id}&pageSize=10'>
+				See List
+			</a>
+			{{else $value.type == "model"}}
+			<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='\${DOMAIN_CONFIGURATIONS.BASE_URL}/\${$value.name}?id=\${$value.value.id}&pageSize=10' rel="popover" data-content="<h5><b>\${$value.value.id}</b></h5>" data-title="<h4>Id</h4>">\${$value.type}</a>
+			{{else}}
+			<span data-trigger="hover" data-html="true" data-placement="right" data-content='<h5><b>\${$value.value}</b></h5>' data-title='<h4>\${$value.name}</h4>' rel="popover" >
+				\${$value.value}
+			</span>
+			{{/if}}
+		{{/each}}
+	</tr>
+</script>

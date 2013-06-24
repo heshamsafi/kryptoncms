@@ -39,14 +39,14 @@ define(	  ["jquery","libraries/mootools-base","libraries/jquery.history","FormSe
 		passiveReload : function(){
 			this.pageScopeMain();
 		},
-		formSubmitHandler : function($form,socket){
+		formSubmitHandler : function($form,socket,action){
 			var thisAjaxifierInstance = this;
 			$form.submit(function(event){
 				event.preventDefault();
 				var serializedForm = thisAjaxifierInstance.formSerializer.serialize($form);
 				console.log(serializedForm);
 				var serializedForm = JSON.stringify(serializedForm);
-				var scaffoldMessage = {"className":$form.attr('className'),actualEntity:serializedForm,action:"modify"};
+				var scaffoldMessage = {"className":$form.attr('className'),actualEntity:serializedForm,action:action};
 				var stringifiedScaffoldMessage = JSON.stringify(scaffoldMessage);
 				socket.push(stringifiedScaffoldMessage);
 				$form.parents(".modal[aria-hidden=false]").modal("hide");

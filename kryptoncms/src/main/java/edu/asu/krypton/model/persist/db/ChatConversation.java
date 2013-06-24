@@ -23,8 +23,6 @@ public class ChatConversation implements DbEntity {
 	private Collection<ChatMessage> messages = new ArrayList<ChatMessage>();
 	
 	
-	
-	
 	@Override
 	public String toString() {
 		return String.format("id = %s, parties = %s, messages = %s", id,parties,messages);

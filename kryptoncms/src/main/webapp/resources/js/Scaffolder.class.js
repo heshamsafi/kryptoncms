@@ -25,7 +25,7 @@ define([
 				  thisInstance.$scaffoldTable.find("tr.ui-selected").each(function(idx,tr){
 					  	var $tr = $(tr);
 			    		$form = $tr.parents("form");	
-			    		var scaffoldMessage = {"className":$form.attr('className'),id:$tr.attr("data-entity-id"),action:"delete"};
+			    		var scaffoldMessage = {"className":$form.attr('className'),id:$tr.attr("data-entity-id"),action:"DELETE"};
 			    		thisInstance.socketHandler.push(JSON.stringify(scaffoldMessage));
 				  });
 			  });
@@ -36,7 +36,7 @@ define([
 				  var id =$tr.attr("data-entity-id");
 				  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
 					  var $form = $("#genericModal form");
-					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler);
+					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"MODIFY");
 					  Ajaxifier.getInstance().passiveReload();
 				  });
 			  });
@@ -44,7 +44,7 @@ define([
 			  $("#create").click(function(){
 				  $("#genericModal").load( $("#scaffoldForm").attr("data-edit-action"),function(){
 					  var $form = $("#genericModal form");
-					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler);
+					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"CREATE");
 				  });
 			  });
 			  thisInstance.socket();
@@ -96,7 +96,7 @@ define([
 //				   }
 //			  });
 		},
-		createOrModifyRow : function(className,entity){
+		modifyRow : function(className,entity){
 			//real time crap
 			var $form = $("#scaffoldForm");
 			if(className.match("Menu") != null){
@@ -107,20 +107,53 @@ define([
 			}
 			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
 			var $tbl = $form.find("table");
-//			var $th = $tbl.find("th");
-//			var newRow = {};
-//			$th.each(function(){
-//				var attrName = $(this).text().trim();
-//				newRow[attrName] = entity[attrName];
-//				console.log(newRow);
-//			});
 			var $tr = $tbl.find("tr[data-entity-id="+entity["id"]+"]");
+			console.log(entity);
+//			$tr.html($("script#chat-message-tmpl").tmpl({
+//				"action":"edit"
+//			}));
 			$tr.find("td").each(function(idx,td){
 				var $td = $(td);
 				var attrName = $td.attr("data-attr");
-				if(typeof entity[attrName] != "undefined")
-				$td.find("span").html(entity[attrName].toString());
+				if(typeof entity[attrName] != "undefined"){
+					var buffer = entity[attrName];
+					if(typeof buffer != "boolean"){
+						var buffer = buffer.replace(new RegExp("<(/?)([^>]*)>","gi")," ");
+						if(buffer.length > 20) buffer = buffer.substring(0,20)+"...";
+					}
+					$td.find("span").html(buffer);
+				}
 			});
+		},
+		insertRow : function(className,entity){
+			var $form = $("#scaffoldForm");
+			if(className.match("Menu") != null){
+				var $anchor = $("#admin_nav #"+entity.id);
+				$anchor.attr({
+					"href": entity.url
+				}).text(entity.name);
+			}
+			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
+			var adaptedObject = {
+					"owner":{
+						"id":entity["id"],
+						"type": $form.attr('classname')
+					},
+					"tds":[]
+			};
+			for(var key in entity){
+				var type = $.isArray(entity[key])?"collection":
+						   $.isPlainObject(entity[key])?"model":
+						   (typeof entity[key])  < 0 ?typeof entity[key]:(typeof entity[key]).replace(new RegExp("([^\\.]*\\.)","g"),"");
+				adaptedObject.tds.push({
+					"value":type == "string"?entity[key].replace(new RegExp("<(/?)([^>]*)>","gi")," ").substring(0,20)+"..."
+											:entity[key],
+					"name":key,
+					"type":type
+				});
+			}
+			console.log(entity);
+			$("script#scaffold-row-tmpl").tmpl(adaptedObject).appendTo($form.find("table tbody"));
 		},
 		deleteRow : function(className,id){
 			//real time crap
@@ -155,11 +188,14 @@ define([
 				    	function(response) {
 				    		var scaffoldMessage = JSON.parse(response.responseBody);
 				    		
-				    		if(scaffoldMessage.action == "delete")
+				    		if(scaffoldMessage.action == "DELETE")
 				    			thisInstance.deleteRow(scaffoldMessage.className,scaffoldMessage.id);
-				    		else{
+				    		else if(scaffoldMessage.action == "MODIFY"){
 				    			var entity = JSON.parse(scaffoldMessage.actualEntity);
-				    			thisInstance.createOrModifyRow(scaffoldMessage.className,entity);
+				    			thisInstance.modifyRow(scaffoldMessage.className,entity);
+				    		}else if(scaffoldMessage.action == "CREATE"){
+				    			var entity = JSON.parse(scaffoldMessage.actualEntity);
+				    			thisInstance.insertRow(scaffoldMessage.className,entity);
 				    		}
 				    	}
 				  ).subscribe();
