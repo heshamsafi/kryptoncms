@@ -9,7 +9,7 @@
 <c:url var="link_facebook_comments" value="/comments/facebook/Article/1" />
 <c:url var="link_photo" value='/photo/' />
 <c:url var="link_article" value='/article/addarticle' />
-
+<c:url var="link_article_search" value='/article/search' />
 
 <c:url var="link_connect_summary" value='/membership/social/' />
 
@@ -53,7 +53,16 @@
 				</ul>
 				<img id="loading_image" style="margin-left:50px;display:none;width: 2.6em;" src='<c:url value="/resources/img/loading.gif" />' />
 				
-				<div class="btn-group pull-right" id="account_controls">
+			<div class="btn-group pull-right" id="account_controls">
+				  <div class="pull-left" style="margin-right:5px">
+				  <form id="searchArticlesForm" class="form-search" action='<c:url value="/article/search" />'>
+    				<div class="input-append">
+    					<input type="text" class="search-query" id="searchArticlesPhrase" data-required placeholder="enter word or phrase ..." />
+    					<button id="searchArticles" class="btn  btn-primary" type="button">Search</button>
+    				</div>
+       		 	  </form>
+       		 	  </div>
+       		 	  <div class="pull-right" style="margin-left:5px">
 				  <a class="btn dropdown-toggle btn btn-primary displ" data-toggle="dropdown" href="#">
 				     <span>Anonymous</span>
 				    <span class="caret"></span>

@@ -3,13 +3,16 @@ package edu.asu.krypton.service;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import edu.asu.krypton.model.persist.db.Article;
 import edu.asu.krypton.model.persist.db.IndexArticleStatistics;
@@ -19,6 +22,9 @@ import edu.asu.krypton.model.persist.db.IndexInArticleTitlePlaces;
 import edu.asu.krypton.model.persist.db.Indices;
 import edu.asu.krypton.model.repository.ArticleRepository;
 import edu.asu.krypton.model.repository.IndexRepository;
+import edu.asu.krypton.sourceControl.helperClass;
+import edu.asu.krypton.sourceControl.difflib.DiffUtils;
+import edu.asu.krypton.sourceControl.difflib.Patch;
 import edu.asu.krypton.utilities.SmartMap;
 
 @Service
@@ -48,9 +54,53 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 	
 	@Override
 	public void saveOrUpdate(Article entity) {
+		try {
+			System.out.println(entity.isObsolete());
 			repository.saveOrUpdate(entity);
-//			if(! entity.isObsolete())
-//				refreshIndexTable(entity);
+			if(! entity.isObsolete()) {
+				if(entity.reIndex){
+					
+					
+					if(!entity.getVersion().equals("0")){
+						deleteArticle(entity);
+						String patchesString=entity.getPatches();
+						ArrayList<Patch<String>>patches=(ArrayList<Patch<String>>) helperClass.fromString(patchesString);
+						
+						StringTokenizer original=new StringTokenizer(entity.getContent(),"\n");
+						
+						List<String>originalTokens=new ArrayList<String>();
+						
+						while(original.hasMoreTokens()){
+							originalTokens.add(original.nextToken());
+						}
+						
+						
+						List<String>Result=originalTokens;
+						for(Patch<String>patch:patches){
+							
+							Result=DiffUtils.patch(Result, patch);
+							System.out.println(patches);
+						
+						}
+						
+						String content= "";
+	
+						for (String s : Result)
+						{
+						    content += s + "\n";
+						}
+						
+						entity.setContent(content);	
+					
+					}
+					
+					refreshIndexTable(entity);
+					entity.reIndex = false;
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public List<Article> getAll(){
@@ -92,6 +142,10 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		return new String(returnChars);
 	}
 	
+	/**
+	 * makes the required indexing operations on the article passed 
+	 * @param article , the article to be indexed
+	 */
 	private void refreshIndexTable(Article article) {
 		// parsing
 		List<String> titleWords = new ArrayList<String>();
@@ -104,7 +158,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 			descriptionWords.add(tokenizer.nextToken());
 		List<String> contentWords = new ArrayList<String>();
 		tokenizer = new StringTokenizer(
-				extractValidSearchTextfromContent(article.getContent()),"< \n\t\f\r");
+				extractValidSearchTextfromContent(article.getContent()),"< &\n\t\f\r");
 		while (tokenizer.hasMoreTokens())
 			contentWords.add(tokenizer.nextToken());
 		// indexing
@@ -119,7 +173,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 				indexRepository.insertOrUpdateIndex(index);
 				IndexArticleStatistics indexStatistics = new IndexArticleStatistics();
 				// indexStatistics.setArticle(article);
-				indexStatistics.setArticleNumber(toByteArray(new Long(article.getId())));
+				indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
 				indexStatistics.setIndex(index);
 				indexStatistics
 						.setNumberOfOccurencesInTitle(toByteArray(new Long(
@@ -147,8 +201,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 					// article
 					indexStatistics = new IndexArticleStatistics();
 					// indexStatistics.setArticle(article);
-					indexStatistics.setArticleNumber(toByteArray(new Long(article
-							.getId())));
+					indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
 					indexStatistics.setIndex(index);
 					indexStatistics
 							.setNumberOfOccurencesInTitle(toByteArray(new Long(
@@ -177,7 +230,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 							.setIndexArticleStatistics(indexStatistics);
 					// saveOrUpdate the record
 					indexRepository.insertOrUpdateIndexArticleStatistics(
-							indexStatistics, true);
+							indexStatistics, false);
 					indexRepository
 							.insertOrUpdateIndexInArticleTitlePlaces(indexInArticleTitlePlaces);
 				}
@@ -195,7 +248,8 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 				indexRepository.insertOrUpdateIndex(index);
 				IndexArticleStatistics indexStatistics = new IndexArticleStatistics();
 				// indexStatistics.setArticle(article);
-				indexStatistics.setArticleNumber(toByteArray(new Long(article.getId())));
+				indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
+				System.out.println("index: "+index.getWord()+" Articel ID: "+new BigInteger(article.getId(),16));
 				indexStatistics.setIndex(index);
 				indexStatistics
 						.setNumberOfOccurencesInContent(toByteArray(new Long(
@@ -221,13 +275,12 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 								article, index);
 				if (indexStatistics == null) {
 					System.out.println(index.getWord());
-					System.out.println(new Long(article.getId()).longValue());
 					// if index exists but has no information yet about this
 					// article
 					indexStatistics = new IndexArticleStatistics();
 					// indexStatistics.setArticle(article);
-					indexStatistics.setArticleNumber(toByteArray(new Long(article
-							.getId())));
+					indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
+					System.out.println("index: "+index.getWord()+" Articel ID: "+new BigInteger(article.getId(),16));
 					indexStatistics.setIndex(index);
 					indexStatistics
 							.setNumberOfOccurencesInContent(toByteArray(new Long(
@@ -257,7 +310,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 							.setIndexArticleStatistics(indexStatistics);
 					// saveOrUpdate the record
 					indexRepository.insertOrUpdateIndexArticleStatistics(
-							indexStatistics, true);
+							indexStatistics, false);
 					indexRepository
 							.insertOrUpdateIndexInArticleContentPlaces(indexInArticleContentPlaces);
 				}
@@ -275,7 +328,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 				indexRepository.insertOrUpdateIndex(index);
 				IndexArticleStatistics indexStatistics = new IndexArticleStatistics();
 				// indexStatistics.setArticle(article);
-				indexStatistics.setArticleNumber(toByteArray(new Long(article.getId())));
+				indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
 				indexStatistics.setIndex(index);
 				indexStatistics
 						.setNumberOfOccurencesInDescription(toByteArray(new Long(
@@ -303,8 +356,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 					// article
 					indexStatistics = new IndexArticleStatistics();
 					// indexStatistics.setArticle(article);
-					indexStatistics.setArticleNumber(toByteArray(new Long(article
-							.getId())));
+					indexStatistics.setArticleNumber(toByteArray(new BigInteger(article.getId(),16)));
 					indexStatistics.setIndex(index);
 					indexStatistics
 							.setNumberOfOccurencesInDescription(toByteArray(new Long(
@@ -336,18 +388,19 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 							.setIndexArticleStatistics(indexStatistics);
 					// saveOrUpdate the record
 					indexRepository.insertOrUpdateIndexArticleStatistics(
-							indexStatistics, true);
+							indexStatistics, false);
 					indexRepository
 							.insertOrUpdateIndexInArticleDescriptionPlaces(indexInArticleDescriptionPlaces);
 				}
 			}
 		}
 		// set score
+//		System.out.println("reached");
 		for (Indices index : indexRepository.getAllIndices()) {
 			List<IndexArticleStatistics> indexStatisticsList = indexRepository
 					.findIndexArticleStatisticsRecordsByIndex(index);
-			//System.out.println(index.getWord());
-			int numberOfOccurenceInAllArticle = indexStatisticsList.size();
+			System.out.println(index.getWord());
+			int numberOfExistancesInAllArticles = indexStatisticsList.size();
 			int numberOfAllArticles = articleRepository.getAllArticles().size();
 			for (IndexArticleStatistics indexStatistics : indexStatisticsList) {
 				double score = Math
@@ -361,12 +414,12 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 								+ toLong(indexStatistics
 										.getNumberOfOccurencesInTitle())
 								* (5.0 / 12.0))
-						* Math.log10( 1 + numberOfAllArticles / numberOfOccurenceInAllArticle);
+						* Math.log10( 1 + numberOfAllArticles / numberOfExistancesInAllArticles);
 				System.out.println(index.getWord());
 				System.out.println(Math.log10(1+ toLong(indexStatistics.getNumberOfOccurencesInContent())* (4.0 / 12.0)+ toLong(indexStatistics
 										.getNumberOfOccurencesInDescription())* (3.0 / 12.0)+ toLong(indexStatistics.getNumberOfOccurencesInTitle())* (5.0 / 12.0)));
-				System.out.println(Math.log10( 1 + numberOfAllArticles / numberOfOccurenceInAllArticle));
-				System.out.println(numberOfOccurenceInAllArticle);
+				System.out.println(Math.log10( 1 + numberOfAllArticles / numberOfExistancesInAllArticles));
+				System.out.println(numberOfExistancesInAllArticles);
 				System.out.println(toLong(indexStatistics.getNumberOfOccurencesInTitle()));
 				System.out.println(toLong(indexStatistics.getNumberOfOccurencesInContent()));
 				System.out.println(toLong(indexStatistics.getNumberOfOccurencesInDescription()));
@@ -381,8 +434,8 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		}
 
 	}
-	
-	public List<Long> rankArticles(List<String> searchWords) {
+		
+	public List<BigInteger> rankArticles(List<String> searchWords) {
 		// TODO: traverse over the searchWord and get the corresponds indexes if
 		// exists
 		List<Indices> indices = new ArrayList<Indices>();
@@ -403,36 +456,40 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		}
 		// TODO: calculate the score of each indices articles over all
 		// searchWords
-		SmartMap <Long, Double> articlesScoreMap = new SmartMap<Long, Double>();
-		//for(Indices index : indices)
-			//System.out.println(index.getWord());
+		SmartMap <BigInteger, Double> articlesScoreMap = new SmartMap<BigInteger, Double>();
+		for(Indices index : indices)
+			System.out.println(index.getWord());
 		for(Indices index : indices){
 			//System.out.println(index.getWord());
-			List<Long> articleIDs = indexRepository.getRealArticleNumbers(index);
+			List<BigInteger> articleIDs = indexRepository.getRealArticleNumbers(index);
 			//System.out.println("----------------------");
-			//for(Long long1 : articleIDs)
-				//System.out.println(long1.longValue());
+			System.out.println("size "+articleIDs.size());
+			for(BigInteger id : articleIDs){
+				System.out.println(id.toString(16));
+			}
 			//System.out.println("----------------------");
 			List<IndexArticleStatistics> indexStatisticsList = (List<IndexArticleStatistics>)indexRepository.findIndexArticleStatisticsRecordsByIndex(index);
 			for(int i=0 ; i<indexStatisticsList.size() ; i++){
 				//System.out.println("reached");
+//				if(new BigInteger(indexStatisticsList.get(i).getArticleNumber()).toString(16).equals("0"))
+//					continue;
 				articlesScoreMap.put(new Double(toDouble(indexStatisticsList.get(i).getScore())/articleRepository.getArticleLength(articleIDs.get(i))), articleIDs.get(i));
-				//System.out.println(toDouble(indexStatisticsList.get(i).getScore()));
-				//System.out.println(toDouble(indexStatisticsList.get(i).getScore())/articleRepository.getArticleLength(articleIDs.get(i)) + " , " +  articleIDs.get(i));
+//				System.out.println(toDouble(indexStatisticsList.get(i).getScore()));
+				System.out.println(toDouble(indexStatisticsList.get(i).getScore())/articleRepository.getArticleLength(articleIDs.get(i)) + " , " +  articleIDs.get(i).toString(16));
 			}
 		}
-		//System.out.println(articlesScoreMap.size());
+//		System.out.println(articlesScoreMap.size());
 		// TODO: find repeated articles and then add their scores , and then eliminate the repeated ones
 		for(int i=0 ; i<articlesScoreMap.size()-1 ; i++){
 			for(int j=i+1 ; j<articlesScoreMap.size() ; j++){
-				if(articlesScoreMap.getKey(i).longValue()==articlesScoreMap.getKey(j).longValue()){
+				if(Arrays.equals(articlesScoreMap.getKey(i).toByteArray(), articlesScoreMap.getKey(j).toByteArray())){
 					//System.out.println(articlesScoreMap.getKey(i).longValue());
 					//System.out.println(articlesScoreMap.getValue(i));
 					//System.out.println(articlesScoreMap.getKey(j).longValue());
 					//System.out.println(articlesScoreMap.getValue(j));
-					//System.out.println("reached");
+//					System.out.println("reached");
 					//System.out.println(articlesScoreMap.getValue(i) + articlesScoreMap.getValue(j));
-					articlesScoreMap.setValue(articlesScoreMap.getKey(i), articlesScoreMap.getValue(i) + articlesScoreMap.getValue(j));
+					articlesScoreMap.setValue(articlesScoreMap.getKey(i), new Double(articlesScoreMap.getValue(i).doubleValue() + articlesScoreMap.getValue(j).doubleValue()));
 					//System.out.println(articlesScoreMap.getKey(i).longValue());
 					//System.out.println(articlesScoreMap.getValue(i));
 					articlesScoreMap.deleteByIndex(j);
@@ -462,29 +519,31 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		// TODO: sort the articles and return it sorted in the articles ArraList
 		//Bubble sort
 		int size = articlesScoreMap.size();
-		for(int i = size-1 ; i>1 ; i--){
+		for(int i = size-1 ; i>0 ; i--){
 			for(int j = 0 ; j<i ; j++){
 				if(articlesScoreMap.getValue(j).doubleValue() < articlesScoreMap.getValue(j+1).doubleValue()){
 					//swapping
-					long first_long = articlesScoreMap.getKey(j).longValue();
+					BigInteger first = articlesScoreMap.getKey(j);
 					double first_double = articlesScoreMap.getValue(j).doubleValue();
-					long second_long = articlesScoreMap.getKey(j+1).longValue();
+					BigInteger second = articlesScoreMap.getKey(j+1);
 					double second_double = articlesScoreMap.getValue(j+1).doubleValue();
-					long temp_long = first_long;
-					double temp_double = first_double;
-					first_long = second_long;
-					first_double = second_double;
-					second_long = temp_long;
-					second_double = temp_double;
-					Long firstLong = new Long(first_long);
+					
+//					first = first.add(second);
+//					second = first.subtract(second);
+//					first = first.subtract(second);
+//					
+//					double temp_double = first_double;
+//					first_double = second_double;
+//					second_double = temp_double;
+					
 					Double firstDouble = new Double(first_double);
-					Long secondLong = new Long(second_long);
 					Double secondDouble = new Double(second_double);
-					articlesScoreMap.setValue(articlesScoreMap.getKey(j), firstDouble);
-					articlesScoreMap.setKey(firstDouble, firstLong);
-					articlesScoreMap.setValue(articlesScoreMap.getKey(j+1), secondDouble);
-					articlesScoreMap.setKey(secondDouble, secondLong);
+					articlesScoreMap.setValue(j, secondDouble);
+					articlesScoreMap.setKey(j, second);
+					articlesScoreMap.setValue(j+1, firstDouble);
+					articlesScoreMap.setKey(j+1, first);
 				}
+				
 			}
 		}
 		return articlesScoreMap.getKeys();
@@ -571,8 +630,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		return additionalScore;
 	}
 	*/
-	
-	public List<Long> search(String sentence) {
+	public List<BigInteger> search(String sentence) {
 		List<String> searchWords = new ArrayList<String>();
 		StringTokenizer tokenizer = new StringTokenizer(sentence);
 		while (tokenizer.hasMoreTokens()){
@@ -590,6 +648,14 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 			dos.writeLong(in.longValue());
 			dos.close();
 			return baos.toByteArray();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private byte[] toByteArray(BigInteger in) {
+		try {
+			return in.toByteArray();
 		} catch (Exception e) {
 			return null;
 		}
@@ -619,16 +685,16 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 
 	public void deleteArticle(Article article) {
 		indexRepository.obsoleteArticle(article);
-		if (ableToDelete()) {
+//		if (ableToDelete()) {
 			// deletion operation
-			List<Article> obsoleteArticles = articleRepository
-					.getObsoleteArticles();
-			for (Article obsolete : obsoleteArticles) {
+//			List<Article> obsoleteArticles = articleRepository
+//					.getObsoleteArticles();
+//			for (Article obsolete : obsoleteArticles) {
 				// get the indexArticleStatistics records whose
 				// articleNumber corresponds to this obsolete article
 				boolean intentionToDeleteArticle = true;
 				List<IndexArticleStatistics> indexArticleStatisticsRecords = indexRepository
-						.findIndexArticleStatisticsRecordsByArticle(obsolete,
+						.findIndexArticleStatisticsRecordsByArticle(article,
 								intentionToDeleteArticle);
 				// get the indexInArticleTitlePlaces records for these
 				// indexArticleStatistics's and for content and description too
@@ -661,15 +727,6 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 						indicesInTheObsoleteArticle.add(indexArticleStatistics
 								.getIndex());
 				}
-				// get indices out of those , that has no rows existing in
-				// the IndexArticleStatistics table , then delete them
-				List<Indices> indicesToBeDeleted = new ArrayList<Indices>();
-				for (Indices index : indicesInTheObsoleteArticle) {
-					if (!(indexRepository
-							.findIndexArticleStatisticsRecordsByIndex(index)
-							.size() > 1))
-						indicesToBeDeleted.add(index);
-				}
 				// delete the indexArticleStatistics's places , then
 				// delete indexArticleStatistics records, then indices
 				indexRepository
@@ -681,13 +738,22 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 				for (IndexArticleStatistics indexArticleStatistics : indexArticleStatisticsRecords)
 					indexRepository
 							.deleteIndexArticleStatictics(indexArticleStatistics);
+				// get indices out of those , that has no rows existing in
+				// the IndexArticleStatistics table , then delete them
+				List<Indices> indicesToBeDeleted = new ArrayList<Indices>();
+				for (Indices index : indicesInTheObsoleteArticle) {
+					if (!(indexRepository
+							.findIndexArticleStatisticsRecordsByIndex(index)
+							.size() > 1))
+						indicesToBeDeleted.add(index);
+				}
 				for (Indices index : indicesToBeDeleted)
 					indexRepository.deleteIndex(index);
 				// delete the obsolete article itself
-				articleRepository.deleteArticle(obsolete);
+//				articleRepository.deleteArticle(obsolete);
 			}
-		}
-	}
+//		}
+//	}
 
 	private boolean isAlreadyExist(Indices index, List<Indices> indices) {
 		if (indices == null || index == null || indices.size() == 0)
@@ -704,11 +770,7 @@ public class ArticleService extends edu.asu.krypton.service.CommentableService<A
 		saveOrUpdate(newArticle);
 		deleteArticle(oldArticle);
 	}
-
-	private boolean ableToDelete() {
-		return indexRepository.ableToDelete();
-	}
-
+	
 	public Article findHomeArticle() {
 		return articleRepository.findHomeArticle();
 	}

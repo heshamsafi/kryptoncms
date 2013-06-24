@@ -2,6 +2,7 @@ package edu.asu.krypton.model.repository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,14 +28,23 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 		setPersistentClass(Indices.class);
 	}
 	
-	@Autowired
-	protected MongoTemplate mongoTemplate;
+	@Autowired(required = true)
+	private MongoTemplate mongoTemplate;
+	
+		public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
 
 	public boolean insertOrUpdateIndex(Indices index) {
 		try{
 			mongoTemplate.save(index);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -44,6 +54,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			mongoTemplate.remove(index);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -54,6 +65,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			mongoTemplate.remove(indexArticleStatistics);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -64,7 +76,6 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 		query.addCriteria(Criteria.where("word").is(word));
 		return mongoTemplate.findOne(query, Indices.class);
 	}
-
 	
 	public List<Indices> getIndexByPhrase(String phrase) {
 		Query query = new Query();
@@ -73,19 +84,19 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 	}
 
 	
-	public boolean ableToDelete() {
-		List<Article> allArticles = mongoTemplate.findAll(Article.class);
-		int numberOfArticles = allArticles.size();
-		int numberOfObsoleteArticles = 0;
-		for(Article article : allArticles){
-			if(article.isObsolete()==true)
-				numberOfObsoleteArticles++;
-		}
-		if ((numberOfObsoleteArticles * 100 / numberOfArticles >= 25)
-				&& (numberOfArticles >= 50))
-			return true;
-		return false;
-	}
+//	public boolean ableToDelete() {
+//		List<Article> allArticles = mongoTemplate.findAll(Article.class);
+//		int numberOfArticles = allArticles.size();
+//		int numberOfObsoleteArticles = 0;
+//		for(Article article : allArticles){
+//			if(article.isObsolete()==true)
+//				numberOfObsoleteArticles++;
+//		}
+//		if ((numberOfObsoleteArticles * 100 / numberOfArticles >= 25)
+//				&& (numberOfArticles >= 50))
+//			return true;
+//		return false;
+//	}
 
 	 
 	public List<Indices> getAllIndices() {
@@ -101,16 +112,15 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 				query.addCriteria(Criteria.where("index").is(indexArticleStatistics.getIndex()));
 				List<IndexArticleStatistics> list = mongoTemplate.find(query, IndexArticleStatistics.class);
 //				 System.out.println(list.size());
-				long articleNumberToBeUsed = 0;
+				BigInteger articleNumberToBeUsed = new BigInteger("0");
 				for(IndexArticleStatistics indexStatistics : list)
-					articleNumberToBeUsed += toLong(indexStatistics.getArticleNumber());
-				indexArticleStatistics.setArticleNumber(toByteArray(new Long(
-						toLong(indexArticleStatistics.getArticleNumber())
-								- articleNumberToBeUsed)));
+					articleNumberToBeUsed = articleNumberToBeUsed.add(toBigInteger(indexStatistics.getArticleNumber()));
+				indexArticleStatistics.setArticleNumber(toByteArray(toBigInteger(indexArticleStatistics.getArticleNumber()).subtract(articleNumberToBeUsed)));
 			}
 			mongoTemplate.save(indexArticleStatistics);
 			return true;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 	}
@@ -133,6 +143,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			mongoTemplate.save(indexInArticleTitlePlaces);
 			return true;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 	}
@@ -154,6 +165,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			}
 			return true;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 	}
@@ -176,11 +188,11 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			mongoTemplate.save(indexInArticleDescriptionPlaces);
 			return true;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 	}
 
-	
 	public IndexArticleStatistics findIndexArticleStatisticsRecordByArticleAndIndex(
 			Article article, Indices index) {
 		try {
@@ -190,27 +202,26 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			if (list == null || list.size() == 0)
 				return null;
 			byte[] startNumber = list.get(0).getArticleNumber();
-			if (Arrays.equals(toByteArray(new Long(article.getId())), startNumber))
+			if (Arrays.equals(toByteArray(new BigInteger(article.getId(),16)), startNumber))
 				return list.get(0);
 			for (int i = 1; i < list.size(); i++) {
 				IndexArticleStatistics indexStatistics = list.get(i);
-				if (Arrays.equals(toByteArray(new Long(article.getId())),
-						toByteArray(toLong(startNumber)
-								+ toLong(indexStatistics.getArticleNumber())))){
+				if (Arrays.equals(toByteArray(new BigInteger(article.getId(),16)),
+						toByteArray(toBigInteger(startNumber).add(toBigInteger(indexStatistics.getArticleNumber()))))){
 					return list.get(i);
 				}
-				startNumber = toByteArray(toLong(startNumber)
-						+ toLong(indexStatistics.getArticleNumber()));
+				startNumber = toByteArray(toBigInteger(startNumber).add(toBigInteger(indexStatistics.getArticleNumber())));
 			}
 			return null;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
 
 	
 	public IndexArticleStatistics findIndexArticleStatisticsRecordByArticleIDAndIndex(
-			Long articleID, Indices index) {
+			BigInteger articleID, Indices index) {
 		try {
 			Query query = new Query();
 			query.addCriteria(Criteria.where("index").is(index));
@@ -223,15 +234,14 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			for (int i = 1; i < list.size(); i++) {
 				IndexArticleStatistics indexStatistics = list.get(i);
 				if (Arrays.equals(toByteArray(articleID),
-						toByteArray(toLong(startNumber)
-								+ toLong(indexStatistics.getArticleNumber())))){
+						toByteArray(toBigInteger(startNumber).add(toBigInteger(indexStatistics.getArticleNumber()))))){
 					return list.get(i);
 				}
-				startNumber = toByteArray(toLong(startNumber)
-						+ toLong(indexStatistics.getArticleNumber()));
+				startNumber = toByteArray(toBigInteger(startNumber).add(toBigInteger(indexStatistics.getArticleNumber())));
 			}
 			return null;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -245,6 +255,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			List<IndexArticleStatistics> list = mongoTemplate.find(query, IndexArticleStatistics.class);
 			return list;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -263,6 +274,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			List<IndexInArticleTitlePlaces> list = mongoTemplate.find(query, IndexInArticleTitlePlaces.class);
 			return list;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -276,6 +288,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			List<IndexInArticleContentPlaces> list = mongoTemplate.find(query, IndexInArticleContentPlaces.class);
 			return list;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -318,15 +331,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 						for (int i = 0; i < size; i++) {
 							if (indexArticleStatisticsList.get(i).equals(
 									indexStatistics)) {
-								indexArticleStatisticsList
-										.get(i + 1)
-										.setArticleNumber(
-												toByteArray(new Long(
-														toLong(indexStatistics
-																.getArticleNumber())
-																+ toLong(indexArticleStatisticsList
-																		.get(i + 1)
-																		.getArticleNumber()))));
+								indexArticleStatisticsList.get(i + 1).setArticleNumber(toByteArray(toBigInteger(indexStatistics.getArticleNumber()).add(toBigInteger(indexArticleStatisticsList.get(i + 1).getArticleNumber()))));
 								insertOrUpdateIndexArticleStatistics(
 										indexArticleStatisticsList.get(i + 1),
 										false);
@@ -337,6 +342,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			}
 			return indexArticleStatisticsRecords;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -350,6 +356,7 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			List<IndexInArticleDescriptionPlaces> list = mongoTemplate.find(query, IndexInArticleDescriptionPlaces.class);
 			return list;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -362,30 +369,42 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 			dos.close();
 			return baos.toByteArray();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private byte[] toByteArray(BigInteger in) {
+		try {
+			return in.toByteArray();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private BigInteger toBigInteger(byte[] in) {
+		return new BigInteger(in);
 	}
 
 	private long toLong(byte[] in) {
 		ByteBuffer bb = ByteBuffer.wrap(in);
 		return bb.getLong();
 	}
-
 	
-	public List<Long> getRealArticleNumbers(Indices index) {
+	public List<BigInteger> getRealArticleNumbers(Indices index) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("index").is(index));
 		List<IndexArticleStatistics> list = mongoTemplate.find(query, IndexArticleStatistics.class);
 		//System.out.println(list.size());
-		List<Long> realArticleNumbers = new ArrayList<Long>();
-		Long startNumber = new Long(toLong(list.get(0).getArticleNumber()));
+		List<BigInteger> realArticleNumbers = new ArrayList<BigInteger>();
+		BigInteger startNumber = toBigInteger(list.get(0).getArticleNumber());
+		System.out.println(startNumber.toString(16));
 		realArticleNumbers.add(startNumber);
 		int size = list.size();
 		for (int i = 1; i < size; i++) {
-			realArticleNumbers.add(new Long(startNumber.longValue()
-					+ toLong(list.get(i).getArticleNumber())));
-			startNumber = new Long(startNumber.longValue()
-					+ toLong(list.get(i).getArticleNumber()));
+			realArticleNumbers.add(startNumber.add(toBigInteger(list.get(i).getArticleNumber())));
+			startNumber = startNumber.add(toBigInteger(list.get(i).getArticleNumber()));
 		}
 		return realArticleNumbers;
 	}
