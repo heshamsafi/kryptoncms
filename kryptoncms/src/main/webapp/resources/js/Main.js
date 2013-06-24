@@ -107,6 +107,17 @@ function(
 		$(".modal").draggable();
 	}
 	function pageScopeMain(){
+		$("#createAppFormSubmit").click(function() {
+			$.get($("#createAppForm").attr('action'), {
+				publicKey_x : $("#createAppForm_X").val(),
+				publicKey_y : $("#createAppForm_Y").val(),
+				e : $("#createAppForm_E").val(),
+				n : $("#createAppForm_N").val(),
+				appName : $("#createAppForm_appName").val()
+			}, function() {
+			});
+		});
+		
 		$("#searchArticles").attr("disabled",true);
 		$("#searchArticlesPhrase").keyup(function(){
 			$("#searchArticles").attr("disabled",$("#searchArticlesPhrase").val().length>0?false:true);
