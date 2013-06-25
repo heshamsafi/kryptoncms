@@ -153,7 +153,7 @@ function(
 		$('[rel=tooltip]').tooltip();
 		$('[rel=popover]').popover();
 		
-		new Scaffolder(Ajaxifier.getInstance());
+		Scaffolder.getInstance().activate();
 		
 		new MenuManager();
 		

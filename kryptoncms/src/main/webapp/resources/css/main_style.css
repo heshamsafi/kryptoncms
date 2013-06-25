@@ -13,6 +13,12 @@ form.membership_form{
 form button[type=submit]{
 	width: 15em;
 }
+form{
+	margin: 0px 0px 0px 0px !important; 
+}
+.btn-group {
+	font-size: 1.3em !important; 
+}
 /* .hide{ */
 /* 	display:none !important; */
 /* } */

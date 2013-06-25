@@ -57,7 +57,7 @@ public class CryptoWebService extends edu.asu.krypton.controllers.Controller{
 				BigInteger ec_public_x_server = ec_public_server.getx();
 				BigInteger ec_public_y_server = ec_public_server.gety();
 				
-				model.addAttribute("hint", "While calculating the symmetric secret key uisng Diffie Hellman algorithm, use the first 16 bytes from the X part only resulting from the Diffie Hellman process as the AES secret symmetric key");
+				model.addAttribute("hint", "While calculating the symmetric secret key using Diffie Hellman algorithm, use the first 16 bytes from the X part only resulting from the Diffie Hellman process as the AES secret symmetric key");
 				model.addAttribute("ec_base_x", ecc.getEc().getGenerator().getx());
 				model.addAttribute("ec_base_y", ecc.getEc().getGenerator().gety());
 				model.addAttribute("ec_order", ecc.getEc().getOrder());

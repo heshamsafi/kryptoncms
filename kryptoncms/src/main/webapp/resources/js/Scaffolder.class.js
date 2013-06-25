@@ -14,40 +14,7 @@ define([
 		socketHandler : null,
 		initialize : function(ajaxifier){
 			  this.ajaxifier = ajaxifier;
-			  var thisInstance = this;
-			  thisInstance.$scaffoldTable = $("table[data-enable-selectable] tbody");
-			  thisInstance.$scaffoldTable.selectable({
-				  filter :'tr',
-				  cancel: 'a'
-			  });
-			  
-			  $("#delete").click(function(event){
-				  thisInstance.$scaffoldTable.find("tr.ui-selected").each(function(idx,tr){
-					  	var $tr = $(tr);
-			    		$form = $tr.parents("form");	
-			    		var scaffoldMessage = {"className":$form.attr('className'),id:$tr.attr("data-entity-id"),action:"DELETE"};
-			    		thisInstance.socketHandler.push(JSON.stringify(scaffoldMessage));
-				  });
-			  });
-			  
-			  $("#edit").click(function(){
-				  var $tr = thisInstance.$scaffoldTable.find("tr.ui-selected");
-				  var $form = $tr.parents("form");
-				  var id =$tr.attr("data-entity-id");
-				  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
-					  var $form = $("#genericModal form");
-					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"MODIFY");
-					  Ajaxifier.getInstance().passiveReload();
-				  });
-			  });
-			  
-			  $("#create").click(function(){
-				  $("#genericModal").load( $("#scaffoldForm").attr("data-edit-action"),function(){
-					  var $form = $("#genericModal form");
-					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"CREATE");
-				  });
-			  });
-			  thisInstance.socket();
+			  this.activate();
 			  
 //			  thisInstance.contextMenu = new ContextMenu();
 			  //change in plans 
@@ -96,8 +63,43 @@ define([
 //				   }
 //			  });
 		},
+		activate : function(){
+			  var thisInstance = this;
+			  thisInstance.socket();
+			  thisInstance.$scaffoldTable = $("table[data-enable-selectable] tbody");
+			  thisInstance.$scaffoldTable.selectable({
+				  filter :'tr',
+				  cancel: 'a'
+			  });
+			  
+			  $("#delete").click(function(event){
+				  thisInstance.$scaffoldTable.find("tr.ui-selected").each(function(idx,tr){
+					  	var $tr = $(tr);
+			    		$form = $tr.parents("form");	
+			    		var scaffoldMessage = {"className":$form.attr('className'),id:$tr.attr("data-entity-id"),action:"DELETE"};
+			    		thisInstance.socketHandler.push(JSON.stringify(scaffoldMessage));
+				  });
+			  });
+			  
+			  $("#edit").click(function(){
+				  var $tr = thisInstance.$scaffoldTable.find("tr.ui-selected");
+				  var $form = $tr.parents("form");
+				  var id =$tr.attr("data-entity-id");
+				  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
+					  var $form = $("#genericModal form");
+					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"MODIFY");
+					  Ajaxifier.getInstance().passiveReload();
+				  });
+			  });
+			  
+			  $("#create").click(function(){
+				  $("#genericModal").load( $("#scaffoldForm").attr("data-edit-action"),function(){
+					  var $form = $("#genericModal form");
+					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"CREATE");
+				  });
+			  });
+		},
 		modifyRow : function(className,entity){
-			//real time crap
 			var $form = $("#scaffoldForm");
 			if(className.match("Menu") != null){
 				var $anchor = $("#admin_nav #"+entity.id);
@@ -128,31 +130,36 @@ define([
 		insertRow : function(className,entity){
 			var $form = $("#scaffoldForm");
 			if(className.match("Menu") != null){
-				var $anchor = $("#admin_nav #"+entity.id);
-				$anchor.attr({
-					"href": entity.url
-				}).text(entity.name);
+				var $ul = $("#admin_nav ul");
+				$("script#admin-menu-item-tmpl").tmpl(entity).appendTo($ul);
 			}
 			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
 			var adaptedObject = {
 					"owner":{
 						"id":entity["id"],
-						"type": $form.attr('classname')
+						"type": $form.attr('classname').replace(new RegExp("([^\\.]*\\.)","g"),"")
 					},
 					"tds":[]
 			};
-			for(var key in entity){
+			$form.find("th[data-field-type]").each(function(idx,item){
+				var $item = $(item); 
+				var key  = $item.text().trim();
 				var type = $.isArray(entity[key])?"collection":
-						   $.isPlainObject(entity[key])?"model":
-						   (typeof entity[key])  < 0 ?typeof entity[key]:(typeof entity[key]).replace(new RegExp("([^\\.]*\\.)","g"),"");
+						   $.isPlainObject(entity[key])?"model":typeof entity[key];
+				var value = entity[key];
+				if(type == "string"){
+					value = entity[key].replace(new RegExp("<(/?)([^>]*)>","gi")," ");
+					if (value.length > 20) value = value.substring(0,20)+"...";
+				}
 				adaptedObject.tds.push({
-					"value":type == "string"?entity[key].replace(new RegExp("<(/?)([^>]*)>","gi")," ").substring(0,20)+"..."
-											:entity[key],
+					"realValue" : entity[key],
+					"value":value,
 					"name":key,
-					"type":type
+					"type":type,
+					"javaType":$form.find("th[data-field-type]:contains("+key+")").attr("data-field-type")
 				});
-			}
-			console.log(entity);
+			});
+			console.log(adaptedObject);
 			$("script#scaffold-row-tmpl").tmpl(adaptedObject).appendTo($form.find("table tbody"));
 		},
 		deleteRow : function(className,id){
@@ -183,23 +190,32 @@ define([
 				thisInstance.socketHandler=null;
 				return;
 			}
-			thisInstance.socketHandler = new SocketHandler({ url : DOMAIN_CONFIGURATIONS.BASE_URL+"form/echo" })
-				  .setOnMessageHandler(
-				    	function(response) {
-				    		var scaffoldMessage = JSON.parse(response.responseBody);
-				    		
-				    		if(scaffoldMessage.action == "DELETE")
-				    			thisInstance.deleteRow(scaffoldMessage.className,scaffoldMessage.id);
-				    		else if(scaffoldMessage.action == "MODIFY"){
-				    			var entity = JSON.parse(scaffoldMessage.actualEntity);
-				    			thisInstance.modifyRow(scaffoldMessage.className,entity);
-				    		}else if(scaffoldMessage.action == "CREATE"){
-				    			var entity = JSON.parse(scaffoldMessage.actualEntity);
-				    			thisInstance.insertRow(scaffoldMessage.className,entity);
-				    		}
-				    	}
-				  ).subscribe();
+			if(thisInstance.socketHandler == null){
+				thisInstance.socketHandler = new SocketHandler({ url : DOMAIN_CONFIGURATIONS.BASE_URL+"form/echo" })
+					  .setOnMessageHandler(
+					    	function(response) {
+					    		var scaffoldMessage = JSON.parse(response.responseBody);
+					    		
+					    		if(scaffoldMessage.action == "DELETE")
+					    			thisInstance.deleteRow(scaffoldMessage.className,scaffoldMessage.id);
+					    		else if(scaffoldMessage.action == "MODIFY"){
+					    			var entity = JSON.parse(scaffoldMessage.actualEntity);
+					    			thisInstance.modifyRow(scaffoldMessage.className,entity);
+					    		}else if(scaffoldMessage.action == "CREATE"){
+					    			var entity = JSON.parse(scaffoldMessage.actualEntity);
+					    			thisInstance.insertRow(scaffoldMessage.className,entity);
+					    		}
+					    	}
+					  ).subscribe();
+			}
 		}
 	});
+	Scaffolder.self = null;
+	Scaffolder.getInstance = function(){
+		if(Scaffolder.self == null){
+			Scaffolder.self = new Scaffolder(Ajaxifier.getInstance());//no need to call activate
+		}
+		return Scaffolder.self;
+	};
 	return Scaffolder;
 });
