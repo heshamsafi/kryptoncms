@@ -21,12 +21,11 @@ import edu.asu.krypton.service.ArticleService;
 
 @Controller
 @RequestMapping(value = "/")
-public class HomeController extends edu.asu.krypton.controllers.Controller implements ApplicationContextAware {
+public class HomeController extends edu.asu.krypton.controllers.Controller {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	private final String DEFAULT_VIEW = "home";
 	private final String DEFAULT_BODY_DIR = "bodies/";
-	private ApplicationContext applicationContext;
 	private final String ARTICLE_VIEW = "article";
 	
 	@Autowired(required=true)
@@ -34,17 +33,10 @@ public class HomeController extends edu.asu.krypton.controllers.Controller imple
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String defaultView(ModelMap model,HttpServletRequest request) throws IOException, NoSuchRequestHandlingMethodException {
-//		model.addAttribute("profiles", applicationContext.getEnvironment().getActiveProfiles());
 		Article home = articleService.findHomeArticle();
 		if(home==null) throw new NoSuchRequestHandlingMethodException(request);
 		model.addAttribute("article", home);
 		return appropriateView(request, DEFAULT_BODY_DIR+ARTICLE_VIEW, defaultView(model,ARTICLE_VIEW));
-//		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, "home"));
-	}
-
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 	
 }

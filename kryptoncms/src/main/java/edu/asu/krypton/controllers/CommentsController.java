@@ -49,12 +49,6 @@ public class CommentsController extends edu.asu.krypton.controllers.Controller {
 
 	@Autowired(required = true)
 	private RegistrationService registrationService;
-
-	@Autowired(required = true)
-	private MongoTemplate mongoTemplate;
-
-	@Autowired(required = true)
-	private ArticleService articleService;
 	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;

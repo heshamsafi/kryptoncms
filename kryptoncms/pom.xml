@@ -377,11 +377,12 @@
 		    <artifactId>pagination-lib</artifactId>
 		    <version>0.2.0</version>
 		</dependency>
+		
 		<dependency>
-		  <groupId>org.springframework.security.social</groupId>
-		  <artifactId>spring-security-social</artifactId>
-		  <version>1.0-SNAPSHOT</version>
-		</dependency>
+            <groupId>org.socialsignin</groupId>
+            <artifactId>spring-social-security</artifactId>
+            <version>1.0.2.RELEASE</version>
+   		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -455,20 +456,12 @@
 		    <name>Spring Social Google</name>
 		    <url>https://github.com/GabiAxel/maven/raw/master/</url>
 		</repository>
-		<repository>
-		        <id>acoveo</id>
-		        <url>http://www.acoveo.com/maven2/repo</url>
-		        <snapshots>
-		                <enabled>false</enabled>
-		        </snapshots>
-		</repository>
-		<repository>
-		        <id>acoveo-snapshots</id>
-		        <url>http://www.acoveo.com/maven2/snapshots</url>
-		        <releases>
-		                <enabled>false</enabled>
-		        </releases>
-		</repository>
+		<repositories>
+		   <repository>
+		    <id>opensourceagility-releases</id>
+		    <url>http://repo.opensourceagility.com/releases</url>
+		   </repository>
+		</repositories>
 	</repositories>
 	<build>
         <plugins>

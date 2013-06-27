@@ -20,7 +20,7 @@
 	
 	<import resource="social-context.xml" />
 	
-	<context:component-scan base-package="edu.asu.krypton.controllers, edu.asu.krypton.model.repository, edu.asu.krypton.service ,edu.asu.krypton.aspects" />
+	<context:component-scan base-package="edu.asu.krypton.controllers, edu.asu.krypton.model.repository, edu.asu.krypton.service ,edu.asu.krypton.aspects, org.socialsignin.springsocial.security,org.springframework.social.connect.mongo" />
 	
 	<context:property-placeholder location="classpath:edu/asu/krypton/config/application.properties"/>
 </beans:beans>

@@ -33,9 +33,12 @@
 		</div>
 	</div>
 		<ul class="thumbnails" style="margin-left:0px">
-		<li class="span1.5"><a href="#" class="thumbnail"> <img
+		<li class="span1.5">
+		<a id="facebook" href="<c:url value='/signin/facebook' />" data-method="POST"  class="thumbnail"> 
+				<img
 				src='<c:url value="/resources/img/facebook.png" />' alt="facebook">
-		</a></li>
+		</a>
+		</li>
 
 		<li class="span1.5"><a href="#" class="thumbnail"> <img
 				src='<c:url value="/resources/img/twitter.png" />' alt="twitter">

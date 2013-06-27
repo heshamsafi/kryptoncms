@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
+import edu.asu.krypton.model.message_proxies.Message;
+
 @Controller
 @RequestMapping(value = "/translate")
 public class TranslationController extends edu.asu.krypton.controllers.Controller {
@@ -44,6 +46,6 @@ public class TranslationController extends edu.asu.krypton.controllers.Controlle
 				return Translate.execute(fromText, Language.valueOf(fromLang),Language.valueOf(toLang));
 			} catch (Exception ex) {}
 		}
-		return "";
+		return ("either connection is down or account expired !");
 	}
 }

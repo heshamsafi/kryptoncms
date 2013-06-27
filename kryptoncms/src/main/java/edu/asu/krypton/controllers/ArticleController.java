@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +24,6 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 import edu.asu.krypton.model.ArticleSubmitMessage;
 import edu.asu.krypton.model.message_proxies.Message;
 import edu.asu.krypton.model.persist.db.Article;
-import edu.asu.krypton.model.repository.ArticleRepository;
 import edu.asu.krypton.service.ArticleService;
 import edu.asu.krypton.sourceControl.helperClass;
 import edu.asu.krypton.sourceControl.difflib.DiffUtils;
@@ -47,20 +43,26 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	@Autowired(required=true)
 	private ArticleService articleService;
 	
-	@Autowired(required=true)
-	private ArticleRepository articleRepository;
-	
-	@Autowired(required=true)
-	private MongoTemplate mongoTemplate;
-	
+	/**
+	 * invoked by sending GET Request to the URL "/article/edit" and simply redirects to article edit view with a view 
+	 * in which an empty article object
+	 * @param request
+	 * @param model
+	 * @return String articleEdit View
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws PatchFailedException
+	 * @throws NoSuchRequestHandlingMethodException
+	 */
 	@RequestMapping(method=RequestMethod.GET,value="edit")
-	public String getHome(HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
-		return getHome(null,null, request, model);
+	public String editHome(HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
+		return editHome(null,null, request, model);
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method=RequestMethod.GET,value="edit/{title}/{version}")
-	public String getHome(@PathVariable String title,@PathVariable String version,HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
+	public String editHome(@PathVariable String title,@PathVariable String version,HttpServletRequest request,Model model) throws IOException, ClassNotFoundException, PatchFailedException, NoSuchRequestHandlingMethodException{
 		if(title != null){
 			
 			//Article article= articleService.findById(id);
@@ -72,45 +74,28 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 			else{
 				String patchesString=article.getPatches();
 				patches=(ArrayList<Patch<String>>) helperClass.fromString(patchesString);
-			
-			
-			
 				StringTokenizer original=new StringTokenizer(article.getContent(),"\n");
-				
 				List<String>originalTokens=new ArrayList<String>();
-				
-				while(original.hasMoreTokens()){
-					originalTokens.add(original.nextToken());
-				}
-				
+				while(original.hasMoreTokens()) originalTokens.add(original.nextToken());
 				int counter=0;
-				
 				int ver=Integer.parseInt(version);
 				if(patches.size()<ver){
 					//el version mesh mowgowda
 					throw new NoSuchRequestHandlingMethodException(request);
-//					return appropriateView(request, DEFAULT_DIR+EDIT_VIEW, defaultView(model,EDIT_VIEW));
 				}
 				List<String>Result=originalTokens;
 				for(Patch<String>patch:patches){
-					if(counter==ver){
-						break;
-					}
+					if(counter==ver) break;
 					Result=DiffUtils.patch(Result, patch);
 					System.out.println(patches);
 					counter++;
 				}
-				
-				String content= "";
-
-				for (String s : Result)
-				{
-				    content += s + "\n";
+				StringBuilder buffer = new StringBuilder();
+				for (String s : Result){
+					buffer.append(s);
+					buffer.append('\n');
 				}
-				
-				article.setContent(content);	
-				
-				
+				article.setContent(buffer.toString());	
 				model.addAttribute("article", article);
 			}
 			
@@ -120,6 +105,7 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "edit",method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Message saveOrUpdate(@RequestBody Article article)
 	{	
@@ -209,26 +195,37 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 		return saveOrUpdate(article);
 	}
 	
-	
-	
+	/**
+	 * this function is invoked when a GET request is sent to /article/{title} where {title} is a string path variable that specifies the title
+	 * of the article to be fetched.
+	 * after fetching the article from the database and populates the model with is it redirects to the article view
+	 * @param title
+	 * @param request
+	 * @param model
+	 * @return String articleView
+	 * @throws NoSuchRequestHandlingMethodException
+	 */
 	@RequestMapping(value="{title}",method=RequestMethod.GET)
 	public String getArticle(@PathVariable String title,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
 		Article article = articleService.findByTitle(title);
 		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
-		Article nextArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").gt(article.getDate())), Article.class);
-		Article prevArticle = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("date").lt(article.getDate())), Article.class);
-		String nextId = nextArticle == null?null:nextArticle.getId();
-		String prevId = prevArticle == null?null:prevArticle.getId();
-		;
-		model.addAttribute("article", article)
-			 .addAttribute("nextId", nextId)
-			 .addAttribute("prevId", prevId)
-			 ;
+		model.addAttribute("article", article);
 		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
 	}
+	/**
+	 * this function is invoked when GET HTTP request to the url "/article" is sent to the server
+	 * and it populates the model with the article set to be the home article and directs to the 
+	 * article view
+	 * @param HttpServletRequest request
+	 * @param Model model
+	 * @return String articleView
+	 * @throws NoSuchRequestHandlingMethodException
+	 */
 	@RequestMapping(value="",method=RequestMethod.GET)
 	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
-		return getArticle(mongoTemplate.findOne(new Query(),Article.class).getId(), request, model);
+		Article homeArticle = articleService.findHomeArticle();
+		if(homeArticle!= null) return getArticle(homeArticle.getId(), request, model);
+		else throw new NoSuchRequestHandlingMethodException(request);
 	}
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public @ResponseBody String getCertainArticle(@RequestParam("phrase") String phrase) throws Exception {
@@ -236,12 +233,13 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 			System.out.println("Searching for " + phrase + "...");
 			List<BigInteger> articlesIDs = articleService.search(phrase);
 			if(articlesIDs == null || articlesIDs.size()==0)
-				return "<h3>No results exist for " + phrase + "</h3>";
+				return "<h3>No results exist for " + phrase + "</h3>";//Hesham : da bgad walla hzar da ya toba ?
+			//law 3ayz te render html use either JSTL or jquery templates,but never do this !
 			String content = "<h3>Search results: " + articlesIDs.size() + " articles found for \"" + phrase + "\"</h3>";
 			content += "<div style=\"margin-left:25px\">";
 			List<Article> articles = new ArrayList<Article>();
 			for(BigInteger id : articlesIDs){
-				articles.add(articleRepository.getArticleByID(id.toString(16)));
+				articles.add(articleService.findById(id.toString(16)));
 			}
 			
 			for(Article article : articles) {

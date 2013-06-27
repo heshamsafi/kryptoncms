@@ -1,16 +1,11 @@
 package edu.asu.krypton.model.persist.db;
 
-import java.io.Serializable;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-//@Document
-public class UserConnection implements Serializable{
-
-
-	private static final long serialVersionUID = 1L;
-
+@Document
+public class UserConnection {
 	@Id
 	private String userId;
 	
@@ -31,6 +26,7 @@ public class UserConnection implements Serializable{
 	
 	private String secret;
 	private String refreshToken;
+	
 	private long expireTime;
 	
 	public String getUserId() {

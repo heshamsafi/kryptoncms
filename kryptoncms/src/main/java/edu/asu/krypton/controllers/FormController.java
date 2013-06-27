@@ -37,9 +37,6 @@ public class FormController {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
-		
-	@Autowired(required=true)
-	private ScaffoldService scaffoldService;
 	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;

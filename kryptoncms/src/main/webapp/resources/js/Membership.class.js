@@ -54,6 +54,14 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	var thisInstance = this;
 	    	thisInstance.$form_login = $(form_selector);
 	    	//var $btn_rememberMe = thisInstance.$form_login.find("[name=rememberMe]");
+	    	$("#facebook").unbind("click").click(function(event){
+	    		$.ajax({
+	    			"type":$(this).attr("data-method"),
+	    			"url":$(this).attr("href"),
+	    			"contentType" : "application/x-www-form-urlencoded",
+	    			"async":true
+	    		});
+	    	});
 	    	thisInstance.$form_login.submit(function(event) {
 	    		event.preventDefault();
 	    		//thisInstance.rememberMe = $btn_rememberMe.val();
