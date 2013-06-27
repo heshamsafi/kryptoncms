@@ -7,7 +7,11 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Document
 public class Album {
 	@Id

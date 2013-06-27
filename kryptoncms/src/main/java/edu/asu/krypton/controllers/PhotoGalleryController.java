@@ -17,7 +17,11 @@ import edu.asu.krypton.model.message_proxies.PhotoMessage;
 import edu.asu.krypton.model.message_proxies.QueryMessage;
 import edu.asu.krypton.service.AlbumService;
 import edu.asu.krypton.service.PhotoService;
-
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Controller
 @RequestMapping(value = "/photo")
 public class PhotoGalleryController extends
@@ -37,6 +41,12 @@ public class PhotoGalleryController extends
 	
 	private final String ALBUM_GALLERY_VIEW = "album_gallery";
 	
+	/**
+	 * 
+	 * @param model
+	 * @param request
+	 * @return Album view
+	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String defaultView(ModelMap model, HttpServletRequest request) {
 		return appropriateView(request,
@@ -44,6 +54,12 @@ public class PhotoGalleryController extends
 				defaultView(model, ALBUM_GALLERY_VIEW));
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @param request
+	 * @return Photo gallery view 
+	 */
 	@RequestMapping(value = "/photo", method = RequestMethod.GET)
 	public String photoView(ModelMap model, HttpServletRequest request){
 		model.addAttribute("album_number", request.getHeader("album_number"));
@@ -53,6 +69,12 @@ public class PhotoGalleryController extends
 				defaultView(model, PHOTO_GALLERY_VIEW));
 	}
 	
+	/**
+	 * 
+	 * @param parentType
+	 * @param parentId
+	 * @return Photos that belongs to album with id equals parentId
+	 */
 	@RequestMapping(value = "/{parentType}/{parentId}", method = RequestMethod.GET)
 	public @ResponseBody QueryMessage<PhotoMessage> getPhotos(@PathVariable String parentType, @PathVariable String parentId){
 		logger.debug("Photos view : " + parentId.toString());
@@ -87,6 +109,10 @@ public class PhotoGalleryController extends
 		this.albumService = albumService;
 	}
 
+	/**
+	 * 
+	 * @return All albums from database
+	 */
 	@RequestMapping(value = "/albums", method = RequestMethod.GET)
 	public @ResponseBody QueryMessage<AlbumMessage> getAlbums(){
 		QueryMessage<AlbumMessage> queryMessage = new QueryMessage<AlbumMessage>();

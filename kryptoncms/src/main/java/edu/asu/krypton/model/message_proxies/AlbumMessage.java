@@ -2,6 +2,11 @@ package edu.asu.krypton.model.message_proxies;
 
 import edu.asu.krypton.model.persist.db.Album;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 public class AlbumMessage {
 
 	private String id;

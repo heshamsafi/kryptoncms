@@ -4,6 +4,11 @@ import org.springframework.stereotype.Repository;
 
 import edu.asu.krypton.model.persist.db.Album;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Repository
 public class AlbumRepository extends edu.asu.krypton.model.repository.Repository<Album>{
 

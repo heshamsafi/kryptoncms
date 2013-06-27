@@ -14,6 +14,11 @@ import edu.asu.krypton.model.persist.db.Album;
 import edu.asu.krypton.model.persist.db.Photo;
 import edu.asu.krypton.model.repository.AlbumRepository;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Service
 public class AlbumService {
 	

@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 
 import edu.asu.krypton.model.persist.db.Photo;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 public class PhotoMessage {
 	
 	private final static Logger logger = org.slf4j.LoggerFactory.getLogger(PhotoMessage.class);
