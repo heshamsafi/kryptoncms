@@ -14,6 +14,11 @@ import edu.asu.krypton.model.message_proxies.PhotoMessage;
 import edu.asu.krypton.model.persist.db.Photo;
 import edu.asu.krypton.model.repository.PhotoRepository;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Service
 public class PhotoService extends CommentableService<Photo> {
 	

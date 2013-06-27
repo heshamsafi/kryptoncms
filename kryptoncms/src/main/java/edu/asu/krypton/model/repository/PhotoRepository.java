@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 import edu.asu.krypton.model.persist.db.Album;
 import edu.asu.krypton.model.persist.db.Photo;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Repository
 public class PhotoRepository extends edu.asu.krypton.model.repository.Repository<Photo>{
 	
@@ -18,7 +23,11 @@ public class PhotoRepository extends edu.asu.krypton.model.repository.Repository
 	public PhotoRepository(){
 		setPersistentClass(Photo.class);
 	}
-	
+	/**
+	 * 
+	 * @param parentId
+	 * @return Photos that belongs to album with id equals parentId
+	 */
 	public List<Photo> getByParentId(String parentId){
 		//return getDao().getSession().createCriteria(Photo.class).add(Restrictions.eq("parent.id", parentId)).list();
 		

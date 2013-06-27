@@ -5,6 +5,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.model.repository.Repository;
 
+/**
+ * 
+ * @author Nadeem
+ *
+ */
 @Document
 public class Photo extends Commentable implements DbEntity{
 
