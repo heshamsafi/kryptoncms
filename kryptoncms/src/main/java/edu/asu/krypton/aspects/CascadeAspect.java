@@ -45,5 +45,8 @@ public class CascadeAspect {
 			e.printStackTrace();
 		}
 	}
+	
+	public void create(DbEntity dbentity){}
+	public void edit(DbEntity dbEntity){}
 
 }

@@ -15,8 +15,6 @@ public class ServerKeyRepository extends edu.asu.krypton.model.repository.Reposi
 		setPersistentClass(ServerKey.class);
 	}
 
-	@Autowired(required = true)
-	protected MongoTemplate mongoTemplate;
 	
 	public synchronized boolean insertOrUpdateServerKey(ServerKey serverKey) {
 		try{

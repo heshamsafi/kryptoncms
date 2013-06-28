@@ -5,7 +5,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	var Membership = new Mootools.Class({
 	    Implements: [Mootools.Options],
 	    options: {},
-	    
+	    cookieOptions : {path:DOMAIN_CONFIGURATIONS.BASE_URL},
 	    rememberMe : false,
 	    initialize: function(optform_loginions){
 	    	this.self = this;
@@ -78,10 +78,11 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    			"contentType" : "application/x-www-form-urlencoded",
 	    			"success":function(response){
 	    				if(response["successful"]){
-	    					$.cookie("j_username",payload["j_username"]);
+	    					thisInstance.destroyCookie();
+	    					$.cookie("j_username",payload["j_username"],thisInstance.cookieOptions);
 	    					$.getJSON(DOMAIN_CONFIGURATIONS.BASE_URL+"membership/userid/"+encodeURIComponent(payload["j_username"]),function(data){
 	    						if(data.errorMessage == null && data.queryResult.length>0)
-	    							$.cookie("userId",data.queryResult.pop());
+	    							$.cookie("userId",data.queryResult.pop(),thisInstance.cookieOptions);
 	    					});
 
 	    					Notifier.getInstance().notify("Welcome, "+$.cookie("j_username"),"MEDIUM","VERY_FAST","alert-success");
@@ -142,7 +143,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	var $drpDwn_lis_in   = $drpDwn_lis.filter(".in");
 	    	var $drpDwn_lis_out  = $drpDwn_lis.filter(".out");
 	    	$drpDwn_lis.hide();
-	    	if($.cookie("j_username")!=""){
+	    	if($.cookie("j_username")!=null){
 	    		$drpDwn_lis_in.show();
 	    		$accountControls_anchor.html($.cookie("j_username"));
 				$("#editAccount").click(function(){
@@ -222,8 +223,8 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	}
 	    },
 	    destroyCookie : function(){
-	    	$.cookie("j_username","");
-	    	$.cookie("userId","");
+	    	$.cookie("j_username",null,this.cookieOptions);
+	    	$.cookie("userId",null,this.cookieOptions);
 	    	//$.cookie("j_password",null);
 	    }
 	});

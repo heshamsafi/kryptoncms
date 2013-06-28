@@ -68,9 +68,6 @@ public class FileUploadController extends edu.asu.krypton.controllers.Controller
 	    );
 	}
 	
-	
-	
-	
 	@RequestMapping(value = "/file/upload.Action",method = RequestMethod.POST)
 	public  @ResponseBody String create(@RequestParam("CKEditor") String CKEditor,@RequestParam("CKEditorFuncNum") String CKEditorFuncNum,@RequestParam("langCode") String langCode,FileUploadBean uploadItem, BindingResult result,HttpServletRequest request)throws Exception{
 //		if (result.hasErrors()){

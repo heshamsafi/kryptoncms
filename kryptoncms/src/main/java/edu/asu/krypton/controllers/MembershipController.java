@@ -108,8 +108,6 @@ public class MembershipController extends edu.asu.krypton.controllers.Controller
 	
 	@RequestMapping(method=RequestMethod.POST,value="/register/{roleRank}",consumes=MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Message register(@RequestBody User user,@PathVariable int roleRank){
-			logger.info("username = "+user.getUsername());
-			logger.info("password = "+user.getPassword());
 			user.setRole(BigInteger.valueOf(roleRank));
 			try{
 				getRegistrationService().registerUser(user);

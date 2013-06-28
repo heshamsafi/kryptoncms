@@ -28,10 +28,8 @@ public class IndexRepository extends edu.asu.krypton.model.repository.Repository
 		setPersistentClass(Indices.class);
 	}
 	
-	@Autowired(required = true)
-	private MongoTemplate mongoTemplate;
 	
-		public MongoTemplate getMongoTemplate() {
+	public MongoTemplate getMongoTemplate() {
 		return mongoTemplate;
 	}
 

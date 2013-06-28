@@ -11,17 +11,17 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 	<import resource="mvc-context.xml"/>
-	
 	<import resource="data-persistence-context.xml" />
-
 	<import resource="spring-security-context.xml" />
-	
 	<import resource="aop-context.xml" />
-	
 	<import resource="social-context.xml" />
 	
-	<context:component-scan base-package="edu.asu.krypton.controllers, edu.asu.krypton.model.repository, edu.asu.krypton.service ,edu.asu.krypton.aspects, org.socialsignin.springsocial.security,org.springframework.social.connect.mongo" />
+	<context:component-scan base-package="edu.asu.krypton.controllers,
+	 edu.asu.krypton.model.repository, edu.asu.krypton.service ,
+	 edu.asu.krypton.aspects, org.socialsignin.springsocial.security,
+	 org.springframework.social.connect.mongo" />
 	
 	<context:property-placeholder location="classpath:edu/asu/krypton/config/application.properties"/>
+	
 </beans:beans>
 	

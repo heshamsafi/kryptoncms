@@ -17,9 +17,6 @@ public class ClientsKeysRepository extends edu.asu.krypton.model.repository.Repo
 		setPersistentClass(AppsSecurityInfo.class);
 	}
 	
-	@Autowired(required=true)
-	private MongoTemplate mongoTemplate;
-	
 	public MongoTemplate getMongoTemplate() {
 		return mongoTemplate;
 	}

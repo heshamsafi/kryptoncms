@@ -22,6 +22,8 @@ public class CryptoAspect {
 				)
 		);
 	}
+	
+	public void secureWebService(String data){}
 
 	public Hash getHash() {
 		return hash;

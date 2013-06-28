@@ -24,7 +24,6 @@
     </beans:bean>
 	<beans:bean id="messageSource" 
 				class="org.springframework.context.support.ReloadableResourceBundleMessageSource" >
-<!-- 				p:basename="/WEB-INF/messages/messages" /> -->
 		<beans:property name="basename" value="/WEB-INF/localization-messages/messages_en" />
 		<beans:property name="fallbackToSystemLocale" value="false"/>
 		<beans:property name="fileEncodings" value="UTF-8"/>
@@ -36,19 +35,5 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-<!-- 	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver" -->
-<!-- 		p:viewClass="org.springframework.web.servlet.view.tiles2.TilesView" /> -->
-
-<!-- 	<bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer" -->
-<!-- 		p:definitions="/WEB-INF/layouts/tiles.xml,/WEB-INF/views/**/tiles.xml" -->
-<!-- 		p:checkRefresh="true" /> -->
-<!-- 	<beans:bean id="userInterceptor" class="edu.asu.krypton.service.membership.social.google.user.UserInterceptor" > -->
-<!-- 		<beans:constructor-arg ref="usersConnectionRepository"></beans:constructor-arg> -->
-<!-- 	</beans:bean> -->
-<!-- 	<mvc:interceptors> -->
-<!-- 		<mvc:interceptor> -->
-<!-- 			<mvc:mapping path="/*"/> -->
-<!-- 			<beans:ref bean="userInterceptor"/> -->
-<!-- 		</mvc:interceptor> -->
-<!-- 	</mvc:interceptors> -->
+	
 </beans:beans>

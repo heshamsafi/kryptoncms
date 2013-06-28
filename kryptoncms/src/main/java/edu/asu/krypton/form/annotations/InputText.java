@@ -1,5 +1,5 @@
-package edu.asu.krypton.form.annotations;
 
+package edu.asu.krypton.form.annotations;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

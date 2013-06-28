@@ -27,7 +27,7 @@ public class User implements DbEntity {
 	private String username;
 	@InputText(readOnly=true)
 	private String password;
-	@InputText
+//	@InputText
 	private BigInteger role;
 	
 	public User(){}

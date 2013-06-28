@@ -18,9 +18,6 @@ public class ArticleRepository extends edu.asu.krypton.model.repository.Reposito
 		setPersistentClass(Article.class);
 	}
 	
-	@Autowired
-	protected MongoTemplate mongoTemplate;
-	
 	public boolean insertOrUpdateArticle(Article article){
 		try{
 			mongoTemplate.save(article);

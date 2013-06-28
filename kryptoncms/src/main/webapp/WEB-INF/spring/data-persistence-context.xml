@@ -16,17 +16,11 @@
              http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd
              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
              http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
-	 
-	<!-- Use this when running in the cloud -->
-<!-- 	<beans profile="cloud"> -->
-<!-- 	    <cloud:service-properties id="serviceProperties"/> -->
-<!-- 	</beans> -->
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
-	</bean>
-
-	<mongo:db-factory host="localhost" port="27017" dbname="kryptoncms"/>
-
+  
+  <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+	<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+  </bean>
+  <mongo:db-factory host="localhost" port="27017" dbname="kryptoncms"/>
   <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
   <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
   	<property name="connectionFactory" ref="redisConnectionFactory" />
@@ -44,21 +38,16 @@
   		</bean>
   	</property>
   </bean>
-   <!-- the default ConnectionFactory -->
- <!-- the default ConnectionFactory -->
   <redis:listener-container>
-    <!-- the method attribute can be skipped as the default method name is "handleMessage" -->
     <redis:listener ref="chatListener"     method="onMessage" topic="chatMessageBroadcast"/>
     <redis:listener ref="commentListener"  method="onMessage" topic="commentMessageBroadcast"/>
     <redis:listener ref="menuListener"     method="onMessage" topic="menuMessageBroadcast"/>
     <redis:listener ref="scaffoldListener" method="onMessage" topic="scaffoldMessageBroadcast"/>    
-  </redis:listener-container>
-  
+  </redis:listener-container>  
   <bean id="chatListener" class="edu.asu.krypton.service.redis.listeners.ChatListener"/>
   <bean id="commentListener" class="edu.asu.krypton.service.redis.listeners.CommentListener"/>
   <bean id="menuListener" class="edu.asu.krypton.service.redis.listeners.MenuListener"/>
   <bean id="scaffoldListener" class="edu.asu.krypton.service.redis.listeners.ScaffoldListener"/>
-  
   <bean class="org.codehaus.jackson.map.ObjectMapper" />
     <bean id = "jaxbMarshaller" class = "org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name = "classesToBeBound">
@@ -73,17 +62,11 @@
             </array>
         </property>
     </bean>
-	<tx:annotation-driven />
-	
 	<beans profile="default">
 		<util:properties id="serviceProperties">
 			<prop key="kryptoncms.db">localhost:3306/krypton</prop>
 			<prop key="kryptoncms.username">root</prop>
 			<prop key="kryptoncms.password">root</prop>
 		</util:properties>
-	</beans>
-
-	<beans profile="cloud">
-		<cloud:service-properties id="serviceProperties" />
 	</beans>
 </beans>
