@@ -15,5 +15,5 @@
       </ul>
 </div>
 <script type="text/x-jquery-tmpl" id="admin-menu-item-tmpl">
-	<li><a data-ajax-enable href='<c:url value="\${url}"  />' data-menu-order="\${order}" data-menu-id="\${id}" id="\${id}">\${name}</a></li>
+	<li><a data-ajax-enable href='<c:url value="/\${url}"  />' data-menu-order="\${order}" data-menu-id="\${id}" id="\${id}">\${name}</a></li>
 </script>

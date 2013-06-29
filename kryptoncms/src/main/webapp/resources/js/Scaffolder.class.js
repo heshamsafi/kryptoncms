@@ -104,7 +104,7 @@ define([
 			if(className.match("Menu") != null){
 				var $anchor = $("#admin_nav #"+entity.id);
 				$anchor.attr({
-					"href": entity.url
+					"href": DOMAIN_CONFIGURATIONS.BASE_URL+entity.url
 				}).text(entity.name);
 			}
 			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
