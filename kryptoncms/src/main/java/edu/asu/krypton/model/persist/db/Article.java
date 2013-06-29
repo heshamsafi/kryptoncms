@@ -1,6 +1,8 @@
 package edu.asu.krypton.model.persist.db;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
 import edu.asu.krypton.form.annotations.TextArea;
+import edu.asu.krypton.model.repository.IndexRepository;
 import edu.asu.krypton.model.repository.Repository;
 
 @Document
@@ -152,4 +155,86 @@ public class Article extends Commentable implements DbEntity {
 		this.patches = patches;
 	}
 	
+	@Override
+	public void onDelete(Repository<?> repository)
+			throws ClassNotFoundException {
+		IndexRepository indexRepository = (IndexRepository) repository;
+		indexRepository.obsoleteArticle(this);
+//		if (ableToDelete()) {
+			// deletion operation
+//			List<Article> obsoleteArticles = articleRepository
+//					.getObsoleteArticles();
+//			for (Article obsolete : obsoleteArticles) {
+				// get the indexArticleStatistics records whose
+				// articleNumber corresponds to this obsolete article
+				boolean intentionToDeleteArticle = true;
+				List<IndexArticleStatistics> indexArticleStatisticsRecords = indexRepository
+						.findIndexArticleStatisticsRecordsByArticle(this,
+								intentionToDeleteArticle);
+				// get the indexInArticleTitlePlaces records for these
+				// indexArticleStatistics's and for content and description too
+				List<IndexInArticleTitlePlaces> indexInArticleTitlePlacesRecords = new ArrayList<IndexInArticleTitlePlaces>();
+				List<IndexInArticleContentPlaces> indexInArticleContentPlacesRecords = new ArrayList<IndexInArticleContentPlaces>();
+				List<IndexInArticleDescriptionPlaces> indexInArticleDescriptionPlacesRecords = new ArrayList<IndexInArticleDescriptionPlaces>();
+				for (IndexArticleStatistics indexStatistics : indexArticleStatisticsRecords) {
+					for (IndexInArticleTitlePlaces indexInArticleTitlePlaces : indexRepository
+							.findIndexInArticleTitlePlacesByIndexArticleStatistics(indexStatistics)) {
+						indexInArticleTitlePlacesRecords
+								.add(indexInArticleTitlePlaces);
+					}
+					for (IndexInArticleContentPlaces indexInArticleContentPlaces : indexRepository
+							.findIndexInArticleContentPlacesByIndexArticleStatistics(indexStatistics)) {
+						indexInArticleContentPlacesRecords
+								.add(indexInArticleContentPlaces);
+					}
+					for (IndexInArticleDescriptionPlaces indexInArticleDescriptionPlaces : indexRepository
+							.findIndexInArticleDescriptionPlacesByIndexArticleStatistics(indexStatistics)) {
+						indexInArticleDescriptionPlacesRecords
+								.add(indexInArticleDescriptionPlaces);
+					}
+				}
+				// get the indices that cooperate with these
+				// indexArticleStatistics's
+				List<Indices> indicesInTheObsoleteArticle = new ArrayList<Indices>();
+				for (IndexArticleStatistics indexArticleStatistics : indexArticleStatisticsRecords) {
+					if (!isAlreadyExist(indexArticleStatistics.getIndex(),
+							indicesInTheObsoleteArticle))
+						indicesInTheObsoleteArticle.add(indexArticleStatistics
+								.getIndex());
+				}
+				// delete the indexArticleStatistics's places , then
+				// delete indexArticleStatistics records, then indices
+				indexRepository
+						.deleteIndexInArticleTitlePlacesRecords(indexInArticleTitlePlacesRecords);
+				indexRepository
+						.deleteIndexInArticleContentPlacesRecords(indexInArticleContentPlacesRecords);
+				indexRepository
+						.deleteIndexInArticleDescriptionPlacesRecords(indexInArticleDescriptionPlacesRecords);
+				for (IndexArticleStatistics indexArticleStatistics : indexArticleStatisticsRecords)
+					indexRepository
+							.deleteIndexArticleStatictics(indexArticleStatistics);
+				// get indices out of those , that has no rows existing in
+				// the IndexArticleStatistics table , then delete them
+				List<Indices> indicesToBeDeleted = new ArrayList<Indices>();
+				for (Indices index : indicesInTheObsoleteArticle) {
+					if (!(indexRepository
+							.findIndexArticleStatisticsRecordsByIndex(index)
+							.size() > 1))
+						indicesToBeDeleted.add(index);
+				}
+				for (Indices index : indicesToBeDeleted)
+					indexRepository.deleteIndex(index);
+				// delete the obsolete article itself
+//				articleRepository.deleteArticle(obsolete);
+	}
+	private boolean isAlreadyExist(Indices index, List<Indices> indices) {
+		if (indices == null || index == null || indices.size() == 0)
+			return false;
+		for (Indices i : indices) {
+			if ((i.getWord().equals(index.getWord()))
+					&& (i.getId() == index.getId()))
+				return true;
+		}
+		return false;
+	}
 }
