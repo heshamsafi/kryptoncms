@@ -73,7 +73,7 @@ public class GenericDatabaseWebServiceController {
 			if(enumeration.hasMoreElements()) buffer.append(" where ");
 			while (enumeration.hasMoreElements()) {
 				String parameterName = (String) enumeration.nextElement();
-				if(parameterName.equals("pageSize") || parameterName.equals("pageNo")) continue;
+				if(parameterName.equals("pageSize") || parameterName.equals("pageNo") || parameterName.equals("caseSensitivity")) continue;
 				query.addCriteria(Criteria.where(parameterName).regex(request.getParameter(parameterName),caseSensitivity.equals("sensitive")?"":"i"));
 			}
 			@SuppressWarnings("unchecked")
@@ -114,7 +114,7 @@ public class GenericDatabaseWebServiceController {
 			if(enumeration.hasMoreElements()) buffer.append(" where ");
 			while (enumeration.hasMoreElements()) {
 				String parameterName = (String) enumeration.nextElement();
-				if(parameterName.equals("pageSize") || parameterName.equals("pageNo")) continue;
+				if(parameterName.equals("pageSize") || parameterName.equals("pageNo") || parameterName.equals("caseSensitivity")) continue;
 				query.addCriteria(Criteria.where(parameterName).regex(request.getParameter(parameterName),caseSensitivity.equals("sensitive")?"":"i"));
 			}
 			repository.delete(query, entityClass);

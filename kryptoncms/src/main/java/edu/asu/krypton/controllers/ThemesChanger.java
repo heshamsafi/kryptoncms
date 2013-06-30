@@ -20,12 +20,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import edu.asu.krypton.model.message_proxies.Message;
 
 @Controller
 @RequestMapping(value = "/themes")
@@ -33,8 +38,17 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 	private final String DEFAULT_VIEW = "theme_changer";
 	private final String DEFAULT_BODY_DIR = "bodies/";
 	private final static Logger logger = LoggerFactory.getLogger(ThemesChanger.class);
-	@RequestMapping(method = RequestMethod.GET)
-	public String defaultView(ModelMap model,HttpServletRequest request) throws IOException {		
+	
+	@Autowired(required=true)
+	private ObjectMapper objectMapper;
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public String defaultView(ModelMap model,HttpServletRequest request) {
+		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, DEFAULT_VIEW));
+	}		
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody String submit(ModelMap model,HttpServletRequest request) throws IOException {		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://bootstrap.herokuapp.com/");
 		httppost.setHeaders(new Header[]{
@@ -96,6 +110,6 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 		    } 
 		}
 		
-		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, DEFAULT_VIEW));
+		return objectMapper.writeValueAsString(new Message().setSuccessful(true));
 	}
 }

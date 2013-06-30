@@ -60,17 +60,6 @@ function(
 	var navigationMenu = null;
 	var commentManager = null;
 	$(document).ready(function(){
-		$('.cp-basic').colorpicker();
-		$( "#slider-range-min" ).slider({
-	      range: "min",
-	      value: 37,
-	      min: 1,
-	      max: 700,
-	      slide: function( event, ui ) {
-	        $( "#amount" ).val( ui.value + "px" );
-	      }
-	    });
-	    $( "#amount" ).val( $( "#slider-range-min" ).slider( "value" ) + "px" );
 		sessionScopeMain();
 		Ajaxifier.getInstance(pageScopeMain,collectGarbage);
 		pageScopeMain();
@@ -107,6 +96,18 @@ function(
 		$(".modal").draggable();
 	}
 	function pageScopeMain(){
+		$('.cp-basic').colorpicker();
+		$( "#slider-range-min" ).slider({
+	      range: "min",
+	      value: 37,
+	      min: 1,
+	      max: 700,
+	      slide: function( event, ui ) {
+	        $( "#amount" ).val( ui.value + "px" );
+	      }
+	    });
+	    $( "#amount" ).val( $( "#slider-range-min" ).slider( "value" ) + "px" );
+		
 		$("#createAppFormSubmit").click(function() {
 			$.get($("#createAppForm").attr('action'), {
 				publicKey_x : $("#createAppForm_X").val(),

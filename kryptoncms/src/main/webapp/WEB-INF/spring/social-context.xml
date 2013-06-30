@@ -17,34 +17,39 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 
-	<context:property-placeholder location="classpath:/edu/asu/krypton/config/application.properties" />
-	<facebook:config app-id="${facebook.clientId}" app-secret="${facebook.clientSecret}" app-namespace="kryptoncms" />
-	<bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+<!-- 	<context:property-placeholder location="classpath:/edu/asu/krypton/config/application.properties" /> -->
+<!-- 	<facebook:config app-id="${facebook.clientId}" app-secret="${facebook.clientSecret}" app-namespace="socialshowcase" /> -->
+<!-- 	<twitter:config app-id="${twitter.consumerKey}" app-secret="${twitter.consumerSecret}"/> -->
+<!-- 	<linkedin:config app-id="${linkedin.consumerKey}" app-secret="${linkedin.consumerSecret}"/> -->
 
-	<bean class="org.springframework.social.connect.web.ProviderSignInController" >
-        <property name="signUpUrl" value="/signup" />
-        <property name="postSignInUrl" value="/authenticate" />
-    </bean>
-   
-   	<bean class="org.springframework.social.connect.web.ConnectController">
-		<!-- relies on by-type autowiring for the constructor-args -->
-		<property name="applicationUrl" value="${application.secureUrl}" />
-	</bean>
-	<bean id="connectionFactoryRegistry" class="org.springframework.social.connect.support.ConnectionFactoryRegistry" />
-	<bean id="usersConnectionRepository"
-		class="org.springframework.social.connect.mongo.MongoUsersConnectionRepository">
-		<constructor-arg ref="mongoConnectionService" />
-		<constructor-arg ref="connectionFactoryRegistry"/>
-		<constructor-arg ref="textEncryptor" />
-	</bean>
+<!-- 	<social:jdbc-connection-repository/>	 -->
+<!-- 	<bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" /> -->
+
+<!--  	<bean id="connectController" class="org.springframework.social.connect.web.ConnectController" autowire="constructor"> -->
+<!-- 		<property name="connectInterceptors"> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="psc" class="org.springframework.social.connect.web.ProviderSignInController"          autowire="constructor" />		 -->
+<!-- 	<bean id="signInAdapter" class="org.springframework.social.showcase.signin.SimpleSignInAdapter" autowire="constructor" /> -->
+
+<!-- 	<bean id="disconnectController" class="org.springframework.social.facebook.web.DisconnectController"  -->
+<!-- 		c:_0-ref="usersConnectionRepository" c:_1="${facebook.clientSecret}" /> -->
+<!-- 	<bean id="usersConnectionRepository" -->
+<!-- 		class="org.springframework.social.connect.mongo.MongoUsersConnectionRepository"> -->
+<!-- 		<constructor-arg ref="mongoConnectionService" /> -->
+<!-- 		<constructor-arg ref="connectionFactoryRegistry"/> -->
+<!-- 		<constructor-arg ref="textEncryptor" /> -->
+<!-- 		<property name="connectionSignUp" ref="springSocialSecurityConnectionSignUp" /> -->
+<!-- 	</bean> -->
 	
-	<bean
-		class="org.springframework.social.connect.mongo.MongoConnectionRepository"
-		id="connectionRepository" factory-method="createConnectionRepository"
-		factory-bean="usersConnectionRepository" scope="request">
-		<constructor-arg value="#{request.userPrincipal.name}" />
-		<aop:scoped-proxy proxy-target-class="false" />
-	</bean>
-	<bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors"
-		factory-method="noOpText" />
+<!-- 	<bean -->
+<!-- 		class="org.springframework.social.connect.mongo.MongoConnectionRepository" -->
+<!-- 		id="connectionRepository" factory-method="createConnectionRepository" -->
+<!-- 		factory-bean="usersConnectionRepository" scope="request"> -->
+<!-- 		<constructor-arg value="#{request.userPrincipal.name}" /> -->
+<!-- 		<aop:scoped-proxy proxy-target-class="false" /> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" -->
+<!-- 		factory-method="noOpText" /> -->
 </beans>

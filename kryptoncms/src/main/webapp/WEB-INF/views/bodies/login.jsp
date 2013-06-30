@@ -32,7 +32,7 @@
 			</div>
 		</div>
 	</div>
-		<ul class="thumbnails" style="margin-left:0px">
+		<ul class="thumbnails" style="margin-left:0px;display:none">
 		<li class="span1.5">
 		<a id="facebook" href="<c:url value='/signin/facebook' />" data-method="POST"  class="thumbnail"> 
 				<img

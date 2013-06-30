@@ -119,7 +119,7 @@ define([
 				var attrName = $td.attr("data-attr");
 				if(typeof entity[attrName] != "undefined"){
 					var buffer = entity[attrName];
-					if(typeof buffer != "boolean"){
+					if(buffer && typeof buffer != "boolean"){
 						var buffer = buffer.replace(new RegExp("<(/?)([^>]*)>","gi")," ");
 						if(buffer.length > 20) buffer = buffer.substring(0,20)+"...";
 					}

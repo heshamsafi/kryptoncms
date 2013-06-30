@@ -16,9 +16,6 @@ define(["jquery","libraries/mootools-base","FormSerializer.class","Ajaxifier.cla
 						url=toRemove
 					}
 				}	
-					
-					
-					
 				$('textarea').trigger('keyup');//what is this for ?
 				$.ajax({
 					"dataType": 'json',
