@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import edu.asu.krypton.form.annotations.InputText;
 import edu.asu.krypton.model.repository.Repository;
 import edu.asu.krypton.service.crypto.KeyStoreManager;
 
@@ -18,20 +19,28 @@ import edu.asu.krypton.service.crypto.KeyStoreManager;
 public class AppsSecurityInfo implements DbEntity {
 
 	@Id
-	private String appId;
+	@InputText(readOnly=true)
+	private String id;
+	
+	
 	@Indexed(unique = true)
+	@InputText
 	private String appName;
 	// Public Elliptic Curve key
+	@InputText
 	@Indexed(unique=true)
 	private BigInteger publicKey_x;
+	@InputText
 	@Indexed(unique=true)
 	private BigInteger publicKey_y;
 	// Symmetric secret key calculated using Elliptic Curve Diffie Hellman Algorithm
 	//@Indexed(unique = true)
 	//private byte[] diffieHelmanKey;
 	// Public RSA key
+	@InputText
 	@Indexed(unique = true)
 	private BigInteger n;
+	@InputText
 	@Indexed(unique = true)
 	private BigInteger e;
 
@@ -55,12 +64,14 @@ public class AppsSecurityInfo implements DbEntity {
 		this.publicKey_y = publicKey_y;
 	}
 
-	public String getAppId() {
-		return appId;
+
+
+	public String getId() {
+		return id;
 	}
 
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getAppName() {
