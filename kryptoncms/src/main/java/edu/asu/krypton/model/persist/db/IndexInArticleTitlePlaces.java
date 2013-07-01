@@ -56,5 +56,10 @@ public class IndexInArticleTitlePlaces implements DbEntity{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void merge(DbEntity newObject) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

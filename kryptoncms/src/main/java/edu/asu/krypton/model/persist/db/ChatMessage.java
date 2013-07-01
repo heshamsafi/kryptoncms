@@ -76,5 +76,11 @@ public class ChatMessage implements DbEntity {
 		this.source = source;
 	}
 
+	@Override
+	public void merge(DbEntity newObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

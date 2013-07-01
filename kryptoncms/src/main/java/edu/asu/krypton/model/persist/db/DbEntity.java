@@ -6,4 +6,5 @@ public interface DbEntity {
 	public void onDelete(Repository<?> repository) throws ClassNotFoundException;
 	public void onEdit(Repository<?> repository);
 	public void onInsert(Repository<?> repository);
+	public void merge(DbEntity newObject);
 }

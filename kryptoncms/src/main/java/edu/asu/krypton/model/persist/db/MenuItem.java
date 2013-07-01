@@ -144,4 +144,10 @@ public class MenuItem implements DbEntity {
 
 	}
 
+	@Override
+	public void merge(DbEntity newObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

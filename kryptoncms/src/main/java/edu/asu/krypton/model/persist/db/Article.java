@@ -43,7 +43,7 @@ public class Article extends Commentable implements DbEntity {
 	@InputText
 	private String commentMode = "custom";
 	
-	@TextArea(applyCKEditor=true)
+//	@TextArea(applyCKEditor=true)
 	private String content;
 	
 	@CheckBox
@@ -236,5 +236,15 @@ public class Article extends Commentable implements DbEntity {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void merge(DbEntity newObject) {
+		Article newArticle = (Article)newObject;
+		setTitle(newArticle.getTitle());
+		setDescription(newArticle.getDescription());
+//		setContent(newArticle.getContent());
+		setObsolete(newArticle.isObsolete());
+		setHome(newArticle.isHome());
 	}
 }

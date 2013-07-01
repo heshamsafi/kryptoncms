@@ -66,4 +66,10 @@ public class IndexInArticleDescriptionPlaces implements DbEntity{
 		
 	}
 
+	@Override
+	public void merge(DbEntity newObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

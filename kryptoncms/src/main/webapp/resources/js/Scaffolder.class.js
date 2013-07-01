@@ -87,7 +87,7 @@ define([
 				  var id =$tr.attr("data-entity-id");
 				  $("#genericModal").load($form.attr("data-edit-action")+id,function(){
 					  var $form = $("#genericModal form");
-					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"MODIFY");
+					  thisInstance.ajaxifier.formSubmitHandler($form,thisInstance.socketHandler,"MODIFY",id);
 					  Ajaxifier.getInstance().passiveReload();
 				  });
 			  });
@@ -119,11 +119,12 @@ define([
 				var attrName = $td.attr("data-attr");
 				if(typeof entity[attrName] != "undefined"){
 					var buffer = entity[attrName];
-					if(buffer && typeof buffer != "boolean"){
-						var buffer = buffer.replace(new RegExp("<(/?)([^>]*)>","gi")," ");
+					if(buffer && typeof buffer == "string"){
+						var buffer = buffer.replace(new RegExp("(<(/?)([^>]*)>)|&.*;","gi")," ").trim();
 						if(buffer.length > 20) buffer = buffer.substring(0,20)+"...";
 					}
-					$td.find("span").html(buffer);
+					if(buffer)
+					$td.find("span").html(buffer.toString());
 				}
 			});
 		},

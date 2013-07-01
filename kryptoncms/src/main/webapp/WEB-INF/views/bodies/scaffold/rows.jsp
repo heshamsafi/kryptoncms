@@ -77,11 +77,10 @@
 
 									<c:when
 										test="${entity[entityField.name].getClass().getSimpleName() eq 'LinkedHashSet'}">
-
 										<c:url var="url" value="/scaffold" />
 										<c:set var="url"
 											value="${url}/${entityField.getGenericType().getActualTypeArguments()[0].simpleName}?ownerType=${entity.getClass().simpleName}&ownerId=${entity['id']}" />
-										<a data-ajax-enable href='${url}&pageSize=10'> See List </a>
+										<a data-ajax-enable href='${url}&pageSize=10'> See List(${entity[entityField.name].size()}) </a>
 									</c:when>
 									<c:when
 										test="${fn:contains(entity[entityField.name].getClass().name,'edu.asu.krypton.model')}">
@@ -95,12 +94,14 @@
 											data-title="<h4>Id</h4>">${entity[entityField.name].getClass().simpleName}</a>
 									</c:when>
 									<c:otherwise>
-										<c:set var="escapedVal"
-											value="${fn:escapeXml(entity[entityField.name].toString())}" />
+										<c:set var="escapedVal" value="${fn:escapeXml(entity[entityField.name].toString())}" />
 										<c:set var="cutoff" value="20" />
 										<c:choose>
 											<c:when test="${escapedVal eq '[]'}">
-												None
+												<c:url var="url" value="/scaffold" />
+												<c:set var="url"
+													value="${url}/${entityField.getGenericType().getActualTypeArguments()[0].simpleName}?ownerType=${entity.getClass().simpleName}&ownerId=${entity['id']}" />
+												<a data-ajax-enable href='${url}&pageSize=10'> See List(0) </a>
 											</c:when>
 											<c:otherwise>
 												<span data-trigger="hover" data-html="true"
@@ -137,7 +138,7 @@
 			{{if $value.type == "collection" && $value.realValue.length}}
 			<a data-ajax-enable 
 				href='\${DOMAIN_CONFIGURATIONS.BASE_URL}/scaffold/\${$value.javaType}?ownerType=\${owner.type}&ownerId=\${owner.id}&pageSize=10'>
-				See List
+				See List(\${$value.value.length})
 			</a>
 			{{else $value.type == "model"}}
 			<a data-placement="right" data-html="true" data-trigger="hover" data-ajax-enable href='\${DOMAIN_CONFIGURATIONS.BASE_URL}/\${$value.name}?id=\${$value.value.id}&pageSize=10' rel="popover" data-content="<h5><b>\${$value.value.id}</b></h5>" data-title="<h4>Id</h4>">\${$value.type}</a>

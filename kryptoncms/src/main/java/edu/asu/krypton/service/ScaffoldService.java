@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.atmosphere.cpr.MetaBroadcaster;
 import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,22 @@ public class ScaffoldService {
 //			mongoTemplate.remove(query, type);
 			repository.delete(query, type);
 		}else if(scaffoldMessage.getAction().equals("MODIFY") || scaffoldMessage.getAction().equals("CREATE")){//modify or create
-			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
+//			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
+			Object object = mergeObjects(scaffoldMessage,type);
 			mongoTemplate.save(object);
 			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
 		}
 		MetaBroadcaster.getDefault().broadcastTo("/form/echo", objectMapper.writeValueAsString(scaffoldMessage));
+	}
+	
+	private Object mergeObjects(ScaffoldMessage scaffoldMessage,Class<?> type) throws JsonParseException, JsonMappingException, IOException{
+		Object oldObject = mongoTemplate.findById(scaffoldMessage.getId(), type);
+		Object newObject = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
+		if(oldObject != null){
+			((DbEntity)oldObject).merge((DbEntity)newObject);
+			newObject = oldObject;
+		}
+		return newObject;
 	}
 	
 }

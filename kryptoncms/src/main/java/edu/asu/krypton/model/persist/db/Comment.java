@@ -127,4 +127,10 @@ public class Comment extends Commentable implements DbEntity {
 		
 	}
 
+	@Override
+	public void merge(DbEntity newObject) {
+		Comment newComment = (Comment)newObject;
+		setContent(newComment.getContent());
+	}
+
 }

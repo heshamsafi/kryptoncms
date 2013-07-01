@@ -75,5 +75,11 @@ public class ChatConversation implements DbEntity {
 		this.messages = messages;
 	}
 
+	@Override
+	public void merge(DbEntity newObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }
