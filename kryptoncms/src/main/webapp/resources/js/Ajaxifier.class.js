@@ -31,9 +31,11 @@ define(	  ["jquery","libraries/mootools-base","libraries/jquery.history","FormSe
 				pageScopeMain();
 				$("#loading_image").slideUp(50);
 			});
-		},pushState : function(data, title, url){
+		},
+		pushState : function(data, title, url){
 			History.pushState(data, title, url);
-		},reload : function(){
+		},
+		reload : function(){
 			this.loadDynamicContent(window.location.href,this.pageScopeMain,this.collectGarbage);
 		},
 		passiveReload : function(){
@@ -44,14 +46,24 @@ define(	  ["jquery","libraries/mootools-base","libraries/jquery.history","FormSe
 			$form.submit(function(event){
 				event.preventDefault();
 				var serializedForm = thisAjaxifierInstance.formSerializer.serialize($form);
-				console.log(serializedForm);
 				var serializedForm = JSON.stringify(serializedForm);
-				var scaffoldMessage = {"className":$form.attr('className'),actualEntity:serializedForm,action:action,id:id};
+				var scaffoldMessage = {
+						"className":$form.attr('className'),
+						actualEntity:serializedForm,
+						action:action,
+						id:id,
+						ownerType:thisAjaxifierInstance.queryString("ownerType"),
+						ownerId:thisAjaxifierInstance.queryString("ownerId")
+				};
 				var stringifiedScaffoldMessage = JSON.stringify(scaffoldMessage);
 				socket.push(stringifiedScaffoldMessage);
 				$form.parents(".modal[aria-hidden=false]").modal("hide");
 				return false;
 			});
+		},
+		queryString : function(key) {
+			   var re=new RegExp('(?:\\?|&)'+key+'=(.*?)(?=&|$)','gi');
+			   return ((m=re.exec(document.location.search)) != null)? m[1]:null;
 		}
 	});
 	//static fields

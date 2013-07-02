@@ -5,6 +5,8 @@ public class ScaffoldMessage extends Message {
 	private String className;
 	private String actualEntity;
 	private String action;//edit , modify or create
+	private String ownerType;
+	private String ownerId;
 	public String getActualEntity() {
 		return actualEntity;
 	}
@@ -28,5 +30,17 @@ public class ScaffoldMessage extends Message {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getOwnerType() {
+		return ownerType;
+	}
+	public void setOwnerType(String ownerType) {
+		this.ownerType = ownerType;
+	}
+	public String getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
 }

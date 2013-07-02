@@ -130,4 +130,10 @@ public class AppsSecurityInfo implements DbEntity {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void addOwned(DbEntity owned) {
+		// TODO Auto-generated method stub
+		
+	}
 }

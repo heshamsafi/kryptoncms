@@ -146,8 +146,20 @@ public class MenuItem implements DbEntity {
 
 	@Override
 	public void merge(DbEntity newObject) {
-		// TODO Auto-generated method stub
-		
+		MenuItem newMenuItem = (MenuItem)newObject;
+		setName(newMenuItem.getName());
+		setUrl(newMenuItem.getUrl());
+		setOrder(newMenuItem.getOrder());
+		setAdmin(newMenuItem.isAdmin());
+	}
+
+	@Override
+	public void addOwned(DbEntity owned) {
+		if (owned instanceof MenuItem) {
+			MenuItem menuItem = (MenuItem)owned;
+			menuItem.setParentId(getId());
+			menuItems.add(menuItem);
+		}
 	}
 
 }

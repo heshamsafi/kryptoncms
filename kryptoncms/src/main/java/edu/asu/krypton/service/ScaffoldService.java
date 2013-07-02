@@ -36,9 +36,20 @@ public class ScaffoldService {
 			query.addCriteria(Criteria.where("id").is(scaffoldMessage.getId()));
 //			mongoTemplate.remove(query, type);
 			repository.delete(query, type);
-		}else if(scaffoldMessage.getAction().equals("MODIFY") || scaffoldMessage.getAction().equals("CREATE")){//modify or create
+		}else if(scaffoldMessage.getAction().equals("MODIFY")){//modify or create
 //			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
 			Object object = mergeObjects(scaffoldMessage,type);
+			mongoTemplate.save(object);
+			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
+		}else if(scaffoldMessage.getAction().equals("CREATE")){
+			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
+			mongoTemplate.save(object);
+			if(scaffoldMessage.getOwnerType() != null && scaffoldMessage.getOwnerId() != null){
+				Class<?> ownerType = Class.forName("edu.asu.krypton.model.persist.db."+scaffoldMessage.getOwnerType());
+				DbEntity owner = (DbEntity) mongoTemplate.findById(scaffoldMessage.getOwnerId(),ownerType);
+				owner.addOwned((DbEntity) object);
+				mongoTemplate.save(owner);
+			}
 			mongoTemplate.save(object);
 			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
 		}

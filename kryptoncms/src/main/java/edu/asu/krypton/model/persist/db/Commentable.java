@@ -40,4 +40,14 @@ public abstract class Commentable implements DbEntity {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void addOwned(DbEntity owned) {
+		if(owned instanceof Comment){
+			Comment ownedComment = (Comment) owned; 
+			ownedComment.setParentId(getId());
+			ownedComment.setParentType(this.getClass().getName());
+			getComments().add(ownedComment);
+		}
+	}
 }

@@ -95,11 +95,11 @@
 			</exclusions>	    	
 	    </dependency>
 	    
-	    <dependency>
-	    	<groupId>org.codehaus.jackson</groupId>
-	   	 	<artifactId>jackson-mapper-asl</artifactId>
-	    	<version>1.5.3</version>
-	    </dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.12</version>
+		</dependency>
 	    
 		<!-- JSR 303 with Hibernate Validator -->
 		<dependency>

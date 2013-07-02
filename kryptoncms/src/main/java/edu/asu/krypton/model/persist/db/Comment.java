@@ -133,4 +133,5 @@ public class Comment extends Commentable implements DbEntity {
 		setContent(newComment.getContent());
 	}
 
+
 }

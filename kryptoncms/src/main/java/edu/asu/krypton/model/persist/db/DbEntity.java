@@ -7,4 +7,5 @@ public interface DbEntity {
 	public void onEdit(Repository<?> repository);
 	public void onInsert(Repository<?> repository);
 	public void merge(DbEntity newObject);
+	public void addOwned(DbEntity owned);
 }

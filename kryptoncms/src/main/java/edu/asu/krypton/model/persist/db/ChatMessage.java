@@ -82,5 +82,11 @@ public class ChatMessage implements DbEntity {
 		
 	}
 
+	@Override
+	public void addOwned(DbEntity owned) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }
