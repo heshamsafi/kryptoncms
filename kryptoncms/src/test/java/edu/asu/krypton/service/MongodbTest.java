@@ -2,7 +2,6 @@ package edu.asu.krypton.service;
 
 import java.lang.reflect.Field;
 
-import javax.persistence.Transient;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

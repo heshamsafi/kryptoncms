@@ -1,6 +1,7 @@
 package edu.asu.krypton.model.persist.db;
 
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+
 
 //@Document
 public class Account {
