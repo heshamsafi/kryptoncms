@@ -32,8 +32,8 @@ public class CommentServiceTest{
 	@Autowired
 	private RegistrationService registrationService;
 	
-	private final int NUMBER_OF_ARTICLES = 5; 
-	private final int NUMBER_OF_COMMENTS_PER_ARTICLE = 10;
+	private final int NUMBER_OF_ARTICLES = 25; 
+	private final int NUMBER_OF_COMMENTS_PER_ARTICLE = 8;
 	private final int NUMBER_OF_COMMENT_PER_COMMENT = 4;
 	private final int NUMBER_OF_COMMENT_PER_COMMENT_PER_COMMENT = 2;
 	

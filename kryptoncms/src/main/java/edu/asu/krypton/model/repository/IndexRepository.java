@@ -24,7 +24,14 @@ import edu.asu.krypton.model.persist.db.Indices;
 @Repository
 public class IndexRepository extends edu.asu.krypton.model.repository.Repository<Indices> {
 
+	private static IndexRepository self = null;
+	
+	public static IndexRepository getInstance(){
+		return self;
+	}
+	
 	public IndexRepository(){
+		self = this;
 		setPersistentClass(Indices.class);
 	}
 	

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -27,9 +28,6 @@ public class Article extends Commentable implements DbEntity {
 	
 	@Transient
 	public boolean reIndex = false;
-	
-	@Transient
-	private IndexRepository indexRepository;
 	
 	@Indexed(unique=true)
 	@InputText
@@ -161,7 +159,7 @@ public class Article extends Commentable implements DbEntity {
 	@Override
 	public void onDelete(Repository<?> repository)
 			throws ClassNotFoundException {
-		super.onDelete(repository);
+		IndexRepository indexRepository = IndexRepository.getInstance();
 		indexRepository.obsoleteArticle(this);
 //		if (ableToDelete()) {
 			// deletion operation
@@ -229,6 +227,7 @@ public class Article extends Commentable implements DbEntity {
 					indexRepository.deleteIndex(index);
 				// delete the obsolete article itself
 //				articleRepository.deleteArticle(obsolete);
+				super.onDelete(repository);
 	}
 	private boolean isAlreadyExist(Indices index, List<Indices> indices) {
 		if (indices == null || index == null || indices.size() == 0)

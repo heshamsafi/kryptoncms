@@ -16,6 +16,7 @@ public class Repository<T> {
 //	@Autowired(required=true)
 //	protected DataAccessObject<T> dao;
 	
+	
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 	
