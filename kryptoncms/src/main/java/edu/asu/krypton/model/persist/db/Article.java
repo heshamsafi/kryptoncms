@@ -28,6 +28,9 @@ public class Article extends Commentable implements DbEntity {
 	@Transient
 	public boolean reIndex = false;
 	
+	@Transient
+	private IndexRepository indexRepository;
+	
 	@Indexed(unique=true)
 	@InputText
 	private String title;
@@ -158,7 +161,7 @@ public class Article extends Commentable implements DbEntity {
 	@Override
 	public void onDelete(Repository<?> repository)
 			throws ClassNotFoundException {
-		IndexRepository indexRepository = (IndexRepository) repository;
+		super.onDelete(repository);
 		indexRepository.obsoleteArticle(this);
 //		if (ableToDelete()) {
 			// deletion operation
