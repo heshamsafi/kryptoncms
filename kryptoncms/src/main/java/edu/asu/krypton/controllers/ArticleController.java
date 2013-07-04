@@ -204,20 +204,14 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	 * @param model
 	 * @return String articleView
 	 * @throws NoSuchRequestHandlingMethodException
+	 * @throws PatchFailedException 
+	 * @throws ClassNotFoundException 
+	 * @throws IOException 
 	 */
 	@RequestMapping(value="{title}",method=RequestMethod.GET)
-	public String getArticle(@PathVariable String title,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+	public String getArticle(@PathVariable String title,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException, PatchFailedException, IOException, ClassNotFoundException{
 		Article article = articleService.findByTitle(title);
 		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
-		model.addAttribute("article", article);
-		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
-	}
-	@RequestMapping(value="{title}/{version}",method=RequestMethod.GET)
-	public String getArticle(@PathVariable String title,@PathVariable String version,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException, IOException, ClassNotFoundException, PatchFailedException{
-		Article article = articleService.findByTitle(title);
-		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
-		
-		
 		
 		if(article.getPatches()==null){
 			model.addAttribute("article", article);
@@ -230,7 +224,7 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 			List<String>originalTokens=new ArrayList<String>();
 			while(original.hasMoreTokens()) originalTokens.add(original.nextToken());
 			int counter=0;
-			int ver=Integer.parseInt(version);
+			int ver=Integer.parseInt(article.getVersion());
 			if(patches.size()<ver){
 				//el version mesh mowgowda
 				throw new NoSuchRequestHandlingMethodException(request);
@@ -252,13 +246,6 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-	
 		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
 	}
 	/**
@@ -269,9 +256,12 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 	 * @param Model model
 	 * @return String articleView
 	 * @throws NoSuchRequestHandlingMethodException
+	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws PatchFailedException 
 	 */
 	@RequestMapping(value="",method=RequestMethod.GET)
-	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException{
+	public String getDefaultArticle(HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException, PatchFailedException, IOException, ClassNotFoundException{
 		Article homeArticle = articleService.findHomeArticle();
 		if(homeArticle!= null) return getArticle(homeArticle.getId(), request, model);
 		else throw new NoSuchRequestHandlingMethodException(request);
