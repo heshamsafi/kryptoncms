@@ -212,6 +212,55 @@ public class ArticleController extends edu.asu.krypton.controllers.Controller {
 		model.addAttribute("article", article);
 		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
 	}
+	@RequestMapping(value="{title}/{version}",method=RequestMethod.GET)
+	public String getArticle(@PathVariable String title,@PathVariable String version,HttpServletRequest request,Model model) throws NoSuchRequestHandlingMethodException, IOException, ClassNotFoundException, PatchFailedException{
+		Article article = articleService.findByTitle(title);
+		if(article == null) throw new NoSuchRequestHandlingMethodException(request);
+		
+		
+		
+		if(article.getPatches()==null){
+			model.addAttribute("article", article);
+		}
+		else{
+			ArrayList<Patch<String>>patches;
+			String patchesString=article.getPatches();
+			patches=(ArrayList<Patch<String>>) helperClass.fromString(patchesString);
+			StringTokenizer original=new StringTokenizer(article.getContent(),"\n");
+			List<String>originalTokens=new ArrayList<String>();
+			while(original.hasMoreTokens()) originalTokens.add(original.nextToken());
+			int counter=0;
+			int ver=Integer.parseInt(version);
+			if(patches.size()<ver){
+				//el version mesh mowgowda
+				throw new NoSuchRequestHandlingMethodException(request);
+			}
+			List<String>Result=originalTokens;
+			for(Patch<String>patch:patches){
+				if(counter==ver) break;
+				Result=DiffUtils.patch(Result, patch);
+				System.out.println(patches);
+				counter++;
+			}
+			StringBuilder buffer = new StringBuilder();
+			for (String s : Result){
+				buffer.append(s);
+				buffer.append('\n');
+			}
+			article.setContent(buffer.toString());	
+			model.addAttribute("article", article);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		return appropriateView(request, DEFAULT_DIR+DEFAULT_VIEW, defaultView(model,DEFAULT_VIEW));
+	}
 	/**
 	 * this function is invoked when GET HTTP request to the url "/article" is sent to the server
 	 * and it populates the model with the article set to be the home article and directs to the 
