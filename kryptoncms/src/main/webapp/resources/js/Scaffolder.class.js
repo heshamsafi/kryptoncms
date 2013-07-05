@@ -102,10 +102,14 @@ define([
 		modifyRow : function(className,entity){
 			var $form = $("#scaffoldForm");
 			if(className.match("Menu") != null){
-				var $anchor = $("#admin_nav #"+entity.id);
-				$anchor.attr({
-					"href": DOMAIN_CONFIGURATIONS.BASE_URL+entity.url
-				}).text(entity.name);
+				if(entity.admin){
+					var $anchor = $("#admin_nav #"+entity.id);
+					$anchor.attr({
+						"href": DOMAIN_CONFIGURATIONS.BASE_URL+entity.url.replace(/^\//,"")
+					}).text(entity.name);
+				}else{
+					this.reloadNonAdminMenu();
+				}
 			}
 			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
 			var $tbl = $form.find("table");
@@ -130,9 +134,14 @@ define([
 		},
 		insertRow : function(className,entity){
 			var $form = $("#scaffoldForm");
+			var thisInstance = this;
 			if(className.match("Menu") != null){
 				var $ul = $("#admin_nav ul");
-				$("script#admin-menu-item-tmpl").tmpl(entity).appendTo($ul);
+				entity.url = entity.url.replace(/^\//,"")
+				if(entity.admin) $("script#admin-menu-item-tmpl").tmpl(entity).appendTo($ul);
+				else{
+					this.reloadNonAdminMenu();
+				}
 			}
 			if(className.match($form.attr('classname')+"$") == null) return;//not on the same page
 			var adaptedObject = {
@@ -160,14 +169,15 @@ define([
 					"javaType":$form.find("th[data-field-type]:contains("+key+")").attr("data-field-type")
 				});
 			});
-			console.log(adaptedObject);
 			$("script#scaffold-row-tmpl").tmpl(adaptedObject).appendTo($form.find("table tbody"));
+			thisInstance.ajaxifier.passiveReload();
 		},
-		deleteRow : function(className,id){
+		deleteRow : function(className,entity){
+			var id = entity.id;
 			//real time crap
 			var $form = $("#scaffoldForm");
 			if(className.match("Menu") != null){
-				$("#admin_nav #"+id).parent("li").slideUp(200, function(){
+				$("#"+id).parent("li").slideUp(200, function(){
 		        	$(this).remove();
 		        });
 			}
@@ -181,6 +191,13 @@ define([
 	    	 .slideUp(200, function(){
 	        	$tr.remove();
 	        });
+		},
+		reloadNonAdminMenu:function(){
+			var thisInstance = this;
+			$.get(DOMAIN_CONFIGURATIONS.BASE_URL+"navigation/menu/user?complete=false",function(response){
+				$(".navbar .nav").html(response);
+				thisInstance.ajaxifier.passiveReload();
+			});
 		},
 		socket : function(){
 			var thisInstance = this;
@@ -196,10 +213,13 @@ define([
 					  .setOnMessageHandler(
 					    	function(response) {
 					    		var scaffoldMessage = JSON.parse(response.responseBody);
-					    		
-					    		if(scaffoldMessage.action == "DELETE")
-					    			thisInstance.deleteRow(scaffoldMessage.className,scaffoldMessage.id);
-					    		else if(scaffoldMessage.action == "MODIFY"){
+					    		if(scaffoldMessage.action == "DELETE"){
+					    			var entity = JSON.parse(scaffoldMessage.actualEntity);
+					    			if(!entity) {
+					    				entity= {id:scaffoldMessage.id};
+					    			}
+					    			thisInstance.deleteRow(scaffoldMessage.className,entity);
+					    		}else if(scaffoldMessage.action == "MODIFY"){
 					    			var entity = JSON.parse(scaffoldMessage.actualEntity);
 					    			thisInstance.modifyRow(scaffoldMessage.className,entity);
 					    		}else if(scaffoldMessage.action == "CREATE"){

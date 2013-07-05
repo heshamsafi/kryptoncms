@@ -4,7 +4,7 @@ public class ScaffoldMessage extends Message {
 	private String id;
 	private String className;
 	private String actualEntity;
-	private String action;//edit , modify or create
+	private String action;//edit , modify or create, non-admin
 	private String ownerType;
 	private String ownerId;
 	public String getActualEntity() {

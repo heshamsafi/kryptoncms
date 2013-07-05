@@ -17,17 +17,13 @@ var SocketHandler = new Mootools.Class({
 			contentType 	  : "text/plain",
 			logLevel		  : Logger.logLevel,
 			//html5 server sent events (sse)
-//			transport:'streaming',
-			transport:'websocket',//
-//			transport		  : 'sse', // we can't use websockets untill we
-			//figure out away to send the JSESSIONID cookie with the handshake request headers :\
-			//apparently neither sse nor long-polling are working in opera browser ... WTF !
+			transport:'websocket',
+//			transport:'long-polling',
 			fallbackTransport : 'long-polling',
 			contentType : "application/json",
 			enableXDR : true,
             rewriteURL : true,
 			withCredentials : true
-			//,cookie : "JSESSIONID=dssadsd"
 		});//defaults
 		this.setOptions(options);//overrides
 		

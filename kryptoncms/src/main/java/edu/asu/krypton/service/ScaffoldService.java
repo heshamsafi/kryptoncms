@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.krypton.model.message_proxies.ScaffoldMessage;
 import edu.asu.krypton.model.persist.db.DbEntity;
+import edu.asu.krypton.model.persist.db.MenuItem;
 import edu.asu.krypton.model.repository.Repository;
 
 @Service
@@ -32,10 +33,11 @@ public class ScaffoldService {
 	public void serviceScaffoldCommand(ScaffoldMessage scaffoldMessage) throws JsonGenerationException, JsonMappingException, IOException, ClassNotFoundException {
 		Class<?> type = Class.forName(scaffoldMessage.getClassName());
 		if(scaffoldMessage.getAction().equals("DELETE")){
-			Query query = new Query();
-			query.addCriteria(Criteria.where("id").is(scaffoldMessage.getId()));
-//			mongoTemplate.remove(query, type);
-			repository.delete(query, type);
+			DbEntity deletedMenu = (DbEntity) repository.findById(scaffoldMessage.getId(), type);
+			if(deletedMenu != null){
+				scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(deletedMenu));
+				repository.delete(deletedMenu);
+			}
 		}else if(scaffoldMessage.getAction().equals("MODIFY")){//modify or create
 //			Object object = objectMapper.readValue(scaffoldMessage.getActualEntity(), type);
 			Object object = mergeObjects(scaffoldMessage,type);
@@ -49,8 +51,8 @@ public class ScaffoldService {
 				DbEntity owner = (DbEntity) mongoTemplate.findById(scaffoldMessage.getOwnerId(),ownerType);
 				owner.addOwned((DbEntity) object);
 				mongoTemplate.save(owner);
+				mongoTemplate.save(object);
 			}
-			mongoTemplate.save(object);
 			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
 		}
 		MetaBroadcaster.getDefault().broadcastTo("/form/echo", objectMapper.writeValueAsString(scaffoldMessage));

@@ -53,11 +53,9 @@
 
 			<div class="nav-collapse collapse">
 				<ul class="nav">
-					<c:forEach items="${items}" var="item">
-						<c:set var="item" scope="request" value="${item}" />
-						<jsp:include page="/WEB-INF/views/includes/recursiveMenuItems.jsp" />
-						<c:set var="item" scope="request" value="${null}" />
-					</c:forEach>
+						<c:set var="items" scope="request" value="${items}" />
+						<jsp:include page="/WEB-INF/views/includes/recursiveMenuItemsContainer.jsp" />
+						<c:set var="items" scope="request" value="${null}" />
 				</ul>
 				<img id="loading_image"
 					style="margin-left: 50px; display: none; width: 2.6em;"
