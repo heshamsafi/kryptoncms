@@ -24,11 +24,11 @@ public class TranslationController extends edu.asu.krypton.controllers.Controlle
 	private final String TRANSLATE_VIEW = "translate";
 	
 	private final String DEFAULT_BODIES_DIR = "bodies/";
-//	
-//	@RequestMapping(value = "/", method = RequestMethod.GET)
-//	public String defaultView(ModelMap model,HttpServletRequest request)  {
-//		return appropriateView(request, DEFAULT_BODIES_DIR+TRANSLATE_VIEW, defaultView(model, TRANSLATE_VIEW));
-//	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String defaultView(ModelMap model,HttpServletRequest request)  {
+		return appropriateView(request, DEFAULT_BODIES_DIR+TRANSLATE_VIEW, defaultView(model, TRANSLATE_VIEW));
+	}
 	
 
 	@RequestMapping(method = RequestMethod.GET, produces=MediaType.TEXT_PLAIN_VALUE)

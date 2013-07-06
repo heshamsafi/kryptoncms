@@ -14,7 +14,7 @@
 <!-- END TRANSLATE -->
 
 <script id="options-templ" type="text/x-jquery-tmpl">
-	<option value="\${this.data}">\${this.data}</option>
+	<li><a tabindex="-1" href="#">\${this.data}</a></li>
 </script>
 <script type="text/javascript">
 // 	$(document).ready(function() {

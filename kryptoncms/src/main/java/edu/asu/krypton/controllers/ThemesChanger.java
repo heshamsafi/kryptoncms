@@ -24,8 +24,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,12 +49,9 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 		return appropriateView(request, DEFAULT_BODY_DIR+DEFAULT_VIEW, defaultView(model, DEFAULT_VIEW));
 	}		
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody void submit(ModelMap model,HttpServletRequest request) throws IOException {
-		System.out.println("varsValue = " + request.getParameter("vars"));
-		logger.debug("send vars");
-		logger.debug("varsValue = " + request.getParameter("vars"));
-		String varsValue = request.getParameter("vars"); 
+	@RequestMapping(method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody void submit(@RequestBody String requestBody,ModelMap model,HttpServletRequest request) throws IOException {
+		System.out.println(requestBody);
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://bootstrap.herokuapp.com/");
 		httppost.setHeaders(new Header[]{
@@ -67,8 +66,7 @@ public class ThemesChanger extends edu.asu.krypton.controllers.Controller {
 		// Request parameters and other properties.
 		List<NameValuePair> params = new ArrayList<NameValuePair>(4);
 		params.add(new BasicNameValuePair("css", "[\"reset.less\",\"scaffolding.less\",\"grid.less\",\"layouts.less\",\"type.less\",\"code.less\",\"labels-badges.less\",\"tables.less\",\"forms.less\",\"buttons.less\",\"sprites.less\",\"button-groups.less\",\"navs.less\",\"navbar.less\",\"breadcrumbs.less\",\"pagination.less\",\"pager.less\",\"thumbnails.less\",\"alerts.less\",\"progress-bars.less\",\"hero-unit.less\",\"media.less\",\"tooltip.less\",\"popovers.less\",\"modals.less\",\"dropdowns.less\",\"accordion.less\",\"carousel.less\",\"wells.less\",\"close.less\",\"utilities.less\",\"component-animations.less\",\"responsive-utilities.less\",\"responsive-767px-max.less\",\"responsive-768px-979px.less\",\"responsive-1200px-min.less\",\"responsive-navbar.less\"]"));
-//		params.add(new BasicNameValuePair("vars", "{\"@blue\":\"#ffffff\",\"@green\":\"#ffffff\",\"@red\":\"#ffffff\",\"@yellow\":\"#ffffff\",\"@orange\":\"#ffffff\",\"@pink\":\"#ffffff\",\"@purple\":\"#ffffff\",\"@warningText\":\"#ffffff\",\"@warningBackground\":\"#ffffff\",\"@errorText\":\"#ffffff\",\"@errorBackground\":\"#ffffff\",\"@successText\":\"#ffffff\",\"@successBackground\":\"#ffffff\",\"@infoText\":\"#ffffff\",\"@infoBackground\":\"#ffffff\",\"@navbarHeight\":\"70px\",\"@navbarBackground\":\"#ffffff\",\"@navbarBackgroundHighlight\":\"#ffffff\",\"@navbarText\":\"#ffffff\",\"@navbarBrandColor\":\"#ffffff\",\"@navbarLinkColor\":\"#ffffff\",\"@navbarLinkColorHover\":\"#ffffff\",\"@navbarLinkColorActive\":\"#ffffff\",\"@navbarLinkBackgroundHover\":\"#ffffff\",\"@navbarLinkBackgroundActive\":\"#ffffff\",\"@navbarSearchBackground\":\"#ffffff\",\"@navbarSearchBackgroundFocus\":\"#ffffff\",\"@navbarSearchBorder\":\"#ffffff\",\"@navbarSearchPlaceholderColor\":\"#ffffff\"}"));
-		params.add(new BasicNameValuePair("vars", varsValue));
+		params.add(new BasicNameValuePair("vars", requestBody));
 		httppost.setEntity(new UrlEncodedFormEntity(params));
 		//Execute and get the response.
 		HttpResponse response = httpclient.execute(httppost);

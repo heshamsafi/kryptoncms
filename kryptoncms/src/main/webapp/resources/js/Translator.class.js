@@ -17,8 +17,8 @@ var Translator = new Mootools.Class({
 		this.$genericForms.each($.proxy(function(index,thisElement){
 			var $fromLangs = $("#options-templ").tmpl(this.langs);
 			var $toLangs = $fromLangs.clone();
-			$(thisElement).find("select[name=toLang]").html($fromLangs);
-			$(thisElement).find("select[name=fromLang]").html($toLangs);
+			$(thisElement).find("#select-group-0 .dropdown-menu").html($fromLangs);
+			$(thisElement).find("#select-group-1 .dropdown-menu").html($toLangs);
 		},this));
 	},
 	attachSubmitEvent : function(){
