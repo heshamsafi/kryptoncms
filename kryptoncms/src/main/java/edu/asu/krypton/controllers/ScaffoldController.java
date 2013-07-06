@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.wiztools.paginationlib.PaginationUtil;
 
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.persist.db.DbEntity;
 import edu.asu.krypton.model.repository.Repository;
 
@@ -49,11 +50,14 @@ public class ScaffoldController extends Controller {
 	@Autowired(required=true)
 	private Repository<DbEntity> repository;
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method=RequestMethod.GET,value="")
 	public String getAllEntities(Model model,HttpServletRequest request) throws IOException, ClassNotFoundException{
 	 Collection<String> entities = new ArrayList<String>();
-	 for(Class docName : findDocuments("edu.asu.krypton.model.persist.db"))
+	 for(Class docName : findDocuments("edu.asu.krypton.model.persist.db")){
+		 if (!docName.isAnnotationPresent(Scaffold.class)) continue;
 	     entities.add(docName.getSimpleName());
+	 }
 
 	 model.addAttribute("entities", entities);
 	 return appropriateView(request, DEFAULT_BODIES_DIR+MAIN_BODY, defaultView(model,MAIN_BODY));

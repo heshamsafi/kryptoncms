@@ -7,7 +7,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,12 +14,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
-import edu.asu.krypton.form.annotations.TextArea;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.IndexRepository;
 import edu.asu.krypton.model.repository.Repository;
 
 @Document
 @XmlRootElement
+@Scaffold
 public class Article extends Commentable implements DbEntity {
 	@Id
 	@InputText(readOnly=true)
@@ -47,7 +47,7 @@ public class Article extends Commentable implements DbEntity {
 //	@TextArea(applyCKEditor=true)
 	private String content;
 	
-	@CheckBox
+//	@CheckBox
 	private boolean obsolete;
 	// momken ne7tag nzawed author ba3deen
 	

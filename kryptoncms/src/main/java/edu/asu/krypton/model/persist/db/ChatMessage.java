@@ -3,19 +3,28 @@ package edu.asu.krypton.model.persist.db;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 
+@XmlRootElement
+@Document
+@Scaffold
 public class ChatMessage implements DbEntity {
 	@Id
+	@InputText(readOnly=true)
 	private String id;
 	
+	@InputText
 	private String message;
 	
 	@DBRef

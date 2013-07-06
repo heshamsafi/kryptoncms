@@ -13,10 +13,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
+import edu.asu.krypton.form.annotations.Validation;
 import edu.asu.krypton.model.repository.Repository;
 
 @Document
 @XmlRootElement
+@Scaffold
 public class User implements DbEntity {
 	@Id
 	@InputText(readOnly=true)
@@ -24,6 +27,7 @@ public class User implements DbEntity {
 	
 	@Indexed(unique=true)
 	@InputText
+	@Validation(required=true)
 	private String username;
 	@InputText(readOnly=true)
 	private String password;
