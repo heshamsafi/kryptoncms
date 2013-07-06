@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -13,9 +14,12 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 
+@XmlRootElement
 @Document
+@Scaffold
 public class Comment extends Commentable implements DbEntity {
 	@Id
 	@InputText(readOnly = true)

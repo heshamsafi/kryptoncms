@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 
+@XmlRootElement
 @Document
+@Scaffold
 public class ChatConversation implements DbEntity {
 
 	@Id
+	@InputText(readOnly=true)
 	private String id;
 	
 	@DBRef

@@ -35,7 +35,13 @@
 								<label for="<%= fields[i].getName() %>" class="add-on pull-left">
 									<span class="icon-asterisk"></span><%= fields[i].getName() %>
 								</label>
-								<sf:input class="input-medium" readonly="true" path="<%= fields[i].getName() %>" size="15" id="<%= fields[i].getName() %>"/>
+								<sf:input
+								<c:if test="<%=(((java.lang.reflect.Field) pageContext
+										.getAttribute("entityField"))
+										.isAnnotationPresent(edu.asu.krypton.form.annotations.InputText.class))%>">
+										data-required
+								</c:if>
+								 class="input-medium" readonly="true" path="<%= fields[i].getName() %>" size="15" id="<%= fields[i].getName() %>"/>
 								<label id="title-description" for="<%= fields[i].getName() %>" class="add-on"></label>
 							</div>
 					<%} else {%>

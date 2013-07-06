@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -12,9 +14,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.CheckBox;
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 
+@XmlRootElement
 @Document
+@Scaffold
 public class MenuItem implements DbEntity {
 	@Indexed
 	@InputText(readOnly=true)

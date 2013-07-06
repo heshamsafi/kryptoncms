@@ -1,6 +1,7 @@
+<%@page import="edu.asu.krypton.form.annotations.Scaffold"%>
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
 <div class="page-header">
-	<h1>Scaffold</h1>
+	<h1>${entityClassName.replaceAll(".*\\.","")}</h1>
 </div>
 <div class="btn-group">
 	<a class="btn dropdown-toggle btn-primary" data-toggle="dropdown"
@@ -28,9 +29,23 @@
 			<c:forEach var="entityField" items="${entityClassFields}">
 				<%--this cannot be done using JSTL so i had to scriptlet it :) --%>
 				<c:if
-					test='<%=!((java.lang.reflect.Field) pageContext
+					test='<%=!(((java.lang.reflect.Field) pageContext
 							.getAttribute("entityField"))
-							.isAnnotationPresent(org.springframework.data.annotation.Transient.class)%>'>
+							.isAnnotationPresent(org.springframework.data.annotation.Transient.class)) &&(
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.InputText.class)) ||
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.CheckBox.class)) ||
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.TextArea.class)) ||
+							(((java.lang.reflect.Field) pageContext
+									.getAttribute("entityField"))
+									.isAnnotationPresent(org.springframework.data.mongodb.core.mapping.DBRef.class))
+							)
+							%>'>
 					<c:choose>
 						<c:when
 							test='<%=((java.lang.reflect.Field) pageContext
@@ -69,9 +84,23 @@
 					<c:forEach var="entityField" items="${entityClassFields}">
 
 						<c:if
-							test='<%=!((java.lang.reflect.Field) pageContext
-								.getAttribute("entityField"))
-								.isAnnotationPresent(org.springframework.data.annotation.Transient.class)%>'>
+							test='<%=!(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(org.springframework.data.annotation.Transient.class)) &&(
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.InputText.class)) ||
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.CheckBox.class)) ||
+							(((java.lang.reflect.Field) pageContext
+							.getAttribute("entityField"))
+							.isAnnotationPresent(edu.asu.krypton.form.annotations.TextArea.class)) ||
+							(((java.lang.reflect.Field) pageContext
+									.getAttribute("entityField"))
+									.isAnnotationPresent(org.springframework.data.mongodb.core.mapping.DBRef.class))
+							)
+							%>'>
 							<td data-attr="${entityField.name}">
 								<%-- 	${entity[entityField.name].getClass()} --%> <c:choose>
 

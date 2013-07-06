@@ -4,18 +4,18 @@ import java.math.BigInteger;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import edu.asu.krypton.form.annotations.InputText;
+import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 import edu.asu.krypton.service.crypto.KeyStoreManager;
 
 @Document
 @XmlRootElement
+@Scaffold
 public class AppsSecurityInfo implements DbEntity {
 
 	@Id
