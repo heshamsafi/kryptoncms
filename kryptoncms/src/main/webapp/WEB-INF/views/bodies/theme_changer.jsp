@@ -96,11 +96,11 @@
 		<label for="successBackground" class="add-on"></label>
 	</div>
 	<div class="control-group input-prepend input-append">
-		<label for="successBackground" class="add-on pull-left">
+		<label for="infoText" class="add-on pull-left">
 			<span>info text</span>
 		</label>
-		<input id="successBackground" name="successBackground" type="text" class="cp-basic"/>
-		<label for="successBackground" class="add-on"></label>
+		<input id="infoText" name="infoText" type="text" class="cp-basic"/>
+		<label for="infoText" class="add-on"></label>
 	</div>
 	<div class="control-group input-prepend input-append">
 		<label for="infoBackground" class="add-on pull-left">
@@ -206,4 +206,5 @@
 	  <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" />
 	</p>
 	<div id="slider-range-min"></div>
+	<div><a id="sendVars" class="btn btn-primary">Submit</a></div>
 	</div>
