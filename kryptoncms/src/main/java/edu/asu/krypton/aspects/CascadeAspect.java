@@ -48,5 +48,4 @@ public class CascadeAspect {
 	
 	public void create(DbEntity dbentity){}
 	public void edit(DbEntity dbEntity){}
-
 }

@@ -31,7 +31,7 @@
 		</div>
 		<div>
 			
-			<input type="text" name="id" value="${article.id}" disabled style="width:0px;height:0px"/><br />
+			<input type="text" name="id" value="${article.id}" disabled style="display:none"/><br />
 		</div>
 	</div>
 	<div>

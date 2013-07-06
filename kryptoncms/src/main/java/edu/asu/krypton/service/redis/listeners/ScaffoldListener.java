@@ -15,24 +15,10 @@ import edu.asu.krypton.service.ScaffoldService;
 public class ScaffoldListener implements MessageListener {
 	
 	@Autowired(required=true)
-	private ObjectMapper objectMapper;
-	
-	@Autowired(required=true)
 	private ScaffoldService scaffoldService;
 	
     @Override
     public void onMessage( final Message message, final byte[] pattern ) {
-    	try {
-    		ScaffoldMessage scaffoldMessage = objectMapper.readValue(message.toString(),ScaffoldMessage.class);
-    		scaffoldService.serviceScaffoldCommand(scaffoldMessage);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    	scaffoldService.broadcast(message.toString());
     }
 }

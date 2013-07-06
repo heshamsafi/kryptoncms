@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.krypton.model.message_proxies.Message;
+import edu.asu.krypton.model.message_proxies.ScaffoldMessage;
 import edu.asu.krypton.service.ScaffoldService;
 import edu.asu.krypton.service.redis.Publisher;
 
@@ -40,9 +41,9 @@ public class FormController {
 	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;
-
+	
 	@Autowired(required=true)
-	private Publisher publisher;
+	private ScaffoldService scaffoldService;
 	
 	@RequestMapping(value="echo",method = RequestMethod.GET)
 	@ResponseBody
@@ -68,7 +69,8 @@ public class FormController {
 			atmosphereResource.resume();
 			return;
 		}
-		publisher.publish("scaffoldMessageBroadcast", requestBody);
+		ScaffoldMessage scaffoldMessage = objectMapper.readValue(requestBody,ScaffoldMessage.class);
+		scaffoldService.serviceScaffoldCommand(scaffoldMessage);
 	}
 	
 	@RequestMapping(value={"/{fullClassName}","/{fullClassName}/{id}"},method=RequestMethod.POST)

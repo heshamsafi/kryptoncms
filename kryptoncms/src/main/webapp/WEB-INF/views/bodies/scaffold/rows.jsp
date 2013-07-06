@@ -164,9 +164,9 @@
 	<tr data-enable-context-menu data-entity-id="\${owner.id}" >
 		{{each tds}}
 			<td data-attr="\${$value.name}">
-			{{if $value.type == "collection" && $value.realValue.length}}
+			{{if $value.type == "collection"}}
 			<a data-ajax-enable 
-				href='\${DOMAIN_CONFIGURATIONS.BASE_URL}/scaffold/\${$value.javaType}?ownerType=\${owner.type}&ownerId=\${owner.id}&pageSize=10'>
+				href='\${DOMAIN_CONFIGURATIONS.BASE_URL}scaffold/\${$value.javaType}?ownerType=\${owner.type}&ownerId=\${owner.id}&pageSize=10'>
 				See List(\${$value.value.length})
 			</a>
 			{{else $value.type == "model"}}

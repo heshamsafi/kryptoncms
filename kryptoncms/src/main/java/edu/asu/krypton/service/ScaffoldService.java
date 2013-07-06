@@ -17,6 +17,7 @@ import edu.asu.krypton.model.message_proxies.ScaffoldMessage;
 import edu.asu.krypton.model.persist.db.DbEntity;
 import edu.asu.krypton.model.persist.db.MenuItem;
 import edu.asu.krypton.model.repository.Repository;
+import edu.asu.krypton.service.redis.Publisher;
 
 @Service
 public class ScaffoldService {
@@ -29,6 +30,9 @@ public class ScaffoldService {
 	
 	@Autowired(required=true)
 	private ObjectMapper objectMapper;
+	
+	@Autowired(required=true)
+	private Publisher publisher;
 
 	public void serviceScaffoldCommand(ScaffoldMessage scaffoldMessage) throws JsonGenerationException, JsonMappingException, IOException, ClassNotFoundException {
 		Class<?> type = Class.forName(scaffoldMessage.getClassName());
@@ -55,7 +59,11 @@ public class ScaffoldService {
 			}
 			scaffoldMessage.setActualEntity(objectMapper.writeValueAsString(object));
 		}
-		MetaBroadcaster.getDefault().broadcastTo("/form/echo", objectMapper.writeValueAsString(scaffoldMessage));
+		publisher.publish("scaffoldMessageBroadcast", objectMapper.writeValueAsString(scaffoldMessage));
+	}
+	
+	public void broadcast(String message){
+		MetaBroadcaster.getDefault().broadcastTo("/form/echo", message);
 	}
 	
 	private Object mergeObjects(ScaffoldMessage scaffoldMessage,Class<?> type) throws JsonParseException, JsonMappingException, IOException{

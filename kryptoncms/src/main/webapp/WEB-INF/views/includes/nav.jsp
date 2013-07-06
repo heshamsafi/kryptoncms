@@ -69,8 +69,8 @@
 								<input type="text" class="search-query"
 									id="searchArticlesPhrase" data-required
 									placeholder="enter word or phrase ..." />
-								<button id="searchArticles" class="btn  btn-primary"
-									type="button">Search</button>
+								<input id="searchArticles" class="btn  btn-primary"
+									type="submit" value="Search" />
 							</div>
 						</form>
 					</div>

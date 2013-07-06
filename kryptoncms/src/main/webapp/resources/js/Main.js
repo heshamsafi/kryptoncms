@@ -125,12 +125,14 @@ function(
 		$("#searchArticlesPhrase").keyup(function(){
 			$("#searchArticles").attr("disabled",$("#searchArticlesPhrase").val().length>0?false:true);
 		});
-		$("#searchArticles").click(function() {
+		$("#searchArticlesForm").submit(function(event) {
+			event.preventDefault();
 			$.get($("#searchArticlesForm").attr('action'), {
 				phrase : $("#searchArticlesPhrase").val()
 			}, function(articles) {
 				$("#bod").html(articles);
 			});
+			return false;
 		});
 		
 		$('select').each(function(i, e){

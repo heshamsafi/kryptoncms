@@ -6,10 +6,12 @@
 	<c:when test="${item.menuItems.size() gt 0 and item.parentId eq null}">class="dropdown"</c:when>
 </c:choose>
 	 >
-	 
+
 		<a 
-			data-ajax-enable
-			<c:if test="${item.menuItems.size() gt 0}"> href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" </c:if>
+			<c:choose>
+				<c:when test="${item.menuItems.size() gt 0}">href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"</c:when>
+				<c:otherwise>data-ajax-enable</c:otherwise>
+			</c:choose>			
 			 href='<c:url value="${item.url}"  />' data-menu-order="${item.order}" data-menu-id="${item.id}" id="${item.id}">
 			${item.name}
 			<c:if test="${item.menuItems.size() gt 0 and item.parentId eq null}"><b class="caret"></b></c:if>
