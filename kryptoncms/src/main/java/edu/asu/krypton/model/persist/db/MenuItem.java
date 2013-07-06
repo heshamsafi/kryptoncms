@@ -119,6 +119,7 @@ public class MenuItem implements DbEntity {
 				iterator.next();
 				iterator.remove();
 			}
+			parent.setMenuItems(staleObjects);
 			repository.saveOrUpdate(parent);
 		}catch (Exception e) {
 			
@@ -127,7 +128,6 @@ public class MenuItem implements DbEntity {
 	}
 	@Override
 	public void onEdit(Repository<?> repository) {
-		// TODO Auto-generated method stub
 		
 	}
 	public Collection<MenuItem> getMenuItems() {

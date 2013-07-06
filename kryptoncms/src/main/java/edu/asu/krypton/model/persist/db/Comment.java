@@ -105,37 +105,38 @@ public class Comment extends Commentable implements DbEntity {
 	@Override
 	public void onDelete(Repository<?> repository)
 			throws ClassNotFoundException {
-		try{
-		super.onDelete(repository);
-		final Commentable commentable = (Commentable) repository.findById(getParentId(), getParentType());
-		@SuppressWarnings("unchecked")
-		Collection<Comment> staleObjects = CollectionUtils.select(commentable.getComments(), new Predicate() {
-			@Override
-			public boolean evaluate(Object comment) {
-				return ((Comment) comment).getId().equals(getId());
-			}
-		});
+		try {
+			super.onDelete(repository);
+			final Commentable commentable = (Commentable) repository.findById(
+					getParentId(), getParentType());
+			@SuppressWarnings("unchecked")
+			Collection<Comment> staleObjects = CollectionUtils.select(
+					commentable.getComments(), new Predicate() {
+						@Override
+						public boolean evaluate(Object comment) {
+							return ((Comment) comment).getId().equals(getId());
+						}
+					});
 
-		for(Comment comment:staleObjects){
-			commentable.getComments().remove(comment);
-		}
-		repository.saveOrUpdate(commentable);
-		}catch (Exception e) {
-			
+			for (Comment comment : staleObjects) {
+				commentable.getComments().remove(comment);
+			}
+			repository.saveOrUpdate(commentable);
+		} catch (Exception e) {
+
 		}
 	}
 
 	@Override
 	public void onInsert(Repository<?> repository) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void merge(DbEntity newObject) {
-		Comment newComment = (Comment)newObject;
+		Comment newComment = (Comment) newObject;
 		setContent(newComment.getContent());
 	}
-
 
 }
