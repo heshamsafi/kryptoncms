@@ -68,9 +68,7 @@ public class GenericDatabaseWebServiceController {
 	    	query.skip(pageSize*(pageNo-1));
 			Map parms = request.getParameterMap();
 			//dao.getSession().createQuery("")
-			StringBuilder buffer = new StringBuilder("from "+entity);
 			Enumeration enumeration = request.getParameterNames();
-			if(enumeration.hasMoreElements()) buffer.append(" where ");
 			while (enumeration.hasMoreElements()) {
 				String parameterName = (String) enumeration.nextElement();
 				if(parameterName.equals("pageSize") || parameterName.equals("pageNo") || parameterName.equals("caseSensitivity")) continue;

@@ -8,7 +8,7 @@
 	 >
 	 
 		<a 
-			
+			data-ajax-enable
 			<c:if test="${item.menuItems.size() gt 0}"> href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" </c:if>
 			 href='<c:url value="${item.url}"  />' data-menu-order="${item.order}" data-menu-id="${item.id}" id="${item.id}">
 			${item.name}

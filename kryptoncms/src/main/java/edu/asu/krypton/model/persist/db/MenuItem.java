@@ -23,7 +23,7 @@ public class MenuItem implements DbEntity {
 	private String name;
 	@InputText
 	private String url;
-	@InputText
+//	@InputText
 	private int order;
 	@CheckBox
 	@Indexed
@@ -97,7 +97,6 @@ public class MenuItem implements DbEntity {
 			while (iterator.hasNext()) {
 				MenuItem menuItem = iterator.next();
 				repository.delete(menuItem);
-				
 			}
 		}
 		if (getParentId() == null) return;
@@ -149,7 +148,6 @@ public class MenuItem implements DbEntity {
 		MenuItem newMenuItem = (MenuItem)newObject;
 		setName(newMenuItem.getName());
 		setUrl(newMenuItem.getUrl());
-		setOrder(newMenuItem.getOrder());
 		setAdmin(newMenuItem.isAdmin());
 	}
 

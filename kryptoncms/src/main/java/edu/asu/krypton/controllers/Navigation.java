@@ -30,6 +30,7 @@ public class Navigation extends Controller {
 	
 	private final String DEFAULT_VIEW = "navigation";
 	private final String MENU_VIEW = "nav";
+	private final String MENU_VIEW_NON_COMPLETE = "recursiveMenuItemsContainer";
 	private final String ADMIN_MENU_VIEW = "admin_nav";
 	
 	private final String DEFAULT_BODY_DIR = "bodies/";
@@ -49,10 +50,10 @@ public class Navigation extends Controller {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,value="/menu/{role}")
-	public String menus(ModelMap model,HttpServletRequest request,@PathVariable String role)  {
+	public String menus(ModelMap model,HttpServletRequest request,@PathVariable String role,@RequestParam(defaultValue="true") boolean complete)  {
 		boolean admin = role.equals("admin");
 		model.addAttribute("items", menuService.getRootItems(admin));
-		return DEFAULT_INCLUDES_DIR+(admin?ADMIN_MENU_VIEW:MENU_VIEW);
+		return DEFAULT_INCLUDES_DIR+((admin)?(ADMIN_MENU_VIEW):((complete)?MENU_VIEW:MENU_VIEW_NON_COMPLETE));
 	}
 	
 	@RequestMapping(value="/menu/echo",method = RequestMethod.GET)

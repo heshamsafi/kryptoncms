@@ -41,7 +41,7 @@
 <!-- 	</mongo:mongo> -->
 
 
-  <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
+  <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" />
   <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >
   	<property name="connectionFactory" ref="redisConnectionFactory" />
   	<property name="keySerializer">

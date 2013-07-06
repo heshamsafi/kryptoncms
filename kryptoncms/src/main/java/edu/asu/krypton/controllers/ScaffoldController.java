@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -117,6 +118,15 @@ public class ScaffoldController extends Controller {
 		    		 query.addCriteria(criteria);
 		    		 counterQuery.addCriteria(criteria);
 		    	}
+				Enumeration enumeration = request.getParameterNames();
+				while (enumeration.hasMoreElements()) {
+					String parameterName = (String) enumeration.nextElement();
+					if(parameterName.equals("id") || parameterName.equals("ownerType") || parameterName.equals("ownerId") ||
+					   parameterName.equals("pageNo") || parameterName.equals("pageSize")) continue;
+					Criteria criteria = Criteria.where(parameterName).is(request.getParameter(parameterName));
+					query.addCriteria(criteria);
+					counterQuery.addCriteria(criteria);
+				}
 		    	totalSize = mongoTemplate.count(counterQuery, entityClass);
 		    	queryResult = mongoTemplate.find(query, entityClass);
 		    }   
