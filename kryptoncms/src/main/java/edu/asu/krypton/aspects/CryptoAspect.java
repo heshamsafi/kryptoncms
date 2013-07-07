@@ -96,12 +96,14 @@ public class CryptoAspect {
 	public String getAround(ProceedingJoinPoint joinPoint){
 		System.out.println("reached");
 		Object[] args = joinPoint.getArgs();
-		String appName = (String)args[args.length-4];
-		System.out.println("appName:"+appName);
-		String signedAppName = (String)args[args.length-3];
-		System.out.println("signedAppName:"+signedAppName);
+
 		HttpServletRequest request = (HttpServletRequest)args[args.length-2];
 		HttpServletResponse response = (HttpServletResponse)args[args.length-1];
+		
+		String appName = request.getParameter("appName");
+		String signedAppName = request.getParameter("signedAppName");
+		System.out.println("appName:"+appName);
+		System.out.println("signedAppName:"+signedAppName);
 		if (rsa.verifySignature(appName.getBytes(), signedAppName.getBytes(), appName)) {
 			System.out.println("Verified ...");
 			AppsSecurityInfo appInfo = clientsKeysRepository.getAppInfo(appName);

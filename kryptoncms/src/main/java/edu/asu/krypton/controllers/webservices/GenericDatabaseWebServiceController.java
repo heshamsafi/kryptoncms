@@ -51,8 +51,8 @@ public class GenericDatabaseWebServiceController {
         jaxbMarshaller.setMarshallerProperties(marshallerProperties);
 	}
 	
-//	public GenericDatabaseWebServiceController(){
-//	}
+	public GenericDatabaseWebServiceController(){
+	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="{entity}.{dataType}")
 	public @ResponseBody String get(
@@ -61,10 +61,7 @@ public class GenericDatabaseWebServiceController {
 			@RequestParam(defaultValue="10") int pageSize,
 			@RequestParam(defaultValue="1") int pageNo,
 			@RequestParam(defaultValue="sensitive") String caseSensitivity,
-			@RequestParam String appName,
-			@RequestParam String signedAppName,
-			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletRequest request,HttpServletResponse response) {
 		StringWriter st = new StringWriter();
 		Class<?> entityClass;
 		try {
@@ -102,10 +99,7 @@ public class GenericDatabaseWebServiceController {
 			@RequestParam(defaultValue="10") int pageSize,
 			@RequestParam(defaultValue="1") int pageNo,
 			@RequestParam(defaultValue="sensitive") String caseSensitivity,
-			@RequestParam String appName,
-			@RequestParam String signedAppName,
-			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletRequest request,HttpServletResponse response) {
 		
 		StringWriter st = new StringWriter();
 		Class<?> entityClass;
@@ -142,8 +136,6 @@ public class GenericDatabaseWebServiceController {
 			@PathVariable String entity,
 			@PathVariable String dataType,
 			@RequestBody String object,
-			@RequestParam String appName,
-			@RequestParam String signedAppName,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		

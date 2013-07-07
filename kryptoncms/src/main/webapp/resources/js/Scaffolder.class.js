@@ -202,12 +202,12 @@ define([
 		socket : function(){
 			var thisInstance = this;
 			var $scaffoldForm = $("#scaffoldForm");
-			if($scaffoldForm.length < 1) {//abort
-				if(thisInstance.socketHandler == null) return;
-				thisInstance.socketHandler.close();
-				thisInstance.socketHandler=null;
-				return;
-			}
+//			if($scaffoldForm.length < 1) {//abort
+//				if(thisInstance.socketHandler == null) return;
+//				thisInstance.socketHandler.close();
+//				thisInstance.socketHandler=null;
+//				return;
+//			}
 			if(thisInstance.socketHandler == null){
 				thisInstance.socketHandler = new SocketHandler({ url : DOMAIN_CONFIGURATIONS.BASE_URL+"form/echo" })
 					  .setOnMessageHandler(

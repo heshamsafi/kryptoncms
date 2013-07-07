@@ -90,7 +90,6 @@ public class ChatController extends edu.asu.krypton.controllers.Controller {
 		String username;
 		logger.debug("i \"broadcast\" got this message "+requestBody);
 		if(requestBody.equals("closing")){
-			System.err.println("chat -- close request but i am too much of a dumbass to close -----------------------------------");
 			atmosphereResource.resume();
 			return;
 		}
