@@ -17,8 +17,8 @@ var Translator = new Mootools.Class({
 		this.$genericForms.each($.proxy(function(index,thisElement){
 			var $fromLangs = $("#options-templ").tmpl(this.langs);
 			var $toLangs = $fromLangs.clone();
-			$(thisElement).find("#select-group-0 .dropdown-menu").html($fromLangs);
-			$(thisElement).find("#select-group-1 .dropdown-menu").html($toLangs);
+			$(thisElement).find("select[name=toLang]").html($fromLangs);
+			$(thisElement).find("select[name=fromLang]").html($toLangs);
 		},this));
 	},
 	attachSubmitEvent : function(){
@@ -27,9 +27,19 @@ var Translator = new Mootools.Class({
 			$(thisElement).submit(function(event){
 				event.preventDefault();
 				var $thisForm = $(this);
-		 		$.get($thisForm.attr("action"), new FormSerializer({"format":"urlencoded"}).serialize($thisForm), function(data) {
+		 		$.post($thisForm.attr("action"), new FormSerializer({"format":"urlencoded"}).serialize($thisForm), function(data) {
 		 			$thisForm.find("#to").text(data);
 	 			});
+//		 		$.ajax( {
+//		 			data : $thisForm.attr("action"),
+//		 			type : "POST"
+////		 				,
+////		 			contentType : 'application/json; charset=UTF-8'
+//		 		})
+//		 	    .always(function(data) {
+//		 	    	$thisForm.find("#to").text(data);
+//		 	    });
+		 	 
 				return false;
 			});
 		});

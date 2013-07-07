@@ -2,7 +2,7 @@ buster.testCase("Notifier", function(run) {
 	require([ "jquery", "Notifier.class", "libraries/jquery.tmpl" ], function($, Notifier) {
 		run({
 			setUp : function(done) {
-				this.timeout = 9000;
+				this.timeout = 2000;
 				$.get(buster.env.contextPath + "/Notifier/markup", function(markup) {
 					$('head').append(markup);
 					$('head').append($(markup).clone().attr("id","cutsom_templ"));

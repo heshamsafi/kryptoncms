@@ -1,5 +1,6 @@
 package edu.asu.krypton.service.crypto;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.security.KeyStore;
 
@@ -22,7 +23,9 @@ public class KeyStoreManager {
 			KeyStore ks = KeyStore.getInstance("JCEKS");
 			ks.load(null, passWord);
 			// Store away the key store.
-			FileOutputStream fos = new FileOutputStream(fullPath);
+			File file = new File(System.getProperty("user.home")+File.separator+"key-store");
+			file.mkdirs();
+			FileOutputStream fos = new FileOutputStream(file.getAbsolutePath()+File.separator+"kryptonKeyStore");
 			ks.store(fos, passWord);
 			fos.close();
 		} catch (Exception e) {
@@ -48,11 +51,12 @@ public class KeyStoreManager {
 				createKeyStore();
 				isAlreadyCreated = true;
 			}
-				
+			File file = new File(System.getProperty("user.home")+File.separator+"key-store");
+			file.mkdirs();
 			KeyStore ks = KeyStore.getInstance("JCEKS");
 			// get user password and file input stream
 			java.io.FileInputStream fis = null;
-			fis = new java.io.FileInputStream(fullPath);
+			fis = new java.io.FileInputStream(file.getAbsolutePath()+File.separator+"kryptonKeyStore");
 			ks.load(fis, passWord);
 			javax.crypto.SecretKey mySecretKey = new SecretKeySpec(secretKey,
 					algorithm);
@@ -63,7 +67,7 @@ public class KeyStoreManager {
 			// store away the key store
 			java.io.FileOutputStream fos = null;
 			try {
-				fos = new java.io.FileOutputStream(fullPath);
+				fos = new java.io.FileOutputStream(file.getAbsolutePath()+File.separator+"kryptonKeyStore");
 				ks.store(fos, passWord);
 			} finally {
 				if (fos != null) {

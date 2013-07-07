@@ -1,5 +1,7 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
+<meta http-equiv="content-type" content="text/html";charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script type="text/javascript">
 	var DOMAIN_CONFIGURATIONS = {
 			BASE_URL : "<c:url value='/'  />"

@@ -19,15 +19,18 @@ import edu.asu.krypton.service.crypto.Rand;
 @Service
 public class RSACryptoSystem {
 	MessageDigest hash;
-	
+	private static RSACryptoSystem self;
 	private ServerKeyRepository serverKeyRepository;
 	private ClientsKeysRepository clientsKeysRepository;
-	
+	public static RSACryptoSystem getInstance(){
+		return self;
+	}
 	private static int decNum = 150;
 
 	@Autowired(required=true)
 	public RSACryptoSystem(ServerKeyRepository serverKeyRepository, ClientsKeysRepository clientsKeysRepository) {
 		try {
+			self = this;
 			setServerKeyRepository(serverKeyRepository);
 			setClientsKeysRepository(clientsKeysRepository);
 			RSAKey k = generateKey();
@@ -238,6 +241,7 @@ public class RSACryptoSystem {
 	List<Byte> listOut = new ArrayList<Byte>();
 	if (input.length <= 20) {
 		out = encryptWithPrivate(input, input.length, Key);
+		decNum = out.length;
 		return out;
 	} else {
 		byte[] temp = new byte[20];

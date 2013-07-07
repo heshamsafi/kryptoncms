@@ -19,13 +19,17 @@ import edu.asu.krypton.service.crypto.aes.AESCryptoSystem;
 
 @Service
 public class ECCryptoSystem {
-
+	private static ECCryptoSystem self;
 	private ServerKeyRepository serverKeyRepository;
 	private ClientsKeysRepository clientsKeysRepository;
 	private AESCryptoSystem aes;
 	
 	private static int decNum = 53;
 
+	public static ECCryptoSystem getInstance(){
+		return self;
+	}
+	
 	MessageDigest hash;
 
 	private EllipticCurve ec;
@@ -33,6 +37,7 @@ public class ECCryptoSystem {
 	@Autowired(required = true)
 	public ECCryptoSystem(ServerKeyRepository serverKeyRepository, ClientsKeysRepository clientsKeysRepository, AESCryptoSystem aes) {
 		try {
+			self = this;
 			setAes(aes);
 			setClientsKeysRepository(clientsKeysRepository);
 			setServerKeyRepository(serverKeyRepository);
@@ -93,6 +98,7 @@ public class ECCryptoSystem {
 	List<Byte> listOut = new ArrayList<Byte>();
 	if (input.length <= 20) {
 		out = encrypt(input, input.length, Key);
+		decNum = out.length;
 		return out;
 	} else {
 		byte[] temp = new byte[20];

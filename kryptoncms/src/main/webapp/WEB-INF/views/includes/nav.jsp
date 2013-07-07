@@ -86,6 +86,8 @@
 								data-toggle="modal">Sign up</a></li>
 							<li class="in"><a href="#chat" role="button"
 								data-toggle="modal">Chat</a></li>
+							<li class="inout"><a href="#translateModal" role="button"
+								data-toggle="modal">Translator</a></li>
 							<li class="in"><a href="#genericModal" id="editAccount"
 								role="button" data-toggle="modal">Edit Account</a></li>
 							<li class="in"><a

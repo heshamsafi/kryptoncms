@@ -141,6 +141,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    	var $accountControls_anchor = $accountControls.find("a.displ>span:not(.caret)");
 	    	var $drpDwn_lis      = $accountControls.find(".dropdown-menu li");
 	    	var $drpDwn_lis_in   = $drpDwn_lis.filter(".in");
+	    	var $drpDwn_lis_inout   = $drpDwn_lis.filter(".inout");
 	    	var $drpDwn_lis_out  = $drpDwn_lis.filter(".out");
 	    	$drpDwn_lis.hide();
 	    	if($.cookie("j_username")!=null){
@@ -221,6 +222,7 @@ define(["jquery","libraries/mootools-base","Logger.class","FormSerializer.class"
 	    		$drpDwn_lis_out.show();
 	    		$accountControls_anchor.html("Anonymous");
 	    	}
+	    	$drpDwn_lis_inout.show();
 	    },
 	    destroyCookie : function(){
 	    	$.cookie("j_username",null,this.cookieOptions);

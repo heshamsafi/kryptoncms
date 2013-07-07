@@ -40,5 +40,9 @@
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<h1>Loading ....</h1>
 	</div>
+	<div id="translateModal" class="modal hide  fade" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<%@ include file="/WEB-INF/views/bodies/translate.jsp"%>
+	</div>
 </body>
 </html>

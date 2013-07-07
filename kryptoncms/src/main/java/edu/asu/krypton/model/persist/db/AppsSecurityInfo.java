@@ -8,10 +8,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import edu.asu.krypton.exceptions.CustomRuntimeException;
 import edu.asu.krypton.form.annotations.InputText;
 import edu.asu.krypton.form.annotations.Scaffold;
 import edu.asu.krypton.model.repository.Repository;
 import edu.asu.krypton.service.crypto.KeyStoreManager;
+import edu.asu.krypton.service.crypto.ecc.ECCryptoSystem;
+import edu.asu.krypton.service.crypto.rsa.RSACryptoSystem;
 
 @Document
 @XmlRootElement
@@ -121,8 +124,13 @@ public class AppsSecurityInfo implements DbEntity {
 
 	@Override
 	public void onInsert(Repository<?> repository) {
-		// TODO Auto-generated method stub
-		
+		try {
+			ECCryptoSystem.getInstance().createApp(this.appName, this.publicKey_x, this.publicKey_y);
+			RSACryptoSystem.getInstance().createApp(this.appName, this.n, this.e);
+		} catch (CustomRuntimeException e1) {
+			System.out.println(e1.getMessage());
+			e1.printStackTrace();
+		}		
 	}
 
 	@Override

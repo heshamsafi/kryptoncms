@@ -1,9 +1,11 @@
 package edu.asu.krypton.controller.webservices;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,43 @@ public class CryptoWebServiceTest {
 	private CryptoWebService crypto;
 	
 	@Test
-	public void defaultEndpoint() {
-		assert true : "test failed";
+	public void defaultEndpoint() throws ClientProtocolException, IOException {
+//		assert true : "test failed";
 		AESCryptoSystem aes = crypto.getAes();
 		ECCryptoSystem ecc = crypto.getEcc();
 		RSACryptoSystem rsa = crypto.getRsa();
+//		
+//		HttpClient httpclient = new DefaultHttpClient();
+//		HttpGet httpget = new HttpGet("http://localhost:8080/kryptoncms/webservice/User.json");
+//		httpget.setHeaders(new Header[]{
+//			  new BasicHeader("Connection", "Connection")
+//			 ,new BasicHeader("Content-Type","application/x-www-form-urlencoded")
+//			 ,new BasicHeader("Accept-Encoding","gzip,deflate,sdch")
+//			 ,new BasicHeader("Accept-Charset","ISO-8859-1,utf-8;q=0.7,*;q=0.3")
+//			 ,new BasicHeader("Accept-Language","en-US,en;q=0.8")
+//			 ,new BasicHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+////			 ,new BasicHeader("Content-Length","1351")
+//		});
+//		// Request parameters and other properties.
+//		RSAKey clientRSAKey = rsa.generateKey();
+//		ECKey clientECKey = ecc.generateKey();
+//		try{
+//			ecc.createApp("new app 1", clientECKey.beta.getx(), clientECKey.beta.gety());
+//			rsa.createApp("new app 1", clientRSAKey.n, clientRSAKey.e);
+//			MessageDigest md = MessageDigest.getInstance("SHA-1");
+//			byte[] hash = md.digest("new app 1".getBytes());
+//			String signedAppName = new String(rsa.encryptWithPrivate(hash, new RSAKey(clientRSAKey.n, clientRSAKey.d, true)));
+//			httpget.setURI(new URI(new String(httpget.getURI().toString()+"?appName="+URLEncoder.encode("new app 1", "UTF-8")+"&signedAppName="+URLEncoder.encode(signedAppName, "UTF-8")).replaceAll("\\+", "%20")));
+//		}catch(Exception ex){
+//			System.out.println(ex.getMessage());
+//		}
+//		
+//		//Execute and get the response.
+//		HttpResponse response = httpclient.execute(httpget);
+//		System.out.println(httpget.getURI().toString());
+//		String responseBody = EntityUtils.toString(response.getEntity());
+//		System.out.println(responseBody);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		byte[] result = aes.decryptDiffieHelmanKey(aes.encryptDiffieHelmanKey(new byte[]{1,2,3}));
 		System.out.println((Arrays.equals(result, new byte[]{1,2,3})));
 		ECKey k = ecc.generateKey();
@@ -48,7 +82,10 @@ public class CryptoWebServiceTest {
 		try{
 			ecc.createApp("new app 1", clientECKey.beta.getx(), clientECKey.beta.gety());
 			rsa.createApp("new app 1", clientRSAKey.n, clientRSAKey.e);
-		}catch(CustomRuntimeException ex){
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			byte[] hash = md.digest("new app 1".getBytes());
+			System.out.println(Arrays.toString(rsa.encryptWithPrivate(hash, new RSAKey(clientRSAKey.n, clientRSAKey.d, true))));
+		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}
 		
@@ -88,7 +125,5 @@ public class CryptoWebServiceTest {
 		byte[] decEncMessage = aes.decryptWithDHSymetricKey(encMessage, DHKey);
 		
 		System.out.println(rsa.verifySignature(decEncMessage, decEncEncHash, "new app 1"));
-		
-		
 	}
 }

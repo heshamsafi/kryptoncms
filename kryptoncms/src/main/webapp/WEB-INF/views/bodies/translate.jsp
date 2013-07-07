@@ -1,20 +1,25 @@
 <%@ include file="/WEB-INF/views/includes/taglibs.jsp"%>
 
-<div class="page-header">
-      <h1>Translate</h1>
-</div>
-
-<form method="GET" action="<c:url value='/translate/tr' />" class="form-inline" onsubmit="return false;" data-generic-translation>
-	<div class="well" id="to"></div>
-	<textarea name="fromText" class="input-block-level" id="from"></textarea>
-	<select name="fromLang" class="from"></select> 
-	<select name="toLang" class="to"></select>
-	<button id="trans" class="btn btn-primary">translate</button>
+<form method="POST" action="<c:url value='/translate/tr' />" class="form-inline" onsubmit="return false;" data-generic-translation>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">x</button>
+		<h1>Translate</h1>
+	</div>
+	<div class="modal-body">
+		<div class="well" id="to"></div>
+		<textarea name="fromText" class="input-block-level" id="from"></textarea>
+		<select name="fromLang" class="from"></select> 
+		<select name="toLang" class="to"></select>
+	</div>
+	<div class="modal-footer">
+		<button id="trans" class="btn btn-primary">translate</button>
+	</div>
 </form>
 <!-- END TRANSLATE -->
 
 <script id="options-templ" type="text/x-jquery-tmpl">
-	<li><a tabindex="-1" href="#">\${this.data}</a></li>
+	<option value="\${this.data}">\${this.data}</option>
 </script>
 <script type="text/javascript">
 // 	$(document).ready(function() {

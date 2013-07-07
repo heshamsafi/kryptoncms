@@ -56,6 +56,10 @@ public class AESCryptoSystem {
 		}
 	}
 	
+	public byte[] test(String str, byte[] key){
+		return encryptDiffieHelmanKey(key);
+	}
+	
 	public byte[] encryptWithDHSymetricKey(byte[] input, byte[] DHKey){
 		try {
 			Key k = new SecretKeySpec(DHKey, "AES");
