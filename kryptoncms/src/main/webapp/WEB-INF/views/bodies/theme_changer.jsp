@@ -3,7 +3,7 @@
 <div class="page-header">
       <h1>Theme Changer</h1>
 </div>
-
+<form method="POST" action='<c:url value="/themes" />' id="themes_changer" >
 	<div class="control-group input-prepend input-append">
 		<label for="blue" class="add-on pull-left">
 			<span>blue</span>
@@ -201,10 +201,52 @@
 		<label for="navbarSearchPlaceholderColor" class="add-on"></label>
 	</div>	
 	
+	<div class="control-group input-prepend input-append">
+		<label for="linkColor" class="add-on pull-left">
+			<span>link Color</span>
+		</label>
+		<input id="linkColor" name="linkColor" type="text" class="cp-basic"/>
+		<label for="linkColor" class="add-on"></label>
+	</div>
+
+	<div class="control-group input-prepend input-append">
+		<label for="tableBackgroundHover" class="add-on pull-left">
+			<span>table Background Hover</span>
+		</label>
+		<input id="tableBackgroundHover" name="tableBackgroundHover" type="text" class="cp-basic"/>
+		<label for="tableBackgroundHover" class="add-on"></label>
+	</div>
+	
 	<p>
 	  <label for="amount">navigation bar height:</label>
-	  <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;" />
+	  <input type="text" id="amount" name="navbarHeight"  style="border: 0; color: #f6931f; font-weight: bold;" />
 	</p>
-	<div id="slider-range-min"></div>
+	<div id="slider-navbarHeight"></div>
+	
+	<p>
+	  <label for="amount-gridColumnWidth">grid Column Width:</label>
+	  <input type="text" id="amount-gridColumnWidth" name="gridColumnWidth"  style="border: 0; color: #f6931f; font-weight: bold;" />
+	</p>
+	<div id="slider-gridColumnWidth"></div>
+	
+	<p>
+	  <label for="amount-baseFontSize">base Font Size:</label>
+	  <input type="text" id="amount-baseFontSize" name="baseFontSize"  style="border: 0; color: #f6931f; font-weight: bold;" />
+	</p>
+	<div id="slider-baseFontSize"></div>
+
+	<p>
+	  <label for="amount-baseLineHeight">base Line Height:</label>
+	  <input type="text" id="amount-baseLineHeight" name="baseLineHeight"  style="border: 0; color: #f6931f; font-weight: bold;" />
+	</p>
+	<div id="slider-baseLineHeight"></div>
+
+	<p>
+	  <label for="amount-baseBorderRadius">base Border Radius:</label>
+	  <input type="text" id="amount-baseBorderRadius" name="baseBorderRadius"  style="border: 0; color: #f6931f; font-weight: bold;" />
+	</p>
+	<div id="slider-baseBorderRadius"></div>
+
 	<div><a id="sendVars" class="btn btn-primary">Submit</a></div>
 	</div>
+</form>

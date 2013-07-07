@@ -202,63 +202,98 @@ function(
 		photoAlbumManager.listAlbums();
 //		photoAlbumManager.$photoAlbums = $("[data-user-albums]");
 		photoAlbumManager.listPhotoAlbums();
+
+		$( "#slider-navbarHeight" ).slider({
+	      range: "min",
+	      value: 37,
+	      min: 1,
+	      max: 700,
+	      slide: function( event, ui ) {
+	        $( "#amount" ).val( ui.value + "px" );
+	      }
+	    });
+	    $( "#amount" ).val( $( "#slider-navbarHeight" ).slider( "value" ) + "px" );
+	
+		$( "#slider-gridColumnWidth" ).slider({
+		      range: "min",
+		      value: 37,
+		      min: 1,
+		      max: 700,
+		      slide: function( event, ui ) {
+		        $( "#amount-gridColumnWidth" ).val( ui.value + "px" );
+		      }
+		});
+		$( "#amount-gridColumnWidth" ).val( $( "#slider-gridColumnWidth" ).slider( "value" ) + "px" );
+
+		$( "#slider-baseFontSize" ).slider({
+		      range: "min",
+		      value: 37,
+		      min: 1,
+		      max: 700,
+		      slide: function( event, ui ) {
+		        $( "#amount-baseFontSize" ).val( ui.value + "px" );
+		      }
+		});
+		$( "#amount-baseFontSize" ).val( $( "#slider-baseFontSize" ).slider( "value" ) + "px" );
+
+		$( "#slider-baseLineHeight" ).slider({
+		      range: "min",
+		      value: 37,
+		      min: 1,
+		      max: 700,
+		      slide: function( event, ui ) {
+		        $( "#amount-baseLineHeight" ).val( ui.value + "px" );
+		      }
+		});
+		$( "#amount-baseLineHeight" ).val( $( "#slider-baseLineHeight" ).slider( "value" ) + "px" );
+
+		$( "#slider-baseBorderRadius" ).slider({
+		      range: "min",
+		      value: 37,
+		      min: 1,
+		      max: 700,
+		      slide: function( event, ui ) {
+		        $( "#amount-baseBorderRadius" ).val( ui.value + "px" );
+		      }
+		});
+		$( "#amount-baseBorderRadius" ).val( $( "#slider-baseBorderRadius" ).slider( "value" ) + "px" );
 		
 		$("#sendVars").unbind("click").click(function(){
 //			alert("submit vars");
 			console.log("submit vars");
 //			console.log("blue:" + $("#blue").val());
-			vars = {};//"{";
-			if($("#blue").val()) vars["@blue"] = "#" + $("#blue").val();
-			if($("#green").val()) vars["@green"] = "#" + $("#green").val();
-			if($("#red").val()) vars["@red"] = "#" + $("#red").val();
-			if($("#yellow").val()) vars["@yellow"] = "#" + $("#yellow").val();
-			if($("#orange").val()) vars["@orange"] = "#" + $("#orange").val();
-			if($("#pink").val()) vars["@pink"] = "#" + $("#pink").val();
-			if($("#purple").val()) vars["@purple"] = "#" + $("#purple").val();
-			
-			if($("#warningText").val()) vars["@warningText"] = "#" + $("#warningText").val();
-			if($("#warningBackground").val()) vars["@warningBackground"] = "#" + $("#warningBackground").val();
-			
-			if($("#errorText").val()) vars["@errorText"] = "#" + $("#errorText").val();
-			if($("#errorBackground").val()) vars["@errorBackground"] = "#" + $("#errorBackground").val();
 
-			if($("#successText").val()) vars["@successText"] = "#" + $("#successText").val();
-			if($("#successBackground").val()) vars["@successBackground"] = "#" + $("#successBackground").val();
+			vars = {};
+			$("form#themes_changer input").each(function(index, element){
+				if($(this).val){
+					if($(this).val())
+						vars["@" + $(this).attr("name")] = ($(this).hasClass("cp-basic")?"#":"") + ($(this).hasClass("cp-basic")?$(this).val():$(("#slider-" + $(this).attr("name"))).slider( "value" )) + ($(this).hasClass("cp-basic")?"":"px");
+//					console.log($(this).attr("name") + " = " + "#" + $(this).val());
+				}
+			});
+//			vars["@navbarHeight"] = $("#slider-range-min").slider( "value" ) + "px";
 			
-			if($("#infoText").val()) vars["@infoText"] = "#" + $("#infoText").val();
-			if($("#infoBackground").val()) vars["@infoBackground"] = "#" + $("#infoBackground").val();
-			
-			if($("#navbarBackground").val()) vars["@navbarBackground"] = "#" + $("#navbarBackground").val();
-			if($("#navbarBackgroundHighlight").val()) vars["@navbarBackgroundHighlight"] = "#" + $("#navbarBackgroundHighlight").val();
-			
-			if($("#navbarText").val()) vars["@navbarText"] = "#" + $("#navbarText").val();
-			if($("#navbarBrandColor").val()) vars["@navbarBrandColor"] = "#" + $("#navbarBrandColor").val();
-			
-			if($("#navbarLinkColor").val()) vars["@navbarLinkColor"] = "#" + $("#navbarLinkColor").val();
-			if($("#navbarLinkColorHover").val()) vars["@navbarLinkColorHover"] = "#" + $("#navbarLinkColorHover").val();
-			if($("#navbarLinkColorActive").val()) vars["@navbarLinkColorActive"] = "#" + $("#navbarLinkColorActive").val();
-			
-			if($("#navbarLinkBackgroundHover").val()) vars["@navbarLinkBackgroundHover"] = "#" + $("#navbarLinkBackgroundHover").val();
-			if($("#navbarLinkBackgroundActive").val()) vars["@navbarLinkBackgroundActive"] = "#" + $("#navbarLinkBackgroundActive").val();
-			
-			if($("#navbarSearchBackground").val()) vars["@navbarSearchBackground"] = "#" + $("#navbarSearchBackground").val();
-			if($("#navbarSearchBackgroundFocus").val()) vars["@navbarSearchBackgroundFocus"] = "#" + $("#navbarSearchBackgroundFocus").val();
-			
-			if($("#navbarSearchBorder").val()) vars["@navbarSearchBorder"] = "#" + $("#navbarSearchBorder").val();
-			if($("#navbarSearchPlaceholderColor").val()) vars["@navbarSearchPlaceholderColor"] = "#" + $("#navbarSearchPlaceholderColor").val();
-
 //			vars += "}";
-			sliderValue = $("#slider-range-min").slider( "value" );
-			console.log("vars length = " + Object.keys(vars).length);
+//			sliderValue = $("#slider-range-min").slider( "value" );
+//			console.log("vars length = " + Object.keys(vars).length);
 			console.log(vars);
-			console.log("slider:" + sliderValue);
+//			console.log("slider:" + sliderValue);
 			if(Object.keys(vars).length > 0){
+				$("#loading_image").slideDown(50);
+//				var speed = 400;
+//				$(".inner-body").slideUp(speed);
+
 				$.ajax({
 					"url" : DOMAIN_CONFIGURATIONS.BASE_URL+"themes",
 					"type" : "POST",
 					"data" : JSON.stringify(vars),
 					"contentType" : "application/json",
 					"success" : function(responseBody) {
+//						$(".inner-body").slideDown(speed);
+//						collectGarbage();
+//						pageScopeMain();
+						$("#loading_image").slideUp(50);
+
 						alert("submit vars success");
 						console.log("submit vars success");
 					},
@@ -271,7 +306,7 @@ function(
 			}
 		});
 		
-//		var ThemeManager = new ThemeManager();
+
 	}
 	function collectGarbage(){
 		if(commentManager.activated){
